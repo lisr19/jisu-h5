@@ -8,8 +8,8 @@
 			<div class="head-img">
 				<van-uploader v-model="fileList"  :max-count="1" :after-read="afterRead"  />
 				<div class="desc">
-					<p class="role">主管</p>
-					<p class="ID">ID：231456</p>
+					<p class="role">{{userDate.role_name}}</p>
+					<p class="ID">ID：{{userDate.id}}</p>
 					<van-icon name="arrow" size="20"/>
 				</div>
 			</div>
@@ -29,14 +29,15 @@
 
 <script>
 	// import headBar from '@/components/head-bar/head-bar'
-	// import {uploadImg} from '@/lib/API/comment'
-	// import { Toast,Dialog } from 'vant'
+	import {uploadImg,getUserDate} from '@/lib/API/comment'
+	import { Toast,Dialog } from 'vant'
 	export default {
 		components:{
-
+			Dialog
 		},
 		data() {
 			return {
+				page:1,
 				imgUrl:'',
 				fileList:[],
 				tipList: [
@@ -49,12 +50,25 @@
 					{
 						title: '留言中心'
 					},
-				]
+				],
+				userDate:{},
 			}
 		},
 		created() {
+			this.getUserDate()
 		},
 		methods: {
+			//获取账户列表
+			async getUserDate(params) {
+				let res = await getUserDate(params)
+				if(res.errno ==0){
+					this.userDate = res.data.data[0]
+					console.log(this.userDate);
+				} else {
+					this.$toast(res.errmsg)
+				}
+
+			},
 			afterRead(file) {
 				this.uploadImg(file.file)
 			},
@@ -76,7 +90,14 @@
 				}
 			},
 			quitUser(){
-				console.log('退出登录');
+				Dialog.confirm({
+					message: '您确定要退出吗？'
+				}).then(() => {
+					localStorage.clear()
+					this.$toast('退出成功')
+					location.reload()
+				}).catch(() => {
+				})
 			},
 		}
 	}

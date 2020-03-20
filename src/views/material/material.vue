@@ -4,7 +4,8 @@
 			<img src="" alt="">
 			申报管理
         </div>
-		<div class="card">
+
+		<div v-if="hbData" class="card">
 			<div class="content">
 				<h2>环保动态数据
 					<span class="hist">
@@ -22,8 +23,18 @@
 			</div>
 			<div class="btn">上传数据/文件</div>
 		</div>
+		<div v-else class="card">
+			<div class="content null">
+				<h2>环保动态数据</h2>
+				<p class="tip">您还未填写环评基本信息</p>
+				<p>请填写相关信息，填写后显示。</p>
+				<div class="btn2">去填写信息</div>
+				<img src="" alt="">
+			</div>
+		</div>
+
 		<div class="card2">
-			<div class="item">
+			<div class="item" @click="openEia">
 				<span>环评基本信息</span>
 				<span>
 					<img src="" alt="">
@@ -40,7 +51,7 @@
 				</span>
 			</div>
 		</div>
-		<div class="card3">
+		<div class="card3" v-if="companyList.length">
 			<h2>第三方公司
 				<span class="hist">
 					<img src="" alt="">
@@ -51,12 +62,20 @@
 				<p v-for=" i in 3"> 1.广州环保有限公司</p>
 			</div>
 		</div>
+		<div class="card3" v-else>
+			<h2>第三方公司
+			</h2>
+			<p style="margin: 25px auto;text-align: center">未添加公司</p>
+		</div>
 	</div>
 </template>
 <script>
 	export default {
 		data(){
-			return{}
+			return{
+				hbData:false,
+				companyList:[]
+			}
 		},
 		created(){
 
@@ -64,7 +83,9 @@
 		mounted(){
 		},
 		methods:{
-
+			openEia(){
+				this.$router.push({name:'环评'})
+			}
 		}
 	}
 </script>
@@ -119,7 +140,6 @@
 			font-family:PingFangSC-Medium,PingFang SC;
 			font-weight:500;
 			color:rgba(51,51,51,1);
-			line-height:44px;
 			box-sizing: border-box;
 			.content{
 				padding: 26px 30px;
@@ -142,7 +162,24 @@
 				text-align: center;
 
 			}
-
+			.null{
+				.tip{
+					margin: 20px 0 8px;
+				}
+				.btn2{
+					width:194px;
+					height:68px;
+					line-height: 68px;
+					text-align: center;
+					background:rgba(255,174,108,1);
+					border-radius:10px;
+					font-size:28px;
+					font-family:PingFangSC-Regular,PingFang SC;
+					font-weight:400;
+					color:rgba(255,255,255,1);
+					margin-top: 30px;
+				}
+			}
 			.items{
 				margin-top: 26px;
 				p{
@@ -164,9 +201,14 @@
 				justify-content: space-between;
 				padding: 0 30px;
 			}
+			.item:first-child{
+				border-bottom: solid 0.5px #E8E8E8;
+			}
 		}
 		.card3{
 			width:684px;
+			height:204px;
+			background:rgba(255,255,255,1);
 			background:rgba(255,255,255,1);
 			border-radius:10px;
 			margin-top: 20px;

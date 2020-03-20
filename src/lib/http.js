@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Config from '@/Config'
-import {MessageBox,Indicator} from "mint-ui";
 
 const baseURL = Config.baseURL
 console.log(baseURL);
@@ -48,8 +47,6 @@ axios.interceptors.response.use(
         return response.data;
     },
     error => {
-        MessageBox('提示', '服务器超时，请稍后再试');
-        Indicator.close()
         return Promise.reject(error);
     }
 );

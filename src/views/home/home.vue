@@ -28,6 +28,20 @@
 			</div>
 			<div ref="myChart"  style="width:320px;height: 220px"></div>
 		</div>
+
+		<div class="my-chart">
+			<div class="title" style="margin-bottom: 0">
+				水体主要污染物排放情况
+			</div>
+			<div ref="myChart2"  style="width:350px;height: 320px"></div>
+		</div>
+
+		<div class="my-chart">
+			<div class="title">
+				水体主要污染物排放情况
+			</div>
+			<div ref="myChart3"  style="width:320px;height: 220px"></div>
+		</div>
 	</div>
 </template>
 <script>
@@ -43,6 +57,7 @@
 		mounted(){
 			setTimeout(()=>{
 				this.chartShow()
+				this.chartShow2()
 			},500)
 
 		},
@@ -76,6 +91,39 @@
 					]
 				})
 			},
+			chartShow2() {
+				let myChart = this.$echarts.init(this.$refs.myChart2)
+				// 绘制图表
+				myChart.setOption({
+					tooltip: {
+						trigger: 'axis',
+						axisPointer: {
+							type: 'shadow'
+						}
+					},
+					grid: {
+						top: '30',
+						left: '0',
+						right: '20',
+						bottom: '20',
+						containLabel: true
+					},
+					xAxis: {
+						type: 'value',
+						boundaryGap: [0, 0.01]
+					},
+					yAxis: {
+						type: 'category',
+						data: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)']
+					},
+					series: [
+						{
+							type: 'bar',
+							data: [823, 349, 290, 104, 1344, 2310]
+						},
+					]
+				})
+			},
 		}
 	}
 </script>
@@ -92,7 +140,11 @@
 		display: flex;
 		align-items: center;
 		flex-direction: column;
+		padding: 390px 0 120px;
 		.head-bar{
+			position: fixed;
+			top: 0;
+			z-index: 9;
 			width: 100%;
 			font-size:28px;
 			font-family:PingFangSC-Regular,PingFang SC;
@@ -156,10 +208,10 @@
 			height:508px;
 			background:rgba(255,255,255,1);
 			border-radius:10px;
-			margin-top:220px;
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			margin-bottom: 20px;
 			.title{
 				font-size:28px;
 				font-family:PingFangSC-Regular,PingFang SC;

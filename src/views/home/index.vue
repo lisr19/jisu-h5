@@ -53,7 +53,10 @@
             }
         },
         created() {
-
+            this.userId = localStorage.getItem('userId')
+            if(!this.userId){
+                this.$router.push({name:'登录'})
+            }
         },
         mounted() {
         },

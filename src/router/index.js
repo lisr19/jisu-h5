@@ -11,6 +11,12 @@ const routes = [
 		component: () => import('@/views/home/index.vue')
 	},
 	{
+		path: '/login',
+		name: '登录',
+		component: () => import('@/views/login/login.vue')
+	},
+
+	{
 		path: '/msg',
 		name: '留言',
 		component: () => import('@/views/my/message.vue')
@@ -29,6 +35,11 @@ const routes = [
 		path: '/enterprise',
 		name: '企业信息',
 		component: () => import('@/views/enterprise/enterprise.vue')
+	},
+	{
+		path: '/eia',
+		name: '环评',
+		component: () => import('@/views/eia/eia.vue')
 	},
 ]
 

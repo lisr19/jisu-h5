@@ -36,7 +36,7 @@
 
 <script>
 	import headBar from '@/components/head-bar/head-bar'
-	// import {uploadImg} from '@/lib/API/comment'
+	import {getUserDate,getEnterDate} from '@/lib/API/comment'
 	// import { Toast,Dialog } from 'vant'
 	export default {
 		components:{
@@ -44,6 +44,7 @@
 		},
 		data() {
 			return {
+				userDate:{},
 				isEdit:false,
 				imgUrl:'',
 				name:'张小平',
@@ -53,8 +54,19 @@
 			}
 		},
 		created() {
+			this.getEnterDate()
 		},
 		methods: {
+			//获取账户列表
+			async getEnterDate(params) {
+				let res = await getEnterDate(params)
+				if(res.errno ==0){
+
+				} else {
+					this.$toast(res.errmsg)
+				}
+
+			},
 			afterRead(file) {
 				this.uploadImg(file.file)
 			},
