@@ -71,7 +71,6 @@
 				} else {
 					this.$toast(res.errmsg)
 				}
-
 			},
 			afterRead(file) {
 				this.uploadImg(file.file)
@@ -98,6 +97,7 @@
 					message: '您确定要退出吗？'
 				}).then(() => {
 					localStorage.clear()
+					sessionStorage.clear()
 					this.$toast('退出成功')
 					location.reload()
 				}).catch(() => {

@@ -61,19 +61,32 @@
             }
         },
         created() {
-            this.userId = localStorage.getItem('userId')
-            if(!this.userId){
+            // this.userId = localStorage.getItem('userId')
+            this.token = sessionStorage.getItem('token')
+            if(!this.token){
                 this.$router.push({name:'登录'})
             }
         },
         mounted() {
+            localStorage.setItem('token',this.token)
         },
         activated() {
+            this.getUserDate()
             this.getEnterInfo()
             this.epList()
             this.procedureList() //其他环保手续
         },
         methods: {
+            //获取用户信息
+            async getUserDate(params) {
+                let res = await getUserDate(params)
+                if(res.errno ==0){
+                    this.userDate = res.data.data[0]
+                    console.log(this.userDate);
+                } else {
+                    this.$toast(res.errmsg)
+                }
+            },
             //企业账户，获取单个企业统计数据
             async getEnterInfo(){
                 let res = await getEnterInfo()

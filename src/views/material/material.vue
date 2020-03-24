@@ -4,8 +4,7 @@
 			<img src="" alt="">
 			申报管理
         </div>
-
-		<div v-if="hbData" class="card">
+		<div v-if="reportData.length>0" class="card">
 			<div class="content">
 				<h2>环保动态数据
 					<span class="hist">
@@ -14,10 +13,21 @@
 			</span>
 				</h2>
 				<div class="items">
-					<p class="item" v-for="i in 3">
-						<span>第三季度</span>
-						<span>2019年9月10日</span>
-						<span>未上传</span>
+					<p class="item" v-for="item in reportData">
+						<span>{{item.year}}年</span>
+						<template>
+							<span v-if="item.quarter==2">第二季度</span>
+							<span v-else-if="item.quarter==3">第三季度</span>
+							<span v-else-if="item.quarter==4">第四季度</span>
+							<span v-else>第一季度</span>
+						</template>
+						<template>
+							<span class="red" v-if="item.status==1">未完成</span>
+							<span v-else-if="item.status==2">审核中</span>
+							<span v-else-if="item.status==3">驳回</span>
+							<span v-else>已完成</span>
+						</template>
+
 					</p>
 				</div>
 			</div>
@@ -28,7 +38,7 @@
 				<h2>环保动态数据</h2>
 				<p class="tip">您还未填写环评基本信息</p>
 				<p>请填写相关信息，填写后显示。</p>
-				<div class="btn2">去填写信息</div>
+				<div class="btn2" @click="openReport">去填写信息</div>
 				<img src="@/assets/img/null.png" alt="">
 			</div>
 		</div>
@@ -44,7 +54,7 @@
 			</div>
 			<div class="item"   @click="openOtherEia" :class="{active:canEdit2}">
 				<span>其他环保手续</span>
-				<span :class="{red:this.has_eia_other_info==0}">
+				<span >
 					<img src="" alt="">
 						{{canEdit2?(has_eia_other_info==1?'已上传':'未上传'):'未填写相关信息'}}
 					<van-icon name="arrow" />
@@ -72,9 +82,11 @@
 <script>
 	import {enterpriseList} from '@/lib/API/enterprise'
 	import {thirdEnterpriseList} from '@/lib/API/third_enterprise'
+	import {reportList} from '@/lib/API/report'
 	export default {
 		data(){
 			return{
+				reportData:[],//动态环保数据
 				hbData:false,
 				hasEpData:0,
 				companyList:[],
@@ -102,6 +114,7 @@
 		mounted(){
 			if(this.has_eia_other_info==1){
 				this.thirdEnterpriseList()
+				this.reportList()
 			}
 		},
 		methods:{
@@ -135,6 +148,16 @@
 					this.$router.push({name:'其他环保手续'})
 				}
 			},
+			openReport(){
+				if(!this.canEdit1){
+					this.$toast('请先填写企业信息')
+				} else if(this.has_eia_basic_info==0){
+					this.$toast('请先填写环评信息')
+				}else  {
+					console.log('去动态数据');
+					// this.$router.push({name:'其他环保手续'})
+				}
+			},
 			//获取第三方公司列表
 			async thirdEnterpriseList() {
 				let params = {
@@ -152,7 +175,23 @@
 					this.$toast(res.errmsg)
 				}
 			},
-
+			//获取动态环保数据
+			async reportList() {
+				let params = {
+					page : 1,
+					search :'',
+				}
+				let res = await reportList(params)
+				if(res.errno ==0){
+					if(res.data.data.length==0){
+						console.log('暂无动态数据');
+					}else {
+						this.reportData = res.data.data
+					}
+				} else {
+					this.$toast(res.errmsg)
+				}
+			},
 		}
 	}
 </script>
@@ -209,7 +248,16 @@
 			color:rgba(51,51,51,1);
 			box-sizing: border-box;
 			.content{
-				padding: 26px 30px;
+				padding: 25px 30px;
+				height: 224px;
+				overflow: hidden;
+				.items{
+					.item{
+						span{
+							margin-right: 20px;
+						}
+					}
+				}
 			}
 			p{
 				font-size:24px;
@@ -227,7 +275,6 @@
 				color:rgba(255,255,255,1);
 				font-size: 28px;
 				text-align: center;
-
 			}
 			.null{
 				img{
@@ -256,9 +303,12 @@
 			.items{
 				margin-top: 26px;
 				p{
-					line-height:34px;
+					line-height:36px;
 				}
 			}
+		}
+		.red{
+			color:#DA3D24
 		}
 		.card2{
 			width:684px;
@@ -270,9 +320,7 @@
 			.active{
 				color: #333333
 			}
-			.red{
-				color:#DA3D24
-			}
+
 			.item{
 				height: 100px;
 				line-height: 100px;
