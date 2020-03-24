@@ -6,14 +6,16 @@
         </div>
 		<div class="card">
 			<div class="item">
-				<p class="type">预警告警</p>
+				<p class="type">预警告警
+					<img src="@/assets/img/warn.png" alt="">
+				</p>
 				<div class="ctx">
 					<p >水体污染</p>
 					<span class="tip">超出标准</span>
 				</div>
 			</div>
 			<div class="item">
-				<p class="type">税务核算</p>
+				<p class="type">税务核算<img src="@/assets/img/icon8.png" alt=""></p>
 				<div class="ctx">
 					<div>
 						水体污染超出指标10%，如本季度未控制排放，税收将增加
@@ -308,6 +310,12 @@
 			padding: 26px 30px;
 			display: flex;
 			justify-content: space-between;
+			.type{
+				img{
+					width: 30px;
+					margin-left: 10px;
+				}
+			}
 			.item{
 				flex: 1;
 				font-size:22px;

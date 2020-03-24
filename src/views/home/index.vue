@@ -14,16 +14,16 @@
             </van-tabbar-item>
             <van-tabbar-item @click="">
                 <span>申报</span>
-                <img
-                        slot="icon"
-                        :src="icon2"
+                <img    slot="icon"
+                        slot-scope="props"
+                        :src="props.active ? icon2.active : icon2.inactive"
                 >
             </van-tabbar-item>
             <van-tabbar-item @click="">
                 <span>我的</span>
-                <img
-                        slot="icon"
-                        :src="icon3"
+                <img      slot="icon"
+                        slot-scope="props"
+                        :src="props.active ? icon3.active : icon3.inactive"
                 >
             </van-tabbar-item>
         </van-tabbar>
@@ -32,6 +32,7 @@
 <script>
     import {getEnterInfo} from '@/lib/API/comment'
     import {epList} from '@/lib/API/model'
+    import {procedureList} from '@/lib/API/otherEia'
     import home from '@/views/home/home'
     import mater from '@/views/material/material'
     import my from '@/views/my/my'
@@ -46,11 +47,17 @@
             return {
                 active: 0,
                 icon: {
-                    active: require('@/assets/img/icon1.png'),
+                    active: require('@/assets/img/act-icon1.png'),
                     inactive: require('@/assets/img/icon1.png'),
                 },
-                icon2: require('@/assets/img/icon2.png'),
-                icon3: require('@/assets/img/icon3.png'),
+                icon2:{
+                    active: require('@/assets/img/act-icon2.png'),
+                    inactive: require('@/assets/img/icon2.png'),
+                },
+                icon3:{
+                    active: require('@/assets/img/act-my.png'),
+                    inactive: require('@/assets/img/my.png'),
+                } ,
             }
         },
         created() {
@@ -64,6 +71,7 @@
         activated() {
             this.getEnterInfo()
             this.epList()
+            this.procedureList() //其他环保手续
         },
         methods: {
             //企业账户，获取单个企业统计数据
@@ -92,6 +100,22 @@
                     localStorage.setItem('has_eia_basic_info', 0);
                 } else {
                     localStorage.setItem('has_eia_basic_info', 1);
+                }
+            },
+
+            //获取企业是否填写其他环保信息
+            async procedureList() {
+                let params = {
+                    page:1,
+                    search:''
+                }
+                let res = await procedureList(params)
+                if(res.errno) {
+                    localStorage.setItem('has_eia_other_info', 0);
+                } else if (res.data.count == 0) {
+                    localStorage.setItem('has_eia_other_info', 0);
+                } else {
+                    localStorage.setItem('has_eia_other_info', 1);
                 }
             },
         }

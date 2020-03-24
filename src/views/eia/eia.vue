@@ -1,28 +1,29 @@
 <template>
 	<div class="page">
 		<head-bar title="环评基本信息"></head-bar>
-		<div class="table" v-if="">
+		<div class="table" v-if="eiaList.length>0">
 <!--			<Table border :columns="columns1" :data="data1"></Table>-->
 			<van-row  style="background:rgba(213,239,234,1);margin-bottom: 0">
-				<van-col span="8">添加时间</van-col>
-				<van-col span="8">状态</van-col>
+				<van-col span="12">添加时间</van-col>
+				<van-col span="4">状态</van-col>
 				<van-col span="8">操作</van-col>
 			</van-row>
-			<van-row v-for="item in 5">
-				<van-col span="8">{{item.add_time}}</van-col>
-				<van-col span="8">{{item.status==0?'未上传':'已上传'}}</van-col>
+			<van-row class="item" v-for="item in eiaList">
+				<van-col span="12">{{item.add_time}}</van-col>
+				<van-col span="4">{{item.status==0?'未上传':'已上传'}}</van-col>
 				<van-col span="8">
-					<van-icon name="close" />
-					<van-icon name="close" />
+					<img style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
+					<img  @click="epDelete" src="@/assets/img/del.png" alt="">
 				</van-col>
 			</van-row>
 		</div>
+		<div v-else style="margin-top: 50px">暂无数据</div>
 		<div class="btn">新增</div>
 	</div>
 </template>
 
 <script>
-	// import {getMsgList,updateFlag} from '@/lib/API/comment'
+	import {epList,epDelete} from '@/lib/API/model'
 	import headBar from '@/components/head-bar/head-bar'
 	export default {
 		components:{
@@ -30,6 +31,7 @@
 		},
 		data() {
 			return {
+				eiaList:[],
 				data1:[
 					{id:'1',add_time:'2019-12-12',status:0},
 					{id:'2',add_time:'2019-12-30',status:0},
@@ -110,8 +112,7 @@
 			}
 		},
 		created() {
-			// this.userId = localStorage.getItem('userId')
-			// this.getMsgList({userId :this.userId,size:this.size,page:1})
+			this.epList()
 		},
 		activated() {
 
@@ -120,23 +121,32 @@
 
 		},
 		methods: {
+			//获取环评基本信息
+			async epList() {
+				let params = {
+					page:1,
+					search:''
+				}
+				let res = await epList(params)
+				if(res.errno) {
+					localStorage.setItem('has_eia_basic_info', 0);
+				} else {
+					this.eiaList =[]
+					this.eiaList =res.data.data
+				}
+			},
 
-			// 获取消息列表
-			async getMsgList(params){
-				this.loading = true
-				Indicator.open('加载中...')
-				let res = await getMsgList(params)
-				if(res.code===200){
-					Indicator.close()
-					this.loading = false
-					this.total = res.data.total
-					if(this.page===1){
-						this.msgList=res.data.list
-					}else {
-						this.msgList= this.msgList.concat(res.data.list)
-					}
-				}else {
-					Indicator.close()
+			//删除环评
+			async epDelete(item) {
+				let params = {
+					id : item.id
+				}
+				let res = await epList(params)
+				if(res.errmsg) {
+					this.$toast('删除企业环评信息出错')
+				} else {
+					this.$toast('成功删除企业环评信息')
+					this.epList()
 				}
 			},
 		},
@@ -178,6 +188,14 @@
 <style lang="less" scoped>
 	.page{
 		padding-top: 112px;
+		.table{
+			.item{
+				img{
+					width: 40px;
+					margin-top: 13px;
+				}
+			}
+		}
 		.btn{
 			width:522px;
 			height:90px;

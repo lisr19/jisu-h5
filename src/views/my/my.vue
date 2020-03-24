@@ -2,7 +2,7 @@
 	<div class="main">
 		<div class="head-bar">
 			<div class="title">
-				<img src="@/assets/img/icon1.png" alt="">
+<!--				<img src="@/assets/img/icon1.png" alt="">-->
 				我的
 			</div>
 			<div class="head-img">
@@ -18,7 +18,7 @@
 		<div class="about">
 			<div class="item" v-for="item in tipList" @click="openDetail(item)">
 				<div style="display: flex;align-items: center">
-					<img src="@/assets/img/icon1.png" alt="">
+					<img :src="item.imgurl" alt="">
 					{{item.title}}
 				</div>
 				<van-icon name="arrow"  size="20"/>
@@ -43,13 +43,16 @@
 				fileList:[],
 				tipList: [
 					{
-						title: '企业信息'
+						title: '企业信息',
+						imgurl:require('@/assets/img/icon4.png'),
 					},
 					{
-						title: '预约培训'
+						title: '预约培训',
+						imgurl:require('@/assets/img/icon5.png'),
 					},
 					{
-						title: '留言中心'
+						title: '留言中心',
+						imgurl:require('@/assets/img/icon6.png'),
 					},
 				],
 				userDate:{},

@@ -29,7 +29,7 @@
 				<p class="tip">您还未填写环评基本信息</p>
 				<p>请填写相关信息，填写后显示。</p>
 				<div class="btn2">去填写信息</div>
-				<img src="" alt="">
+				<img src="@/assets/img/null.png" alt="">
 			</div>
 		</div>
 
@@ -44,14 +44,14 @@
 			</div>
 			<div class="item"   @click="openOtherEia" :class="{active:canEdit2}">
 				<span>其他环保手续</span>
-				<span>
+				<span :class="{red:this.has_eia_other_info==0}">
 					<img src="" alt="">
-						{{canEdit2?'未上传':'未填写相关信息'}}
+						{{canEdit2?(has_eia_other_info==1?'已上传':'未上传'):'未填写相关信息'}}
 					<van-icon name="arrow" />
 				</span>
 			</div>
 		</div>
-		<div class="card3" v-if="companyList.length">
+		<div class="card3" v-if="companyList.length>0">
 			<h2>第三方公司
 				<span class="hist">
 					<img src="" alt="">
@@ -59,7 +59,7 @@
 				</span>
 			</h2>
 			<div class="items">
-				<p v-for=" i in 3"> 1.广州环保有限公司</p>
+				<p v-for="(item,index) in companyList">{{index+1}}、{{item.code}}</p>
 			</div>
 		</div>
 		<div class="card3" v-else>
@@ -71,6 +71,7 @@
 </template>
 <script>
 	import {enterpriseList} from '@/lib/API/enterprise'
+	import {thirdEnterpriseList} from '@/lib/API/third_enterprise'
 	export default {
 		data(){
 			return{
@@ -86,14 +87,22 @@
 			this.enterId = localStorage.getItem('enterId')
 			this.has_enterprise_detail = localStorage.getItem('has_enterprise_detail')
 			this.has_eia_basic_info = localStorage.getItem('has_eia_basic_info')
+			this.has_eia_other_info = localStorage.getItem('has_eia_other_info')
 			if(this.enterId){
 				this.canEdit1 = true
+				if(this.has_eia_basic_info==1){
+					this.canEdit2 = true
+				}else {
+					this.canEdit2 = false
+				}
 			}else {
 				this.canEdit1 = false
 			}
 		},
 		mounted(){
-
+			if(this.has_eia_other_info==1){
+				this.thirdEnterpriseList()
+			}
 		},
 		methods:{
 			//获取企业列表
@@ -118,16 +127,32 @@
 				}
 			},
 			openOtherEia(){
-				console.log(this.hasEpData);
 				if(!this.canEdit1){
 					this.$toast('请先填写企业信息')
-				} else if(this.hasEpData==0){
+				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
 				}else  {
-					console.log(33333);
-					this.$toast('可填写其他信息')
+					this.$router.push({name:'其他环保手续'})
 				}
-			}
+			},
+			//获取第三方公司列表
+			async thirdEnterpriseList() {
+				let params = {
+					page:1,
+					search:''
+				}
+				let res = await thirdEnterpriseList(params)
+				if(res.errno ==0){
+					if(res.data.data.length==0){
+						console.log('暂无第三方公司信息');
+					}else {
+						this.companyList = res.data.data
+					}
+				} else {
+					this.$toast(res.errmsg)
+				}
+			},
+
 		}
 	}
 </script>
@@ -205,6 +230,12 @@
 
 			}
 			.null{
+				img{
+					position: absolute;
+					width: 230px;
+					top: 40px;
+					right: 50px;
+				}
 				.tip{
 					margin: 20px 0 8px;
 				}
@@ -239,6 +270,9 @@
 			.active{
 				color: #333333
 			}
+			.red{
+				color:#DA3D24
+			}
 			.item{
 				height: 100px;
 				line-height: 100px;
@@ -262,6 +296,7 @@
 			text-align: left;
 			padding: 30px;
 			box-sizing: border-box;
+			overflow: auto;
 			.items{
 				margin-top: 28px;
 			}
