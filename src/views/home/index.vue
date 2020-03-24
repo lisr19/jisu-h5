@@ -30,7 +30,8 @@
     </div>
 </template>
 <script>
-    // import headBar from '@/components/head-bar/head-bar'
+    import {getEnterInfo} from '@/lib/API/comment'
+    import {epList} from '@/lib/API/model'
     import home from '@/views/home/home'
     import mater from '@/views/material/material'
     import my from '@/views/my/my'
@@ -60,7 +61,40 @@
         },
         mounted() {
         },
-        methods: {}
+        activated() {
+            this.getEnterInfo()
+            this.epList()
+        },
+        methods: {
+            //企业账户，获取单个企业统计数据
+            async getEnterInfo(){
+                let res = await getEnterInfo()
+                if(res.errno==100){
+                    localStorage.setItem('has_enterprise_detail', 0)
+                } else {
+                    localStorage.setItem('has_enterprise_detail', 1)
+                    this.enterId = res.data.enterprise_info.id
+                    localStorage.setItem('enterId',this.enterId)
+
+                }
+            },
+
+            //获取企业是否填写环评基本信息
+            async epList() {
+                let params = {
+                    page:1,
+                    search:''
+                }
+                let res = await epList(params)
+                if(res.errno) {
+                    localStorage.setItem('has_eia_basic_info', 0);
+                } else if (res.data.count == 0) {
+                    localStorage.setItem('has_eia_basic_info', 0);
+                } else {
+                    localStorage.setItem('has_eia_basic_info', 1);
+                }
+            },
+        }
     }
 </script>
 <style>

@@ -6,7 +6,8 @@
 				我的
 			</div>
 			<div class="head-img">
-				<van-uploader v-model="fileList"  :max-count="1" :after-read="afterRead"  />
+				<img  src="@/assets/img/headimg.jpg" alt="">
+<!--				<van-uploader v-model="fileList"  :max-count="1" :after-read="afterRead"  />-->
 				<div class="desc">
 					<p class="role">{{userDate.role_name}}</p>
 					<p class="ID">ID：{{userDate.id}}</p>
@@ -131,6 +132,12 @@
 				padding-left: 46px;
 				margin-top: 5px;
 				display: flex;
+				img{
+					width:150px;
+					height:150px;
+					border-radius:10px;
+					overflow: hidden;
+				}
 				.desc{
 					flex: 3;
 					font-size:26px;

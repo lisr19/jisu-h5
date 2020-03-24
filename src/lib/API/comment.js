@@ -20,6 +20,21 @@ export function getUserDate (params) {
 export function getEnterDate (params) {
     return fetch('home/enterprise/list', params)
 }
+// 留言
+export function getLeaveMsg (params) {
+    return fetch('home/leave_msg/list', params)
+}
+
+// 培训
+export function getTrainList (params) {
+    return fetch('home/train/list', params)
+}
+
+// 获取单个企业统计数据
+export function getEnterInfo(params) {
+    return fetch('home/index/enterprise_static', params);
+}
+
 
 
 

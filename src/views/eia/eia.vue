@@ -1,9 +1,23 @@
 <template>
 	<div class="page">
 		<head-bar title="环评基本信息"></head-bar>
-		<div class="table">
+		<div class="table" v-if="">
 <!--			<Table border :columns="columns1" :data="data1"></Table>-->
+			<van-row  style="background:rgba(213,239,234,1);margin-bottom: 0">
+				<van-col span="8">添加时间</van-col>
+				<van-col span="8">状态</van-col>
+				<van-col span="8">操作</van-col>
+			</van-row>
+			<van-row v-for="item in 5">
+				<van-col span="8">{{item.add_time}}</van-col>
+				<van-col span="8">{{item.status==0?'未上传':'已上传'}}</van-col>
+				<van-col span="8">
+					<van-icon name="close" />
+					<van-icon name="close" />
+				</van-col>
+			</van-row>
 		</div>
+		<div class="btn">新增</div>
 	</div>
 </template>
 
@@ -129,7 +143,13 @@
 	}
 </script>
 
-<style>
+<style scoped>
+	.van-row{
+		height:68px;
+		line-height: 68px;
+		margin-bottom: 20px;
+		background:rgba(255,255,255,1);
+	}
 	.ivu-table-header{
 		height:68px;
 		background:rgba(213,239,234,1);
@@ -158,5 +178,17 @@
 <style lang="less" scoped>
 	.page{
 		padding-top: 112px;
+		.btn{
+			width:522px;
+			height:90px;
+			line-height: 90px;
+			background:rgba(33,68,61,1);
+			box-shadow:0px 4px 18px 0px rgba(166,172,191,0.5);
+			border-radius:52px;
+			color: #ffffff;
+			position: absolute;
+			left: 17%;
+			bottom: 0;
+		}
 	}
 </style>

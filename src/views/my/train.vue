@@ -18,7 +18,7 @@
 </template>
 
 <script>
-	// import {getMsgList,updateFlag} from '@/lib/API/comment'
+	import {getTrainList} from '@/lib/API/comment'
 	import headBar from '@/components/head-bar/head-bar'
 	export default {
 		components:{
@@ -37,22 +37,15 @@
 
 		},
 		methods: {
-
-			async getMsgList(params){
-				this.loading = true
-				Indicator.open('加载中...')
-				let res = await getMsgList(params)
+			async getTrainList(params){
+				let res = await getTrainList(params)
 				if(res.code===200){
-					Indicator.close()
-					this.loading = false
 					this.total = res.data.total
 					if(this.page===1){
 						this.msgList=res.data.list
 					}else {
 						this.msgList= this.msgList.concat(res.data.list)
 					}
-				}else {
-					Indicator.close()
 				}
 			},
 		},

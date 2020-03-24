@@ -3,28 +3,32 @@
 		<head-bar title="留言中心"></head-bar>
 		<div class="msg-content" >
 			<ul class="items" >
-				<li class="item" v-for="item in 5" @click="">
+				<li class="item" v-for="item in msgList" @click="">
 					<div class="info">
 						<div style="flex: 6">
-							<p class="add-time">发送时间：2019-12-21</p>
-							<div class="desc">内容：环保系统里面的文档资料已上传请注意查收，详细的……</div>
+							<p class="add-time">发送时间：{{item.add_time}}</p>
+							<div class="desc">内容：{{item.content}}</div>
 						</div>
-						<div class="tip">
-							<span class="state">已回复</span>
+						<div class="tip"  v-if="item.status===0">
+							<span class="state">未回复</span>
+							<img src="@/assets/img/icon1.png" alt="">
+						</div>
+						<div class="tip" v-else>
+							<span class="state" >已回复</span>
 							<img src="@/assets/img/icon1.png" alt="">
 						</div>
 					</div>
 				</li>
 			</ul>
-<!--			<div  v-if="msgList.length===0&&!loading" class="msg-null">-->
-<!--				<img  src="@/assets/icon/null-news.png" alt="">-->
-<!--			</div>-->
+			<div  v-if="msgList.length===0" class="msg-null">
+				暂无数据
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-	// import {getMsgList,updateFlag} from '@/lib/API/comment'
+	import {getLeaveMsg} from '@/lib/API/comment'
 	import headBar from '@/components/head-bar/head-bar'
 	export default {
 		components:{
@@ -35,11 +39,12 @@
 			return {
 				msgList:[],
 				loading:false,
+				size:50
 			}
 		},
 		created() {
-			// this.userId = localStorage.getItem('userId')
-			// this.getMsgList({userId :this.userId,size:this.size,page:1})
+			this.userId = localStorage.getItem('userId')
+			this.getLeaveMsg({page:1,search:""})
 		},
 		mounted(){
 
@@ -47,21 +52,12 @@
 		methods: {
 
 			// 获取消息列表
-			async getMsgList(params){
-				this.loading = true
-				Indicator.open('加载中...')
-				let res = await getMsgList(params)
-				if(res.code===200){
-					Indicator.close()
-					this.loading = false
-					this.total = res.data.total
-					if(this.page===1){
-						this.msgList=res.data.list
-					}else {
-						this.msgList= this.msgList.concat(res.data.list)
-					}
+			async getLeaveMsg(params){
+				let res = await getLeaveMsg(params)
+				if(res.errno ==0){
+					this.msgList=res.data.data
 				}else {
-					Indicator.close()
+					this.$toast(res.errmsg)
 				}
 			},
 		},
@@ -101,6 +97,7 @@
 					margin-bottom: 20px;
 					box-sizing: border-box;
 					.info{
+						width: 100%;
 						font-size:24px;
 						font-family:PingFangSC-Regular,PingFang SC;
 						font-weight:400;

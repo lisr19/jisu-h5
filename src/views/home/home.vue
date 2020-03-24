@@ -26,103 +26,234 @@
 			<div class="title">
 				企业污染物排放类型分布（kg）
 			</div>
-			<div ref="myChart"  style="width:320px;height: 220px"></div>
+			<ve-pie :extend="chartExtend"  :legend-visible="false" :data="chartData" width="320px" height="220px"  :data-empty="dataEmpty1"  style="margin: 0 auto;" ></ve-pie>
 		</div>
 
 		<div class="my-chart">
 			<div class="title" style="margin-bottom: 0">
-				水体主要污染物排放情况
+				大气主要污染物排放情况
 			</div>
-			<div ref="myChart2"  style="width:350px;height: 320px"></div>
+			<ve-bar  :data="chartData1" width="325px"  height="260px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
 		</div>
 
 		<div class="my-chart">
 			<div class="title">
 				水体主要污染物排放情况
 			</div>
-			<div ref="myChart3"  style="width:320px;height: 220px"></div>
+			<ve-bar  :data="chartData2" width="325px"  height="260px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
 		</div>
 	</div>
 </template>
 <script>
+	import {getEnterInfo} from '@/lib/API/comment'
 	export default {
 		data(){
+			this.chartExtend = {
+				series: {
+					radius: ['0%', '60%'],
+					center:[150,'center']
+				},
+			};
 			return{
-
+				//表格
+				tabledata:[],
+				dataEmpty1: false,
+				dataEmpty2: false,
+				dataEmpty3: false,
+				dataEmpty4: false,
+				//饼图
+				chartData: {
+					columns: ['污染物', '排放总量'],
+					rows: []
+				},
+				//柱状1
+				chartData1: {
+					columns: ['污染物', '许可量（t/a）', '排放量（t）'],
+					rows: []
+				},
+				//柱状2
+				chartData2: {
+					columns: ['污染物', '许可量（t/a）', '排放量（t）'],
+					rows: []
+				},
 			}
 		},
 		created(){
-
+			// this.getEnterInfo()
 		},
 		mounted(){
-			setTimeout(()=>{
-				this.chartShow()
-				this.chartShow2()
-			},500)
-
+			this.getEnterInfo()
+		},
+		activated() {
 		},
 		methods:{
-			chartShow() {
-				let myChart = this.$echarts.init(this.$refs.myChart)
-				// 绘制图表
-				myChart.setOption({
-					tooltip: {
-						trigger: 'item',
-						formatter: "{a} <br/>{b}: {c} 占比({d}%)"
-					},
-					grid: {
-						left: '0',
-						right: '0',
-						bottom: '0',
-						containLabel: true
-					},
-					series: [
-						{
-							type: 'pie',
-							radius: '80%',
-							center: ['50%', '50%'],
-							data: [
-								{value: 1, name: '后台_bug'},
-								{value: 3, name: 'IOS_bug'},
-								{value: 7, name: 'Android_bug'},
-								{value: 4, name: 'H5_bug'},
-							],
+			//企业账户，获取单个企业统计数据
+			async getEnterInfo(){
+				let res = await getEnterInfo()
+				if(res.errno==100){
+					sessionStorage.setItem('has_enterprise_detail', 0)
+					this.dataEmpty1 = true
+					this.dataEmpty2 = true
+					this.dataEmpty3 = true
+					return
+				} else {
+					sessionStorage.setItem('has_enterprise_detail', 1)
+				}
+				// console.log(res);
+				//企业污染物排放类型分布,取出废水废气所有测试指标
+				let water_total_list=res.data.water_total_list;
+				let gas_total_list=res.data.gas_total_list;
+				let data=[];
+				//废水
+				if(water_total_list){
+					for(var i in water_total_list){
+						for(var j in water_total_list[i]){
+							let total_count=0;
+							if(water_total_list[i][j].outfall_count){
+								let total_month=JSON.parse(water_total_list[i][j].outfall_count);
+								for(var h in total_month){
+									total_count=parseFloat(total_month[h].total)+total_count
+								};
+							};
+							if(water_total_list[i][j].index_array){
+								let index_array=JSON.parse(water_total_list[i][j].index_array);
+								let outfall_name=water_total_list[i][j].outfall_name;
+								for(var k in index_array){
+									index_array[k].outfall_name=outfall_name;
+									let count_sum=total_count*index_array[k].index_value/1000;
+									index_array[k].total=parseFloat(count_sum.toFixed(2));
+									let a=0;
+									for(var f in data){
+										if(data[f].name==index_array[k].name){
+											let avg=(data[f].index_value+index_array[k].index_value)/2
+											avg=parseFloat(avg.toFixed(2));
+											data[f].index_value=avg;
+											data[f].total=data[f].total+index_array[k].total;
+											a=1;
+										}
+									};
+									if(a==0){
+										data.push(index_array[k])
+									}
+								}
+							}
 						}
-					]
-				})
-			},
-			chartShow2() {
-				let myChart = this.$echarts.init(this.$refs.myChart2)
-				// 绘制图表
-				myChart.setOption({
-					tooltip: {
-						trigger: 'axis',
-						axisPointer: {
-							type: 'shadow'
+					}
+				};
+				//废气
+				if(gas_total_list){
+					for(var i in gas_total_list){
+						for(var j in gas_total_list[i]){
+							let total_count=0;
+							if(gas_total_list[i][j].outfall_count){
+								let total_month=JSON.parse(gas_total_list[i][j].outfall_count);
+								for(var h in total_month){
+									total_count=parseFloat(total_month[h].total)+total_count
+								};
+							};
+							if(gas_total_list[i][j].index_array){
+								let index_array=JSON.parse(gas_total_list[i][j].index_array);
+								let outfall_name=gas_total_list[i][j].vent_name;
+								for(var k in index_array){
+									index_array[k].outfall_name=outfall_name;
+									let count_sum=total_count*index_array[k].index_value/1000000;
+									index_array[k].total=parseFloat(count_sum.toFixed(2));
+									let a=0;
+									for(var f in data){
+										if(data[f].name==index_array[k].name){
+											let avg=(data[f].index_value+index_array[k].index_value)/2
+											avg=parseFloat(avg.toFixed(2));
+											data[f].index_value=avg;
+											data[f].total=data[f].total+index_array[k].total;
+											a=1;
+										}
+									};
+									if(a==0){
+										data.push(index_array[k])
+									}
+								}
+							}
 						}
-					},
-					grid: {
-						top: '30',
-						left: '0',
-						right: '20',
-						bottom: '20',
-						containLabel: true
-					},
-					xAxis: {
-						type: 'value',
-						boundaryGap: [0, 0.01]
-					},
-					yAxis: {
-						type: 'category',
-						data: ['巴西', '印尼', '美国', '印度', '中国', '世界人口(万)']
-					},
-					series: [
-						{
-							type: 'bar',
-							data: [823, 349, 290, 104, 1344, 2310]
-						},
-					]
-				})
+					}
+				};
+				if(data){
+					//表格
+					for(var i in data){
+						let status='未知';
+						if(data[i].limit_value!='无'){
+							let limit5=data[i].limit_value*0.5;
+							let limit7=data[i].limit_value*0.7;
+							if(data[i].index_value>data[i].limit_value){
+								status='超标';
+							}else if(data[i].limit_value>=data[i].index_value&&data[i].index_value>=limit7){
+								status='达标';
+							}else if(limit7>data[i].index_value&&data[i].index_value>=limit5){
+								status='低排放';
+							}else{
+								status='超低排放';
+							}
+						};
+						let info={
+							name:data[i].name,
+							outfall_name:data[i].outfall_name,
+							density:data[i].index_value,
+							limit:data[i].limit_value,
+							status:status
+						};
+						this.tabledata.push(info);
+					};
+					//饼图
+					let bingdata_rows=[];
+					for(var i in data){
+						let info={
+							'污染物':data[i].name+'('+data[i].total+')',
+							'排放总量':data[i].total
+						};
+						bingdata_rows.push(info);
+					};
+					if(bingdata_rows.length==0){
+						this.dataEmpty1=true
+					};
+					this.chartData.rows=bingdata_rows;
+					//大气污染物柱状图以及水体污染物柱状图
+					let gasdata=[];
+					let waterdata=[];
+					for(var i in data){
+						if(data[i].index_type.indexOf('water')!= -1){
+							waterdata.push(data[i])
+						};
+						if(data[i].index_type.indexOf('gas')!= -1){
+							gasdata.push(data[i])
+						};
+					};
+					if(gasdata.length>0){
+						for(var i in gasdata){
+							let info={
+								'污染物':gasdata[i].name,
+								'许可量（t/a）':gasdata[i].limit_value,
+								'排放量（t）':gasdata[i].index_value,
+							};
+							this.chartData1.rows.push(info)
+						};
+					}else{
+						this.dataEmpty2=true;
+					};
+					if(waterdata.length>0){
+						for(var i in waterdata){
+							let info={
+								'污染物':waterdata[i].name,
+								'许可量（t/a）':waterdata[i].limit_value,
+								'排放量（t）':waterdata[i].index_value,
+							};
+							this.chartData2.rows.push(info)
+						}
+					}else{
+						this.dataEmpty3=true;
+					};
+					console.log(gasdata)
+
+				};
+				// console.log(data);
 			},
 		}
 	}
@@ -132,6 +263,9 @@
 		height: 100px;
 		border-top: solid 0.5px #B3B3B3!important;
 		background:rgba(247,247,247,1);
+	}
+	.v-charts-data-empty{
+		margin-top: -320px;
 	}
 </style>
 <style lang="less" scoped>

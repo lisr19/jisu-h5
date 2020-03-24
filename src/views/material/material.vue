@@ -34,19 +34,19 @@
 		</div>
 
 		<div class="card2">
-			<div class="item" @click="openEia">
+			<div class="item"  @click="openEia" :class="{active:canEdit1}">
 				<span>环评基本信息</span>
 				<span>
 					<img src="" alt="">
-					已上传
+					{{canEdit1?(has_eia_basic_info==1?'已上传':'未上传'):'未填写相关信息'}}
 					<van-icon name="arrow" />
 				</span>
 			</div>
-			<div class="item">
+			<div class="item"   @click="openOtherEia" :class="{active:canEdit2}">
 				<span>其他环保手续</span>
 				<span>
 					<img src="" alt="">
-					已上传
+						{{canEdit2?'未上传':'未填写相关信息'}}
 					<van-icon name="arrow" />
 				</span>
 			</div>
@@ -70,21 +70,63 @@
 	</div>
 </template>
 <script>
+	import {enterpriseList} from '@/lib/API/enterprise'
 	export default {
 		data(){
 			return{
 				hbData:false,
-				companyList:[]
+				hasEpData:0,
+				companyList:[],
+				canEdit1:false,
+				canEdit2:false,
+
 			}
 		},
 		created(){
-
+			this.enterId = localStorage.getItem('enterId')
+			this.has_enterprise_detail = localStorage.getItem('has_enterprise_detail')
+			this.has_eia_basic_info = localStorage.getItem('has_eia_basic_info')
+			if(this.enterId){
+				this.canEdit1 = true
+			}else {
+				this.canEdit1 = false
+			}
 		},
 		mounted(){
+
 		},
 		methods:{
+			//获取企业列表
+			async enterpriseList(params) {
+				let res = await enterpriseList(params)
+				if(res.errno ==0){
+					if(res.data.data.length==0){
+						console.log('暂无企业信息');
+					}else {
+						this.enterId = res.data.data[0].id
+						localStorage.setItem('enterId',this.enterId)
+					}
+				} else {
+					this.$toast(res.errmsg)
+				}
+			},
 			openEia(){
-				this.$router.push({name:'环评'})
+				if(this.canEdit1){
+					this.$router.push({name:'环评'})
+				} else {
+					this.$toast('请先填写企业信息')
+				}
+			},
+			openOtherEia(){
+				console.log(this.hasEpData);
+				if(!this.canEdit1){
+					this.$toast('请先填写企业信息')
+				} else if(this.hasEpData==0){
+					this.$toast('请先填写环评信息')
+				}else  {
+					console.log(33333);
+					this.$toast('可填写其他信息')
+				}
 			}
 		}
 	}
@@ -192,7 +234,11 @@
 			height:204px;
 			background:rgba(255,255,255,1);
 			border-radius:10px;
-			margin-top: 270px;
+			margin-top: 295px;
+			color:rgba(153,153,153,1);
+			.active{
+				color: #333333
+			}
 			.item{
 				height: 100px;
 				line-height: 100px;
