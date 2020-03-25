@@ -50,10 +50,10 @@
 					password :this.password,
 				}
 				let res = await userLogin(params)
-				console.log(res);
 				if(res.errno ==0){
 					this.$toast('登录成功')
 					localStorage.setItem('token',res.data.token)
+					sessionStorage.setItem('token',res.data.token)
 					localStorage.setItem('userId',res.data.id)
 					this.$store.dispatch('setUserInfo',res.data)
 					this.$router.push({name:'首页'})

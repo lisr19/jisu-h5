@@ -12,7 +12,7 @@
 				<van-col span="12">{{item.add_time}}</van-col>
 				<van-col span="4">{{item.status==0?'未上传':'已上传'}}</van-col>
 				<van-col span="8">
-					<img style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
+					<img  @click="openDetail(item)" style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
 					<img  @click="comFn(item)" src="@/assets/img/del.png" alt="">
 				</van-col>
 			</van-row>
@@ -124,6 +124,11 @@
 		methods: {
 			addDetail(){
 				this.$router.push({path:'/eia-detail'})
+			},
+			//查看环评信息详情
+			openDetail(item){
+				console.log(item);
+				this.$router.push({path:'/eia-detail',query:{enterprise_id:item.enterprise_id}})
 			},
 			//确定弹窗
 			comFn(item){

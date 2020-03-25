@@ -16,8 +16,11 @@
 						<Radio :label="1" border>是</Radio>
 					</RadioGroup>
 				</div>
-				<div class="inner-card">
-					<div v-if="form.affect_book==1">
+				<div class="inner-card" >
+					<div v-if="form.affect_book==1" >
+<!--						<div  class="fold" @click="hidden(1)" >-->
+<!--							<Icon   type="md-arrow-round-up" />-->
+<!--						</div>-->
 						<div style="margin-bottom:5px">
 							<FormItem prop="unit_name" label="编制单位：">
 								<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">编制单位：</p>  -->
@@ -167,25 +170,22 @@
 				<div class="inner-card">
 					<div v-if="form.waste_water==1">
 						<div style="margin-bottom:5px">
-							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废水指标';pe_index=1" style="width:150px;margin-bottom:5px">添加环评废水指标</Button>
+							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废水指标';pe_index=1" style="margin-bottom:5px">添加环评废水指标</Button>
 							<FormItem prop="po_emit_prove_index_array1" label="">
 								<p>环评废水指标：</p>
-									<div class="item-card">
-										<p>name</p>
-										<p>年排污总量(Kg)：</p>
-										<p>排放浓度(mg/m³)：</p>
-										<p>排放速率(m³/h)：</p>
-										<p>执行标准：</p>
-										<div>
-											<span>删除</span>
-										</div>
+									<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array1">
+										<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs(index)">删除</span></p>
+										<p>年排污总量(Kg)：{{item.total}}</p>
+										<p>排放浓度(mg/m³)：{{item.density}}</p>
+										<p>排放速率(m³/h)：{{item.speed}}</p>
+										<p>执行标准：{{item.standard}}</p>
 									</div>
 <!--								<Table border highlight-row size="small" :columns="columns_index6" :data="form.po_emit_prove_index_array1" ></Table>-->
 							</FormItem>
 						</div>
 
 
-						<Button type="primary" class="button1" @click="add_total('water_waste')" style="width:120px">添加排污监测点</Button>
+						<Button type="primary" class="button1" @click="add_total('water_waste')" >添加排污监测点</Button>
 						<FormItem prop="water_waste_total" label="排污监测点：">
 							<div style="margin:10px 0 10px 0;padding:10px;background-color:#fff" v-for="(item,index) in form.water_waste_total" :key="index">
 								<!-- <span>废水类型：</span>
@@ -398,6 +398,121 @@
 
 			</Form>
 		</div>
+		<Modal v-model="add_noise" title="噪音监测点信息" @on-ok="addData2()">
+			<div style="margin-bottom:20px" >
+				<p style="width:80px;float:left;line-height:30px;text-align:right">噪音监测点：</p>
+				<Input type="text" placeholder="请输入噪音监测点名称" v-model="noise_name" style="width:200px"></Input>
+			</div>
+			<div>
+				<p style="width:80px;float:left;line-height:30px;text-align:right">测试值：</p>
+				<InputNumber placeholder="请输入测试值" v-model="noise_value" style="width:200px"></InputNumber>
+			</div>
+		</Modal>
+
+		<Modal v-model="add_index1" :title="index_title" @on-ok="addindexData()">
+			<!-- <div style="margin-bottom:10px" >
+              <p style="width:80px;float:left;line-height:30px;text-align:right">指标类型：</p>
+              <Select  style="width:200px" v-model="waste_type" @on-change="changedata" >
+                  <Option :value="1" >废水</Option>
+                  <Option :value="2" >废气</Option>
+                  <Option :value="3" >固废</Option>
+                  <Option :value="4" >危废</Option>
+                  <Option :value="5" >噪音</Option>
+              </Select>
+            </div> -->
+			<div style="margin-bottom:10px" >
+				<p style="width:80px;float:left;line-height:30px;text-align:right">名称：</p>
+				<Select  v-model="id" ref="nameselect" :label-in-value="true" style="width:200px" @on-change="all_index_change" >
+					<Option v-for="(item,index) in po_emit_prove_index_data1" v-bind:key="index" :value="item.id" :label="item.name" v-if="item.type==pe_index"></Option>
+				</Select>
+			</div>
+			<div style="margin-bottom:10px" >
+				<p style="width:80px;float:left;line-height:30px;text-align:right">执行标准：</p>
+				<Input placeholder="请输入执行标准名称及标准号" v-model="standard" style="width:200px"></Input>
+			</div>
+			<div style="margin-bottom:10px" v-if="pe_index==5">
+				<p style="width:80px;float:left;line-height:30px;text-align:right">昼间噪音：</p>
+				<InputNumber placeholder="请输入噪音限值" v-model="day_noise" style="width:150px"></InputNumber>dB
+			</div>
+			<div style="margin-bottom:10px" v-if="pe_index==5">
+				<p style="width:80px;float:left;line-height:30px;text-align:right">夜间噪音：</p>
+				<InputNumber placeholder="请输入噪音限值" v-model="night_noise" style="width:150px"></InputNumber>dB
+			</div>
+			<div style="margin-bottom:10px" v-if="pe_index!=5">
+				<p style="width:80px;float:left;line-height:30px;text-align:right">年排污总量：</p>
+				<InputNumber placeholder="请输入年排污总量" v-model="total" style="width:150px"></InputNumber>
+				<span v-if="pe_index==1||pe_index==2">kg</span><span v-else>t</span>
+			</div>
+			<div style="margin-bottom:10px" v-if="pe_index==1||pe_index==2">
+				<p style="width:80px;float:left;line-height:30px;text-align:right">排放浓度：</p>
+				<InputNumber  placeholder="请输入排放浓度" v-model="density" style="width:150px"></InputNumber>
+				<span v-if="pe_index==1">mg/l</span><span v-else>mg/m³</span>
+			</div>
+			<div style="margin-bottom:10px" v-if="pe_index==1">
+				<p style="width:80px;float:left;line-height:30px;text-align:right" >废水流量：</p>
+				<InputNumber  placeholder="废水流量" v-model="speed" style="width:150px"></InputNumber>m³/h
+			</div>
+			<div style="margin-bottom:10px" v-if="pe_index==2">
+				<p style="width:80px;float:left;line-height:30px;text-align:right" >排放风量：</p>
+				<InputNumber  placeholder="请输入排放风量" v-model="speed" style="width:150px"></InputNumber>m³/h
+			</div>
+			<div style="margin-bottom:10px" v-if="pe_index==3">
+				<p style="width:80px;float:left;line-height:30px;text-align:right" >固废类型：</p>
+				<Select v-model="solid_type" placeholder="请选择固废类型" style="width:200px;float:left;margin-right:10px">
+					<Option :value=1>固态</Option>
+					<Option :value=2>半固态</Option>
+					<Option :value=3>液态</Option>
+				</Select>
+			</div>
+
+		</Modal>
+
+		<Modal v-model="add_index" :title="index_title" @on-ok="addData()">
+			<div style="margin-bottom:10px" >
+				<p style="width:80px;float:left;line-height:30px;text-align:right">废物名称：</p>
+				<!-- <Select v-show="index_type==31" v-model="id"  :label-in-value="true" style="width:200px" @on-change="all_index_change" >
+                    <Option v-for="(item,index) in wa_tr_fa_index_data" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+                </Select>
+                <Select  v-show="index_type==33" v-model="id"   :label-in-value="true" style="width:200px" @on-change="all_index_change" >
+                    <Option v-for="(item,index) in ga_tr_fa_index_data" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+                </Select>
+                <Select  v-show="index_type==35" v-model="id"   :label-in-value="true" style="width:200px" @on-change="all_index_change" >
+                    <Option v-for="(item,index) in dangerous_waste_index_data" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+                </Select> -->
+				<Select  v-show="index_type.toString().indexOf('water')!= -1" v-model="id"  :label-in-value="true" style="width:200px" @on-change="all_index_change"  >
+					<Option v-for="(item,index) in form.po_emit_prove_index_array1" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+				</Select>
+				<Select  v-show="index_type.toString().indexOf('gas')!= -1" v-model="id"  :label-in-value="true" style="width:200px" @on-change="all_index_change"  >
+					<Option v-for="(item,index) in form.po_emit_prove_index_array2" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+				</Select>
+			</div>
+			<!-- <div style="margin-bottom:10px" >
+              <p style="width:80px;float:left;line-height:30px;text-align:right">测试值：</p>
+              <InputNumber placeholder="请输入测试值" v-model="index_value" style="width:200px"></InputNumber>
+            </div> -->
+			<div>
+				<p style="width:80px;float:left;line-height:30px;text-align:right">备注：</p>
+				<Input type="text" placeholder="" v-model="remarks" style="width:250px"></Input>
+			</div>
+		</Modal>
+
+		<Modal v-model="add_attach" :title="attach_title" @on-ok="adddata1">
+			<Input type="text" placeholder="请输入文件名" v-model="attach_name"></Input>
+			<Upload
+					:headers="headers"
+					:show-upload-list="false"
+					:on-success="uploadSuccess"
+					:on-error="uploadError"
+					multiple type="drag"
+					:action="this.$parent.baseUrl + 'file/report_upload'"
+					style="width:100px;margin-top:20px"
+			>
+				<i-button type="ghost" icon="ios-cloud-upload-outline">上传文件</i-button>
+			</Upload>
+			<div class="demo-upload-list" v-if="attach_url">
+				<span>{{attach_url}}</span>
+			</div>
+		</Modal>
 		<div class="btn" @click="savemodel">保存</div>
 	</div>
 </template>
@@ -475,6 +590,7 @@
 				}
 			}
 			return {
+				show1:true,
 				//表单验证
 				ruleValidate:{
 					unit_name:[{
@@ -1156,14 +1272,14 @@
 											props: {
 												span: '24',
 											},
-										}, [h('Button', {
+										}, [h('Icon', {
 											props: {
-												type: 'text',
-												icon: 'eye',
+												type: 'ios-eye',
 											},
 											style: {
 												fontSize: '20px',
-												width: 'auto'
+												width: 'auto',
+												marginRight:'10px'
 											},
 											on: {
 												click: () => {
@@ -1172,10 +1288,9 @@
 												}
 											}
 										}, ),
-											h('Button', {
+											h('Icon', {
 												props: {
-													type: 'text',
-													icon: 'close-round',
+													type: 'md-close',
 												},
 												style: {
 													fontSize: '20px',
@@ -1292,15 +1407,56 @@
 			}
 		},
 		created() {
+			this.enterprise_id=this.$route.query.enterprise_id;
 			this.enterpriseSelect()
+			if(this.enterprise_id){
+				this.nextaction()
+			}
+
+		},
+		mounted(){
+			this.add_total('water_waste')
+			this.add_total('gas')
+			this.add_total('solid_total_info')
+			this.add_total('dangerous')
+			this.add_total('noise')
+			this.getselectdata();
+			//上传验证
+			this.headers.Authorization = sessionStorage.token;
+
 		},
 		activated() {
 
 		},
-		mounted(){
-
-		},
 		methods: {
+			getselectdata(){
+				select().then(res => {
+					if (res.errno==0) {
+						this.wastewater_type_data=res.data.wastewater_type;
+						this.wa_tr_fa_index_data=res.data.wa_tr_fa_index;
+						this.wastewater_total_index_data=res.data.wastewater_total_index;
+						this.ga_tr_fa_index_data=res.data.ga_tr_fa_index;
+						this.wastegas_total_index_data=res.data.wastegas_total_index;
+						this.dangerous_waste_type_data=res.data.dangerous_waste_type;
+						this.solid_waste_type=res.data.solid_waste_type;
+						this.noise_type=res.data.noise_type,
+								this.po_emit_prove_index_data1=res.data.po_emit_prove_index;
+					} else {
+						this.$toast('获取指标类型选择列表出错')
+					}
+				})
+			},
+			async nextaction(){
+				this.first_show= false;
+				await this.third_enterpriseSelect();
+				await this.getModelInfo();
+				await this.handleLimitvalue();
+			},
+
+			delFs(index){
+				console.log(index);
+				this.form.po_emit_prove_index_array1.splice(index,1);
+			},
 			//获取企业选择列表
 			async enterpriseSelect(){
 				let res = await enterpriseSelect()
@@ -1310,6 +1466,78 @@
 					this.enterpriseData=res.data
 				}
 			},
+
+			//获取模板信息
+			getModelInfo(){
+				let data={
+					id:this.enterprise_id
+				};
+				getmodel(data).then(res=>{
+					if(res.errno==0){
+						if(res.data!='暂无数据'){
+							for (let i in res.data) {
+								if(i == 'waste_water_total') {
+									continue
+								}
+								// if(i == 'factory_length') {
+								//   this.form[i] = res.data[i]>0?res.data[i]:100
+								//   continue
+								// }
+								this.form[i] = res.data[i]
+							}
+							if(this.form.affect_book==1){
+								this.form.test = 1
+								this.form.unit_name=res.data.affect_book_info.unit_name;
+								this.form.unit_prove=res.data.affect_book_info.unit_prove || [];
+								this.form.register_name=res.data.affect_book_info.register_name;
+								this.form.register_code=res.data.affect_book_info.register_code;
+								this.form.book_type=res.data.affect_book_info.book_type;
+								this.form.book_date=res.data.affect_book_info.book_date;
+								this.form.affect_book_attach=res.data.affect_book_info.attach || [];
+								this.form.affect_book_other_attach=res.data.affect_book_info.other_attach || [];
+								this.form.po_emit_prove_index_array=res.data.affect_book_info.po_emit_prove_index_array || [];
+							};
+							if(this.form.department_reply==1){
+								this.form.department_reply_name=res.data.department_reply_info.department_reply_name;
+								this.form.reply_code=res.data.department_reply_info.reply_code;
+								this.form.reply_date=res.data.department_reply_info.reply_date;
+								this.form.department_reply_attach=res.data.department_reply_info.attach || [];
+								this.form.department_reply_other_attach=res.data.department_reply_info.other_attach || [];
+							};
+							if(this.form.check_accept==1){
+								this.form.check_accept_name=res.data.check_accept_info.check_accept_name;
+								this.form.check_accept_date=res.data.check_accept_info.check_accept_date;
+								this.form.check_accept_attach=res.data.check_accept_info.attach || [];
+							};
+							if(this.form.waste_water==1){
+								this.form.water_waste_total=res.data.waste_water_total
+							};
+							if(this.form.waste_gas==1){
+								this.form.wastegas_total=res.data.waste_gas_info.wastegas_total_info
+							};
+							if(this.form.solid_waste==1){
+								this.form.solid_total_info=res.data.solid_total_info;
+								for (let index in res.data.solid_total_info) {
+									this.form.solid_total_info[index].type_id = parseInt(res.data.solid_total_info[index].type_id)
+								}
+							};
+							if(this.form.dangerous_waste==1){
+								this.form.dangerous_waste_total=res.data.dangerous_waste_total;
+								this.form.dangerous_attach = JSON.parse(res.data.dangerous_attach) || []
+							};
+							if(this.form.noise==1){
+								this.form.noise_list=res.data.noise_list
+							};
+						}
+					}else{
+						this.$Notice.error({
+							title: '获取信息出错',
+							duration: this.$parent.getInfoFailTime
+						});
+					}
+				})
+			},
+
 			//保存模板信息
 			savemodel(){
 				if(!this.enterprise_id){
@@ -1380,6 +1608,521 @@
 					}
 				})
 			},
+			//排污许可证阈值
+			handleLimitvalue(){
+				let data={
+					enterprise_id:this.enterprise_id
+				}
+				limitValue(data).then(res => {
+					if (res.errno==0) {
+						this.limit_value=JSON.parse(res.data.index_array);
+						for(var i in this.limit_value){
+							if(this.limit_value[i].pe_index==1){
+								this.form.po_emit_prove_index_array1.push(this.limit_value[i])
+							}else if(this.limit_value[i].pe_index==2){
+								this.form.po_emit_prove_index_array2.push(this.limit_value[i])
+							}else if(this.limit_value[i].pe_index==3){
+								this.form.po_emit_prove_index_array3.push(this.limit_value[i])
+							}else if(this.limit_value[i].pe_index==4){
+								this.form.po_emit_prove_index_array4.push(this.limit_value[i])
+							}else{
+								this.form.po_emit_prove_index_array5.push(this.limit_value[i])
+							}
+						}
+					}
+				})
+			},
+			//第三方企业选择列表
+			third_enterpriseSelect(){
+				let data={
+					enterprise_id:this.enterprise_id
+				}
+				third_enterpriseSelect(data).then(res => {
+					if (res.errno) {
+						this.$Notice.error({
+							title: '获取企业选择列表出错',
+							desc: res.errmsg,
+							duration: this.$parent.getInfoFailTime
+						});
+					} else {
+						this.third_Enterprise_Select=res.data
+					}
+				})
+			},
+
+			//获取固废总量阈值
+			get_solid_total_limit(value,index){
+				let label = value.label;
+				var a=0;
+				for(var j in this.form.po_emit_prove_index_array3){
+					if(this.form.po_emit_prove_index_array3[j].name==label){
+						this.form.solid_total_info[index].total_limit=this.form.po_emit_prove_index_array3[j].total;
+						this.form.solid_total_info[index].standard=this.form.po_emit_prove_index_array3[j].standard;
+						a=1
+					}
+				};
+				if(a==0){
+					this.form.solid_total_info[index].total_limit='';
+					this.form.solid_total_info[index].standard='';
+				}
+			},
+
+			//获取危险物总量阈值
+			get_dangerous_total_limit(value,index){
+				let label = value.label;
+				console.log(label)
+				var a=0;
+				for(var j in this.form.po_emit_prove_index_array4){
+					if(this.form.po_emit_prove_index_array4[j].name==label){
+						this.form.dangerous_waste_total[index].total_limit=this.form.po_emit_prove_index_array4[j].total;
+						this.form.dangerous_waste_total[index].standard=this.form.po_emit_prove_index_array4[j].standard;
+						a=1;
+					}
+				};
+				if(a==0){
+					this.form.dangerous_waste_total[index].total_limit='';
+					this.form.dangerous_waste_total[index].standard=''
+				}
+			},
+
+			//获取噪音阈值
+			get_noise_limit(a,b){
+				if(a){
+					let label=a.label;
+					var a=0;
+					for(var j in this.form.po_emit_prove_index_array5){
+						if(this.form.po_emit_prove_index_array5[j].name==label){
+							this.form.noise_list[b].limit_day=this.form.po_emit_prove_index_array5[j].day_noise;
+							this.form.noise_list[b].limit_night=this.form.po_emit_prove_index_array5[j].night_noise;
+							this.form.noise_list[b].standard=this.form.po_emit_prove_index_array5[j].standard;
+							a=1;
+							break;
+						}
+					};
+					if(a==0){
+						this.form.noise_list[b].limit_day='';
+						this.form.noise_list[b].limit_night='';
+						this.form.noise_list[b].standard='';
+					}
+				}
+			},
+
+			//指标选择
+			all_index_change(e){
+				if(e){
+					this.name=e.label
+				}
+			},
+			//获取危险物种类代码
+			get_dangerous_code(){
+				let data={
+					id:this.dangerous_waste_type
+				};
+				dangerousCode(data).then(res=>{
+					if(res.errno==0){
+						this.dangerous_waste_code=res.data;
+					}else{
+						this.$Notice.error({
+							title: '获取危险物种类代码失败',
+							desc: res.errmsg,
+							duration: this.$parent.getInfoFailTime
+						});
+					}
+				})
+
+			},
+
+			//通用
+			//插入排水口或排气口或危险物
+			add_total(e,index){
+				if(e=='water_waste'){
+					let data={
+						type_id:'',
+						wa_tr_fa:0,
+						wa_tr_fa_index_array:[],
+						wa_tr_fa_attach:[],
+						ou_wa_fa:0,
+						ou_wa_fa_attach:[],
+						third_enterprise_id:'',
+						wastewater_total:[]
+					};
+					this.form.water_waste_total.push(data);
+					this.add_total('water',this.form.water_waste_total.length-1)
+				}else if(e=='water'){
+					let data={
+						outfall_name:'',
+						count:0,
+						index_array:[],
+					};
+					this.form.water_waste_total[index].wastewater_total.push(data);
+				}else if(e=='gas'){
+					let data={
+						vent_name:'',
+						count:0,
+						index_array:[],
+					};
+					this.form.wastegas_total.push(data);
+				}else if(e=='dangerous'){
+					let data={
+						name:'',
+						type_id:[],
+						third_enterprise_id:''
+					};
+					this.form.dangerous_waste_total.push(data);
+				}else if(e=='year_month'){
+					if(!this.year_month){
+						this.$Notice.error({
+							title: '请选择年月',
+							duration: this.$parent.getInfoFailTime
+						});
+						return;
+					};
+					let data={
+						year_month:this.year_month,
+						output_value:'',
+						pay_taxes:'',
+						use_water:'',
+						use_electricity:'',
+					};
+					this.quarter_info_base.push(data);
+				}else if(e=='solid_total_info'){
+					let data={
+						type_id:0,
+						solid_type:'',
+						name:'',
+						total_limit:'',
+						standard:'',
+						third_enterprise_id:''
+					};
+					this.form.solid_total_info.push(data);
+				}else if(e=='noise'){
+					let data={
+						type_id:'',
+						name:'',
+						num:'',
+						standard:'',
+						limit:'',
+					};
+					this.form.noise_list.push(data);
+				}
+			},
+			delete_total(e,index,index1){
+				if(e=='water_waste'){
+					this.form.water_waste_total.splice(index,1);
+				}else if(e=='water'){
+					this.form.water_waste_total[index].wastewater_total.splice(index1,1);
+				}else if(e=='gas'){
+					this.form.wastegas_total.splice(index,1);
+				}else if(e=='dangerous'){
+					this.form.dangerous_waste_total.splice(index,1);
+				}else if(e=='year_month'){
+					this.quarter_info_base.splice(index,1);
+				}else if(e=='solid_total_info'){
+					this.form.solid_total_info.splice(index,1);
+				}
+			},
+			//指标插入数据
+			addData(){
+				if(this.index_type==31){
+					let index_array={
+						id:this.id,
+						name:this.name,
+						index_value:this.index_value,
+						index_type:this.index_type,
+						remarks:this.remarks,
+						water_index:this.water_index
+					};
+					this.form.water_waste_total[this.water_index].wa_tr_fa_index_array.push(index_array)
+				}else if(this.index_type==33){
+					let index_array={
+						id:this.id,
+						name:this.name,
+						index_value:this.index_value,
+						index_type:this.index_type,
+						remarks:this.remarks
+					};
+					this.ga_tr_fa_index_array.push(index_array)
+				}else if(this.index_type==35){
+					let index_array={
+						id:this.id,
+						name:this.name,
+						index_value:this.index_value,
+						index_type:this.index_type,
+						remarks:this.remarks
+					};
+					this.dangerous_waste_index_array.push(index_array)
+				}else if(this.index_type.toString().indexOf('water')!=-1){
+					let index=parseInt(this.index_type);
+					let index_array={
+						id:this.id,
+						name:this.name,
+						index_value:this.index_value,
+						index_type:this.index_type,
+						limit_value:'无',
+						remarks:this.remarks,
+						water_index:this.water_index
+					};
+					for(var j in this.form.po_emit_prove_index_array1){
+						if(this.form.po_emit_prove_index_array1[j].name==this.name){
+							index_array.limit_value=this.form.po_emit_prove_index_array1[j].density;
+							index_array.standard=this.form.po_emit_prove_index_array1[j].standard
+						}
+					}
+					this.form.water_waste_total[this.water_index].wastewater_total[index].index_array.push(index_array)
+				}else if(this.index_type.toString().indexOf('gas')!=-1){
+					let index=parseInt(this.index_type);
+					let index_array={
+						id:this.id,
+						name:this.name,
+						index_value:this.index_value,
+						index_type:this.index_type,
+						limit_value:'无',
+						remarks:this.remarks
+					};
+					for(var j in this.form.po_emit_prove_index_array2){
+						if(this.form.po_emit_prove_index_array2[j].name==this.name){
+							index_array.limit_value=this.form.po_emit_prove_index_array2[j].density;
+							index_array.standard=this.form.po_emit_prove_index_array2[j].standard
+						}
+					}
+					this.form.wastegas_total[index].index_array.push(index_array)
+				};
+				this.id='';
+				this.name='';
+				this.total=0;
+				this.density=0;
+				this.speed=0;
+				this.remarks='';
+				this.water_index='';
+			},
+			//上传文件插入数据
+			adddata1(){
+				if(!this.attach_name||!this.attach_url){
+					this.$Notice.error({
+						title: '文件不能为空',
+						duration: this.$parent.getInfoFailTime
+					});
+					return;
+				};
+				let data;
+				if(this.attach_type==31||this.attach_type==32){
+					data={
+						"name":this.attach_name,
+						"url":this.attach_url,
+						"attach_type":this.attach_type,
+						"water_attach":this.water_attach
+					};
+				}else{
+					data={
+						"name":this.attach_name,
+						"url":this.attach_url,
+						"attach_type":this.attach_type,
+					};
+				};
+				if(this.attach_type==1){
+					//环评单位资质证书
+					this.form.unit_prove.push(data)
+				}else if(this.attach_type==2){
+					//环境影响报告书
+					this.form.affect_book_attach.push(data);
+				}else if(this.attach_type==3){
+					//环境影响其他附件
+					this.form.affect_book_other_attach.push(data);
+				}else if(this.attach_type==4){
+					//环保部门批复书
+					this.form.department_reply_attach.push(data)
+				}else if(this.attach_type==5){
+					//环保部门批复其他附件
+					this.form.department_reply_other_attach.push(data)
+				}else if(this.attach_type==6){
+					//环评验收
+					this.form.check_accept_attach.push(data);
+				} else if (this.attach_type==7) {
+					this.form.dangerous_attach.push(data)
+				}else if(this.attach_type==31){
+					if(!this.form.water_waste_total[this.water_attach].wa_tr_fa_attach){
+						this.form.water_waste_total[this.water_attach].wa_tr_fa_attach=[];
+					};
+					this.form.water_waste_total[this.water_attach].wa_tr_fa_attach.push(data);
+				}else if(this.attach_type==32){
+					if(!this.form.water_waste_total[this.water_attach].ou_wa_fa_attach){
+						this.form.water_waste_total[this.water_attach].ou_wa_fa_attach=[];
+					};
+					this.form.water_waste_total[this.water_attach].ou_wa_fa_attach.push(data);
+				}else if(this.attach_type==33){
+					this.ga_tr_fa_attach.push(data);
+				}else if(this.attach_type==34){
+					this.ou_ga_fa_attach.push(data);
+				}else if(this.attach_type==35){
+					this.dangerous_waste_attach.push(data);
+				}else if(this.attach_type==36){
+					this.em_type_attach.push(data);
+				}else if(this.attach_type==37){
+					this.form3.illegal_record_attach.push(data);
+				}else if(this.attach_type.toString().indexOf('dangerous')!=-1){
+					let index=parseInt(this.attach_type);
+					this.form.dangerous_waste_total[index].attach.push(data)
+				};
+				this.attach_name='';
+				this.attach_url='';
+				this.water_attach=''
+			},
+
+			addData2(){
+				let data={
+					name:this.noise_name,
+					value:this.noise_value
+				};
+				this.form.noise_list.push(data);
+			},
+
+			solid_index(e){
+				this.solid_waste_index=e;
+			},
+
+			dangerous_index(e){
+				this.dangerous_waste_index=e
+			},
+
+			water_waste_index(e,e1){
+				this.water_waste_e=e;
+				this.water_waste_e1=e1;
+			},
+
+			gas_waste_index(e){
+				this.gas_waste_e=e;
+			},
+
+			update_outfall_count(index,index1){
+				let speed=this.form.water_waste_total[index].wastewater_total[index1].count;
+				let data=this.form.water_waste_total[index].wastewater_total[index1].outfall_count;
+				for(var i in data){
+					if(!data[i].hours){
+						data[i].hours=0;
+					};
+					let total_count=speed*data[i].hours;
+					data[i].total=total_count.toFixed(2);
+				};
+				this.form.water_waste_total[index].wastewater_total[index1].outfall_count=data;
+			},
+
+			update_gas_outfall_count(index){
+				let speed=this.form.wastegas_total[index].count;
+				let data=this.form.wastegas_total[index].outfall_count;
+				for(var i in data){
+					if(!data[i].hours){
+						data[i].hours=0;
+					};
+					let total_count=speed*data[i].hours;
+					data[i].total=total_count.toFixed(2);
+				};
+				this.form.wastegas_total[index].outfall_count=data;
+			},
+
+			//报告书指标插入数据
+			addindexData(){
+				let index_array={
+					id:this.id,
+					name:this.name,
+					index_value:this.index_value,
+					pe_index:this.pe_index,
+					remarks:this.remarks,
+					day_noise:this.day_noise,
+					night_noise:this.night_noise,
+					total:this.total,
+					standard:this.standard,
+					density:this.density,
+					speed:this.speed,
+					waste_type:this.waste_type,
+					solid_type:this.solid_type
+				};
+				if(this.pe_index==1){
+					this.form.po_emit_prove_index_array1.push(index_array);
+				}else if(this.pe_index==2){
+					this.form.po_emit_prove_index_array2.push(index_array);
+				}else if(this.pe_index==3){
+					this.form.po_emit_prove_index_array3.push(index_array);
+				}else if(this.pe_index==4){
+					this.form.po_emit_prove_index_array4.push(index_array);
+				}else{
+					this.form.po_emit_prove_index_array5.push(index_array);
+				};
+				// this.po_emit_prove_index_array.push(index_array);
+				// //虽未保存，要更新数组
+				// this.limit_value=this.po_emit_prove_index_array
+				this.id='';
+				this.name='';
+				this.total=0;
+				this.density=0;
+				this.speed=0;
+				this.standard='';
+				this.noise=0;
+				this.waste_type='';
+				this.solid_type="";
+
+			},
+
+			changedata(e){
+				let data=[];
+				for(var i in this.po_emit_prove_index_data1){
+					if(this.po_emit_prove_index_data1[i].type==e){
+						data.push(this.po_emit_prove_index_data1[i])
+					}
+				};
+				this.po_emit_prove_index_data=data;
+			},
+
+			//打开文件上传窗口
+			toAddfiles(){
+				this.uploadmodel=true
+			},
+
+			//上传文件成功
+			uploadSuccess(res, file) {
+				if (res.errno) {
+					this.$Notice.error({
+						title: '上传失败',
+						desc: res.errmsg,
+						duration: this.$parent.saveFailTime
+					});
+				} else {
+					this.attach_url = res.url;
+					this.$Notice.success({
+						title: '上传成功',
+						duration: this.$parent.successTime
+					});
+				}
+			},
+			//上传文件失败
+			uploadError(error, file) {
+				this.$Notice.error({
+					title: '上传失败',
+					desc: file,
+					duration: this.$parent.saveFailTime
+				});
+			},
+			handleBeforeUpload() {
+				const check = this.uploadList.length < 2;
+				if (!check) {
+					this.$Notice.warning({
+						title: '最多只能上传 1个文件。'
+					});
+				}
+				return check;
+			},
+			computecount(e){
+				if(e){
+					this.form.noise_list=[];
+					var count=e%100==0?(e/100):(Math.floor(e/100)+1);
+					for(var i=0;i<count;i++){
+						this.add_total('noise')
+					}
+				}
+			},
+			hidden(){
+				this.show1= false
+				console.log(this.form.affect_book);
+			}
 
 		},
 	}
@@ -1402,9 +2145,13 @@
 	}
 	.ivu-form-item-content{
 		font-size: 28px;
+		text-align: left;
 	}
 	.ivu-btn{
 		font-size: 28px;
+	}
+	.ivu-modal-body{
+
 	}
 </style>
 <style lang="less" scoped>
@@ -1427,14 +2174,40 @@
 				margin: 0 20px;
 				padding: 0 20px;
 				border-radius: 10px;
+				position: relative;
 				>div{
 					padding: 30px 0;
+				}
+				.fold{
+					font-size: 40px;
+					position: absolute;
+					right: 10px;
+					top: 10px;
+					width: 80px;
+					height: 80px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					z-index: 9999;
 				}
 			}
 			.item-card{
 				background:rgba(255,255,255,1);
 				border-radius:10px;
 				padding: 16px 30px;
+				margin-bottom: 15px;
+				.name{
+					border-bottom: 1px solid #EDEDED;
+					font-family:PingFangSC-Medium,PingFang SC;
+					font-weight:500;
+					color:rgba(51,51,51,1);
+					position: relative;
+					span{
+						position: absolute;
+						right: 10px;
+						color: #4f5e66;
+					}
+				}
 			}
 		}
 		.btn{
