@@ -249,7 +249,7 @@
 			box-sizing: border-box;
 			.content{
 				padding: 25px 30px;
-				height: 224px;
+				max-height: 220px;
 				overflow: hidden;
 				.items{
 					.item{
@@ -301,7 +301,7 @@
 				}
 			}
 			.items{
-				margin-top: 26px;
+				margin-top: 20px;
 				p{
 					line-height:36px;
 				}
@@ -315,7 +315,7 @@
 			height:204px;
 			background:rgba(255,255,255,1);
 			border-radius:10px;
-			margin-top: 295px;
+			margin-top: 250px;
 			color:rgba(153,153,153,1);
 			.active{
 				color: #333333
@@ -335,7 +335,8 @@
 		}
 		.card3{
 			width:684px;
-			height:204px;
+			min-height:204px;
+			max-height:450px;
 			background:rgba(255,255,255,1);
 			background:rgba(255,255,255,1);
 			border-radius:10px;

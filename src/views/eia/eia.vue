@@ -13,18 +13,19 @@
 				<van-col span="4">{{item.status==0?'未上传':'已上传'}}</van-col>
 				<van-col span="8">
 					<img style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
-					<img  @click="epDelete" src="@/assets/img/del.png" alt="">
+					<img  @click="comFn(item)" src="@/assets/img/del.png" alt="">
 				</van-col>
 			</van-row>
 		</div>
 		<div v-else style="margin-top: 50px">暂无数据</div>
-		<div class="btn">新增</div>
+		<div class="btn" @click="addDetail">新增</div>
 	</div>
 </template>
 
 <script>
 	import {epList,epDelete} from '@/lib/API/model'
 	import headBar from '@/components/head-bar/head-bar'
+	import {Dialog} from "vant";
 	export default {
 		components:{
 			headBar,
@@ -121,6 +122,20 @@
 
 		},
 		methods: {
+			addDetail(){
+				this.$router.push({path:'/eia-detail'})
+			},
+			//确定弹窗
+			comFn(item){
+				Dialog.confirm({
+					message: '您确定要删除此删除企业环评信息？'
+				}).then(() => {
+					console.log(item);
+					// this.epDelete(item)
+				}).catch(() => {
+
+				})
+			},
 			//获取环评基本信息
 			async epList() {
 				let params = {
@@ -141,7 +156,7 @@
 				let params = {
 					id : item.id
 				}
-				let res = await epList(params)
+				let res = await epDelete(params)
 				if(res.errmsg) {
 					this.$toast('删除企业环评信息出错')
 				} else {

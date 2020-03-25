@@ -10,12 +10,12 @@
 							<div class="desc">内容：{{item.content}}</div>
 						</div>
 						<div class="tip"  v-if="item.status===0">
-							<span class="state">未回复</span>
-							<img src="@/assets/img/icon1.png" alt="">
+							<span class="state" style="color: #E2B100">未回复</span>
+							<img src="@/assets/img/icon9.png" alt="">
 						</div>
 						<div class="tip" v-else>
-							<span class="state" >已回复</span>
-							<img src="@/assets/img/icon1.png" alt="">
+							<span class="state" style="color: #2DB170">已回复</span>
+							<img src="@/assets/img/icon10.png" alt="">
 						</div>
 					</div>
 				</li>

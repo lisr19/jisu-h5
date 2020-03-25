@@ -61,17 +61,17 @@
             }
         },
         created() {
-            // this.userId = localStorage.getItem('userId')
-            this.token = sessionStorage.getItem('token')
-            if(!this.token){
+            this.userId = localStorage.getItem('userId')
+            // this.token = sessionStorage.getItem('token')
+            if(!this.userId){
                 this.$router.push({name:'登录'})
             }
         },
         mounted() {
-            localStorage.setItem('token',this.token)
+            // localStorage.setItem('token',this.token)
         },
         activated() {
-            this.getUserDate()
+            // this.getUserDate()
             this.getEnterInfo()
             this.epList()
             this.procedureList() //其他环保手续
