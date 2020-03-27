@@ -21,7 +21,7 @@ export function getmodel(params) {
 
 //保存模板信息
 export function savemodel(params) {
-  return fetch('home/pe_model/savemodel',params);
+  return post('home/pe_model/savemodel',params);
 }
 
 //获取选择列表

@@ -11,16 +11,17 @@
 			<Form ref="form" :model="form"   :rules="ruleValidate" label-position="left">
 				<div class="card">
 					<p>1、是否有做环境影响评价报告</p>
-					<RadioGroup v-model="form.affect_book">
+					<RadioGroup v-model="form.affect_book" @on-change="onChange1">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.affect_book==1&&!show1" @click="show1=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card" >
-					<div v-if="form.affect_book==1" >
-<!--						<div  class="fold" @click="hidden(1)" >-->
-<!--							<Icon   type="md-arrow-round-up" />-->
-<!--						</div>-->
+					<div class="w-card" v-if="form.affect_book==1&&show1" >
+						<div  class="fold"  >
+							<Icon @click="show1=false" type="md-arrow-round-up" size="30"/>
+						</div>
 						<div style="margin-bottom:5px">
 							<FormItem prop="unit_name" label="编制单位：">
 								<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">编制单位：</p>  -->
@@ -90,10 +91,14 @@
 					<RadioGroup v-model="form.department_reply">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.department_reply==1&&!show2" @click="show2=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div v-if="form.department_reply==1">
+					<div class="w-card" v-if="form.department_reply==1&&show2">
+						<div  class="fold" @click="show2=false" >
+							<Icon  type="md-arrow-round-up" />
+						</div>
 						<div style="margin-bottom:5px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环保批准部门：</p> -->
 							<FormItem prop="department_reply_name" label="环保批准部门：">
@@ -124,7 +129,7 @@
 							<Button type="primary" class="button1" @click="attach_type=5;attach_title='其他附件';add_attach=true" >添加其他附件</Button>
 							<span style="color:red;font-size:14px;margin-left:5px">其他附件</span>
 						</div>
-						<Table border highlight-row size="small" :columns="columns_attach" :data="form.department_reply_other_attach"></Table>
+						<Table style="margin-bottom: 30px" border highlight-row size="small" :columns="columns_attach" :data="form.department_reply_other_attach"></Table>
 					</div>
 				</div>
 				<div class="card">
@@ -132,10 +137,14 @@
 					<RadioGroup v-model="form.check_accept">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.check_accept==1&&!show3" @click="show3=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div v-if="form.check_accept==1">
+					<div class="w-card" v-if="form.check_accept==1&&show3">
+						<div  class="fold" @click="show3=false" >
+							<Icon   type="md-arrow-round-up" />
+						</div>
 						<div style="margin-bottom:5px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环评验收单位：</p> -->
 							<FormItem prop="check_accept_name" label="环评验收单位：">
@@ -165,10 +174,14 @@
 					<RadioGroup v-model="form.waste_water">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.waste_water==1&&!show4" @click="show4=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div v-if="form.waste_water==1">
+					<div class="w-card" v-if="form.waste_water==1&&show4">
+						<div  class="fold" @click="show4=false" >
+							<Icon   type="md-arrow-round-up" />
+						</div>
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废水指标';pe_index=1" style="margin-bottom:5px">添加环评废水指标</Button>
 							<FormItem prop="po_emit_prove_index_array1" label="">
@@ -219,216 +232,243 @@
 					<RadioGroup v-model="form.waste_gas">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.waste_gas==1&&!show5" @click="show5=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
-				<div class="inner-card" v-if="form.waste_gas==1">
-					<div style="margin-bottom:5px;">
-						<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废气指标';pe_index=2" >添加环评废气指标</Button>
-						<FormItem prop="po_emit_prove_index_array2" label="">
-							<p><em style="color: #ed4014">*</em>环评废气指标：</p>
-							<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array2">
-								<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs2(index)">删除</span></p>
-								<p>年排污总量(Kg)：{{item.total}}</p>
-								<p>排放浓度(mg/m³)：{{item.density}}</p>
-								<p>排放速率(m³/h)：{{item.speed}}</p>
-								<p>执行标准：{{item.standard}}</p>
-							</div>
-<!--							<Table border highlight-row size="small" :columns="columns_index7" :data="form.po_emit_prove_index_array2" ></Table>-->
-						</FormItem>
-					</div>
-
-					<p class="line"></p>
-					<Button type="primary"  class="button1" @click="add_total('gas')" >添加排放口（监测点）</Button>
-					<div class="card-one">
-						<FormItem prop="wastegas_total" label="">
-							<div class="card-two" v-for="(item,index) in form.wastegas_total" :key="index">
-								<p>排气监测点：<Button type="primary" class="del-btn" @click="delete_total('gas',index)" >删除</Button></p>
-								<i-input type="text" v-model="item.vent_name" placeholder="请输入排气监测点名称" style="width: 100%;margin: 15px 0"></i-input>
-
-								<!-- <p style="margin-top:5px;margin-bottom:5px">
-                                  <span style="margin-left:12px">排放风量：</span> <InputNumber v-model="item.count" placeholder="请输入排放风量"  @on-change="update_gas_outfall_count(index)"></InputNumber>标杆m³/h
-                                </p> -->
-
-								<div style="margin:10px 0">
-									<Button type="primary" class="button1" @click="add_index=true;index_title='排气监测点数据';index_type=index.toString()+'gas'" >选择环评废气指标</Button>
+				<div  class="inner-card">
+					<div class="w-card" v-if="form.waste_gas==1&&show5">
+						<div  class="fold" @click="show5=false" >
+							<Icon   type="md-arrow-round-up" />
+						</div>
+						<div style="margin-bottom:5px;">
+							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废气指标';pe_index=2" >添加环评废气指标</Button>
+							<FormItem prop="po_emit_prove_index_array2" label="">
+								<p><em style="color: #ed4014">*</em>环评废气指标：</p>
+								<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array2">
+									<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs2(index)">删除</span></p>
+									<p>年排污总量(Kg)：{{item.total}}</p>
+									<p>排放浓度(mg/m³)：{{item.density}}</p>
+									<p>排放速率(m³/h)：{{item.speed}}</p>
+									<p>执行标准：{{item.standard}}</p>
 								</div>
+								<!--							<Table border highlight-row size="small" :columns="columns_index7" :data="form.po_emit_prove_index_array2" ></Table>-->
+							</FormItem>
+						</div>
 
-								<div style="margin-top: 10px" class="item-card" v-for="(item3,index3) in item.index_array">
-									<p class="name">{{index3+1}} 、{{item3.name}} <span @click="delFszb(item3,index3)">删除</span></p>
-									<p>排污浓度限值(mg/m³)：{{item3.limit_value}}</p>
-									<p>执行标准名称及标准号：{{item3.standard}}</p>
-									<p>备注：{{item3.remarks}}</p>
+						<p class="line"></p>
+						<Button type="primary"  class="button1" @click="add_total('gas')" >添加排放口（监测点）</Button>
+						<div class="card-one">
+							<FormItem prop="wastegas_total" label="">
+								<div class="card-two" v-for="(item,index) in form.wastegas_total" :key="index">
+									<p>排气监测点：<Button type="primary" class="del-btn" @click="delete_total('gas',index)" >删除</Button></p>
+									<i-input type="text" v-model="item.vent_name" placeholder="请输入排气监测点名称" style="width: 100%;margin: 15px 0"></i-input>
+
+									<!-- <p style="margin-top:5px;margin-bottom:5px">
+                                      <span style="margin-left:12px">排放风量：</span> <InputNumber v-model="item.count" placeholder="请输入排放风量"  @on-change="update_gas_outfall_count(index)"></InputNumber>标杆m³/h
+                                    </p> -->
+
+									<div style="margin:10px 0">
+										<Button type="primary" class="button1" @click="add_index=true;index_title='排气监测点数据';index_type=index.toString()+'gas'" >选择环评废气指标</Button>
+									</div>
+
+									<div style="margin-top: 10px" class="item-card" v-for="(item3,index3) in item.index_array">
+										<p class="name">{{index3+1}} 、{{item3.name}} <span @click="delFszb(item3,index3)">删除</span></p>
+										<p>排污浓度限值(mg/m³)：{{item3.limit_value}}</p>
+										<p>执行标准名称及标准号：{{item3.standard}}</p>
+										<p>备注：{{item3.remarks}}</p>
+									</div>
+									<!--								<Table border highlight-row size="small" :columns="columns_index1" :data="item.index_array"></Table>-->
 								</div>
-<!--								<Table border highlight-row size="small" :columns="columns_index1" :data="item.index_array"></Table>-->
-							</div>
-						</FormItem>
+							</FormItem>
+						</div>
 					</div>
 				</div>
+
 
 				<div class="card">
 					<p >6、是否产生一般固废</p>
 					<RadioGroup v-model="form.solid_waste">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.solid_waste==1&&!show6" @click="show6=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
-				<div class="inner-card" v-if="form.solid_waste==1">
-					<div style="margin-bottom:5px">
-						<Button type="primary" class="button1" @click="add_index1=true;index_title='环评固废指标';pe_index=3" style="width:150px;margin-bottom:5px">添加环评固废指标</Button>
-						<FormItem prop="po_emit_prove_index_array3" label="">
+				<div class="inner-card">
+					<div class="w-card" v-if="form.solid_waste==1&&show6">
+						<div  class="fold" @click="show6=false" >
+							<Icon   type="md-arrow-round-up" />
+						</div>
+						<div style="margin-bottom:5px">
+							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评固废指标';pe_index=3" style="width:150px;margin-bottom:5px">添加环评固废指标</Button>
+							<FormItem prop="po_emit_prove_index_array3" label="">
 
-							<p><em style="color: #ed4014">*</em>环评固废指标：</p>
-							<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array3">
-								<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs3(index)">删除</span></p>
-								<template>
-									<p v-if="item.solid_type == 1">固废类型：固态</p>
-									<p v-else-if="item.solid_type == 2">固废类型：半固态</p>
-									<p v-else>固废类型：液态</p>
-								</template>
-								<p>年排污总量(Kg)：{{item.total}}</p>
-								<p>执行标准：{{item.standard}}</p>
-							</div>
-<!--							<Table border highlight-row size="small" :columns="columns_index8" :data="form.po_emit_prove_index_array3" ></Table>-->
-						</FormItem>
-					</div>
-
-
-					<p class="line"></p>
-					<Button type="primary" class="button1" @click="add_total('solid_total_info')" >添加固废信息</Button>
-					<div class="card-one">
-						<FormItem prop="solid_total_info" label="">
-							<div class="card-two" v-for="(item,index) in form.solid_total_info" :key="index" >
-								<p>固废名称：<Button type="primary" class="del-btn" @click="delete_total('solid_total_info',index)" >删除</Button></p>
-								<i-input type="text" v-model="item.name" placeholder="请输入固废名称" style="width: 100%;margin: 15px 0"></i-input>
-								<div style="margin-bottom:10px">
-									<div >固废类型：</div>
-									<Select  :label-in-value="true"  v-model="item.type_id" @on-change="(value,selectedData)=>{get_solid_total_limit(value,index)}" >
-										<Option v-for="(item,index) in form.po_emit_prove_index_array3" v-bind:key="index" :value="item.id" :label="item.name"></Option>
-									</Select>
-									<!-- <Cascader :data="solid_waste_type" v-model="item.type_id" placeholder="请选择固废类型" trigger="hover" @on-change="(value,selectedData)=>{get_solid_total_limit(value, selectedData,index)}" style="width:200px;float:left;margin-right:10px" ></Cascader> -->
-									<p style="line-height:32px">
-										<span>排污总量（许可值）：{{item.total_limit}}t</span>
-										<!-- <span>执行标准：{{item.standard}}</span> -->
-									</p>
+								<p><em style="color: #ed4014">*</em>环评固废指标：</p>
+								<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array3">
+									<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs3(index)">删除</span></p>
+									<template>
+										<p v-if="item.solid_type == 1">固废类型：固态</p>
+										<p v-else-if="item.solid_type == 2">固废类型：半固态</p>
+										<p v-else>固废类型：液态</p>
+									</template>
+									<p>年排污总量(Kg)：{{item.total}}</p>
+									<p>执行标准：{{item.standard}}</p>
 								</div>
-							</div>
-						</FormItem>
-					</div>
+								<!--							<Table border highlight-row size="small" :columns="columns_index8" :data="form.po_emit_prove_index_array3" ></Table>-->
+							</FormItem>
+						</div>
 
+
+						<p class="line"></p>
+						<Button type="primary" class="button1" @click="add_total('solid_total_info')" >添加固废信息</Button>
+						<div class="card-one">
+							<FormItem prop="solid_total_info" label="">
+								<div class="card-two" v-for="(item,index) in form.solid_total_info" :key="index" >
+									<p>固废名称：<Button type="primary" class="del-btn" @click="delete_total('solid_total_info',index)" >删除</Button></p>
+									<i-input type="text" v-model="item.name" placeholder="请输入固废名称" style="width: 100%;margin: 15px 0"></i-input>
+									<div style="margin-bottom:10px">
+										<div >固废类型：</div>
+										<Select  :label-in-value="true"  v-model="item.type_id" @on-change="(value,selectedData)=>{get_solid_total_limit(value,index)}" >
+											<Option v-for="(item,index) in form.po_emit_prove_index_array3" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+										</Select>
+										<!-- <Cascader :data="solid_waste_type" v-model="item.type_id" placeholder="请选择固废类型" trigger="hover" @on-change="(value,selectedData)=>{get_solid_total_limit(value, selectedData,index)}" style="width:200px;float:left;margin-right:10px" ></Cascader> -->
+										<p style="line-height:32px">
+											<span>排污总量（许可值）：{{item.total_limit}}t</span>
+											<!-- <span>执行标准：{{item.standard}}</span> -->
+										</p>
+									</div>
+								</div>
+							</FormItem>
+						</div>
+
+					</div>
 				</div>
+
 
 				<div class="card">
 					<p >7、是否产生危险废物</p>
 					<RadioGroup v-model="form.dangerous_waste">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.dangerous_waste==1&&!show7" @click="show7=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
-				<div class="inner-card" v-if="form.dangerous_waste==1">
-					<div style="margin-bottom:5px">
-						<Button type="primary" class="button1" @click="add_index1=true;index_title='环评危险废物指标';pe_index=4" >添加环评危险废物指标</Button>
-						<FormItem prop="po_emit_prove_index_array4" label="">
+				<div class="inner-card">
+					<div class="w-card" v-if="form.dangerous_waste==1&&show7">
+						<div  class="fold" @click="show7=false" >
+							<Icon   type="md-arrow-round-up" />
+						</div>
+						<div style="margin-bottom:5px">
+							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评危险废物指标';pe_index=4" >添加环评危险废物指标</Button>
+							<FormItem prop="po_emit_prove_index_array4" label="">
 
-							<p><em style="color: #ed4014">*</em>危险废物指标：</p>
-							<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array4">
-								<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs4(index)">删除</span></p>
-								<p>年排污总量(Kg)：{{item.total}}</p>
-								<p>执行标准：{{item.standard}}</p>
-							</div>
-
-<!--							<Table border highlight-row size="small" :columns="columns_index9" :data="form.po_emit_prove_index_array4" ></Table>-->
-						</FormItem>
-					</div>
-
-					<p class="line"></p>
-					<Button type="primary" class="button1" @click="add_total('dangerous')" >添加危险物信息</Button>
-					<div class="card-one">
-						<FormItem prop="dangerous_waste_total" label="">
-							<div class="card-two" v-for="(item,index) in form.dangerous_waste_total" :key="index">
-								<p>废物名称：<Button type="primary" class="del-btn" @click="delete_total('dangerous',index)" >删除</Button></p>
-								<i-input type="text" v-model="item.name" placeholder="请输入危险废物名称" style="width: 100%;margin: 15px 0"></i-input>
-
-								<div style="margin-bottom:10px">
-									<div >种类代码：</div>
-									<Select  label-in-value style="width:200px" @on-change="(value,selectedData)=>{get_dangerous_total_limit(value,index)}" v-model="item.type_id" >
-										<Option v-for="(v,i) in form.po_emit_prove_index_array4" v-bind:key="i" :value="getDangerousId(v.id)" :label="v.name"></Option>
-									</Select>
-									<p style="line-height:32px">
-										<span>排污总量（许可量）：{{item.total_limit}}t</span>
-										<!-- <span>执行标准：{{item.standard}}</span> -->
-									</p>
+								<p><em style="color: #ed4014">*</em>危险废物指标：</p>
+								<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array4">
+									<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs4(index)">删除</span></p>
+									<p>年排污总量(Kg)：{{item.total}}</p>
+									<p>执行标准：{{item.standard}}</p>
 								</div>
-							</div>
+
+								<!--							<Table border highlight-row size="small" :columns="columns_index9" :data="form.po_emit_prove_index_array4" ></Table>-->
+							</FormItem>
+						</div>
+
+						<p class="line"></p>
+						<Button type="primary" class="button1" @click="add_total('dangerous')" >添加危险物信息</Button>
+						<div class="card-one">
+							<FormItem prop="dangerous_waste_total" label="">
+								<div class="card-two" v-for="(item,index) in form.dangerous_waste_total" :key="index">
+									<p>废物名称：<Button type="primary" class="del-btn" @click="delete_total('dangerous',index)" >删除</Button></p>
+									<i-input type="text" v-model="item.name" placeholder="请输入危险废物名称" style="width: 100%;margin: 15px 0"></i-input>
+
+									<div style="margin-bottom:10px">
+										<div >种类代码：</div>
+										<Select  label-in-value style="width:200px" @on-change="(value,selectedData)=>{get_dangerous_total_limit(value,index)}" v-model="item.type_id" >
+											<Option v-for="(v,i) in form.po_emit_prove_index_array4" v-bind:key="i" :value="getDangerousId(v.id)" :label="v.name"></Option>
+										</Select>
+										<p style="line-height:32px">
+											<span>排污总量（许可量）：{{item.total_limit}}t</span>
+											<!-- <span>执行标准：{{item.standard}}</span> -->
+										</p>
+									</div>
+								</div>
+							</FormItem>
+						</div>
+
+
+
+						<p class="line"></p>
+						<Button type="primary" class="button1" @click="attach_type=7;attach_title='危险废物服务合同';add_attach=true" >添加危险废物服务合同</Button>
+						<FormItem prop="dangerous_attach" label="">
+							<p>危险废物服务合同:</p>
+							<Table border highlight-row size="small" :columns="columns_attach" :data="form.dangerous_attach"></Table>
 						</FormItem>
 					</div>
-
-
-
-					<p class="line"></p>
-					<Button type="primary" class="button1" @click="attach_type=7;attach_title='危险废物服务合同';add_attach=true" >添加危险废物服务合同</Button>
-					<FormItem prop="dangerous_attach" label="">
-						<p>危险废物服务合同:</p>
-						<Table border highlight-row size="small" :columns="columns_attach" :data="form.dangerous_attach"></Table>
-					</FormItem>
 				</div>
+
 
 				<div class="card">
 					<p >8、是否有噪音排放</p>
 					<RadioGroup v-model="form.noise">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
+						<Icon v-if="form.noise==1&&!show8" @click="show8=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
-				<div class="inner-card" v-if="form.noise==1" >
-					<div style="margin-bottom:5px">
-						<Button type="primary" class="button1" @click="add_index1=true;index_title='环评噪音指标';pe_index=5" style="width:150px;margin-bottom:5px">添加环评噪音指标</Button>
-						<FormItem prop="po_emit_prove_index_array5" label="">
-
-							<p><em style="color: #ed4014">*</em>噪音指标：</p>
-							<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array5">
-								<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs5(index)">删除</span></p>
-								<p>昼间噪音(dB)：{{item.day_noise}}</p>
-								<p>昼间噪音(dB)：{{item.night_noise}}</p>
-								<p>执行标准：{{item.standard}}</p>
-							</div>
-
-
-							<Table border highlight-row size="small" :columns="columns_index10" :data="form.po_emit_prove_index_array5" ></Table>
-						</FormItem>
-					</div>
-
-					<div style="margin-bottom:5px">
-						<span>厂界长度：</span>
-						<InputNumber placeholder="请输入厂界长度" v-model="form.factory_length" style="width:200px" @on-change="computecount"></InputNumber>m
-					</div>
-					<FormItem prop="noise_list" label="监测点信息：">
-						<div style="margin:5px 0 0 0;padding:10px;background-color:#fff" v-for="(item,index) in form.noise_list" :key="index">
-
-							<div style="margin-bottom:5px">
-								<p style="width:100px;float:left;text-align:right;line-height:32px">监测点：</p>
-								<Input placeholder="请输入监测点" v-model="item.name"  style="width:200px"></Input>
-							</div>
-							<div style="margin-bottom:5px">
-								<p style="width:100px;float:left;text-align:right;line-height:32px">编号：</p>
-								<Input placeholder="请输入监测点编号" v-model="item.num"  style="width:200px"></Input>
-							</div>
-							<div style="margin-bottom:5px">
-								<p style="width:100px;float:left;text-align:right;line-height:32px">类型：</p>
-								<i-select v-model="item.type_id" style="width:200px" :label-in-value="true" @on-change="get_noise_limit($event,index)" >
-									<i-option v-for="item1 in form.po_emit_prove_index_array5" v-bind:key="item1.id" :value="item1.id">{{item1.name}}</i-option>
-								</i-select>
-								<span>阈值：昼间{{item.limit_day}}dB</span>
-								<span>夜间{{item.limit_night}}dB</span>
-								<span>执行标准：{{item.standard}}</span>
-							</div>
-
+				<div class="inner-card">
+					<div  class="w-card" v-if="form.noise==1&&show8" >
+						<div  class="fold" @click="show8=false" >
+							<Icon   type="md-arrow-round-up" />
 						</div>
-					</FormItem>
-					<!-- <div style="margin-top:5px;margin-bottom:5px">
-                      <Button type="primary" class="button1" @click="add_total('noise')"  style="width:200px">添加噪音监测点</Button>
-                    </div> -->
-				</div>
+						<div style="margin-bottom:5px">
+							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评噪音指标';pe_index=5" style="width:150px;margin-bottom:5px">添加环评噪音指标</Button>
+							<FormItem prop="po_emit_prove_index_array5" label=" ">
 
+								<p><em style="color: #ed4014">*</em>噪音指标：</p>
+								<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array5">
+									<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs5(index)">删除</span></p>
+									<p>昼间噪音(dB)：{{item.day_noise}}</p>
+									<p>昼间噪音(dB)：{{item.night_noise}}</p>
+									<p>执行标准：{{item.standard}}</p>
+								</div>
+
+
+								<!--							<Table border highlight-row size="small" :columns="columns_index10" :data="form.po_emit_prove_index_array5" ></Table>-->
+							</FormItem>
+						</div>
+
+						<div>
+							<span>厂界长度：</span>
+							<InputNumber placeholder="请输入厂界长度" v-model="form.factory_length" style="width:200px" @on-change="computecount"></InputNumber>
+						</div>
+						<FormItem prop="noise_list" label="">
+							<div style="margin:5px 0 0 0;padding:10px;background-color:#fff;border-radius: 10px" v-for="(item,index) in form.noise_list" :key="index">
+								<div style="margin-bottom:10px">
+									<span>监测点：</span>
+									<Input placeholder="请输入监测点" v-model="item.name" ></Input>
+								</div>
+								<div style="margin-bottom:10px">
+									<span>编号：</span>
+									<Input placeholder="请输入监测点编号" v-model="item.num"></Input>
+								</div>
+								<div style="margin-bottom:10px">
+									<span>类型：</span>
+									<i-select v-model="item.type_id" style="width:200px" :label-in-value="true" @on-change="get_noise_limit($event,index)" >
+										<i-option v-for="item1 in form.po_emit_prove_index_array5" v-bind:key="item1.id" :value="item1.id">{{item1.name}}</i-option>
+									</i-select>
+									<div style="margin-top: 10px;background: #f2faff;border-radius: 10px;padding: 5px 10px">
+										<p>阈值：昼间{{item.limit_day}}dB</p>
+										<p>夜间{{item.limit_night}}dB</p>
+										<p>执行标准：{{item.standard}}</p>
+									</div>
+								</div>
+
+							</div>
+						</FormItem>
+						<!-- <div style="margin-top:5px;margin-bottom:5px">
+                          <Button type="primary" class="button1" @click="add_total('noise')"  style="width:200px">添加噪音监测点</Button>
+                        </div> -->
+					</div>
+				</div>
 			</Form>
 		</div>
 		<Modal v-model="add_noise" title="噪音监测点信息" @on-ok="addData2()">
@@ -625,7 +665,14 @@
 			}
 			return {
 				baseURL: Config.baseURL,
-				show1:true,
+				show1:false,
+				show2:false,
+				show3:false,
+				show4:false,
+				show5:false,
+				show6:false,
+				show7:false,
+				show8:false,
 				//表单验证
 				ruleValidate:{
 					unit_name:[{
@@ -1466,7 +1513,6 @@
 		methods: {
 			//危废typeID类型转换
 			getDangerousId(v) {
-				console.log('v',v)
 				return v.join(',')
 			},
 			getselectdata(){
@@ -1517,21 +1563,20 @@
 				this.index_type=index1.toString()+'water';
 			},
 			delFszb(item3,index3){
-				console.log(item3);
-				console.log(index3);
-				// if(item.index_type==31){
-				// 	this.form.water_waste_total[item.water_index].wa_tr_fa_index_array.splice(item,1);
-				// }else if(item.index_type==33){
-				// 	this.ga_tr_fa_index_array.splice(item,1);
-				// }else if(item.index_type==35){
-				// 	this.dangerous_waste_index_array.splice(item,1);
-				// }else if(item.index_type.toString().indexOf('water')!=-1){
-				// 	let index=parseInt(item.index_type);
-				// 	this.form.water_waste_total[item.water_index].wastewater_total[index].index_array.splice(item,1);
-				// }else if(item.index_type.toString().indexOf('gas')!=-1){
-				// 	let index=parseInt(item.index_type);
-				// 	this.form.wastegas_total[index].index_array.splice(item,1);
-				// }
+				if(item3.index_type==31){
+					// this.form.water_waste_total[item3.water_index].wa_tr_fa_index_array.splice(item.index,1);
+				}else if(item3.index_type==33){
+					// this.ga_tr_fa_index_array.splice(item.index,1);
+				}else if(item3.index_type==35){
+					// this.dangerous_waste_index_array.splice(params.index,1);
+				}else if(item3.index_type.toString().indexOf('water')!=-1){
+					let index=parseInt(item3.index_type);
+					this.form.water_waste_total[item3.water_index].wastewater_total[index].index_array.splice(index3,1);
+				}else if(item3.index_type.toString().indexOf('gas')!=-1){
+					console.log(1212);
+					let index=parseInt(item3.index_type);
+					this.form.wastegas_total[index].index_array.splice(index3,1);
+				}
 			},
 			//获取企业选择列表
 			async enterpriseSelect(){
@@ -1562,6 +1607,7 @@
 								this.form[i] = res.data[i]
 							}
 							if(this.form.affect_book==1){
+								this.show1 =true
 								this.form.test = 1
 								this.form.unit_name=res.data.affect_book_info.unit_name;
 								this.form.unit_prove=res.data.affect_book_info.unit_prove || [];
@@ -1574,6 +1620,7 @@
 								this.form.po_emit_prove_index_array=res.data.affect_book_info.po_emit_prove_index_array || [];
 							};
 							if(this.form.department_reply==1){
+								this.show2 =true
 								this.form.department_reply_name=res.data.department_reply_info.department_reply_name;
 								this.form.reply_code=res.data.department_reply_info.reply_code;
 								this.form.reply_date=res.data.department_reply_info.reply_date;
@@ -1581,27 +1628,33 @@
 								this.form.department_reply_other_attach=res.data.department_reply_info.other_attach || [];
 							};
 							if(this.form.check_accept==1){
+								this.show3 =true
 								this.form.check_accept_name=res.data.check_accept_info.check_accept_name;
 								this.form.check_accept_date=res.data.check_accept_info.check_accept_date;
 								this.form.check_accept_attach=res.data.check_accept_info.attach || [];
 							};
 							if(this.form.waste_water==1){
+								this.show4 =true
 								this.form.water_waste_total=res.data.waste_water_total
 							};
 							if(this.form.waste_gas==1){
+								this.show5 =true
 								this.form.wastegas_total=res.data.waste_gas_info.wastegas_total_info
 							};
 							if(this.form.solid_waste==1){
+								this.show6 =true
 								this.form.solid_total_info=res.data.solid_total_info;
 								for (let index in res.data.solid_total_info) {
 									this.form.solid_total_info[index].type_id = parseInt(res.data.solid_total_info[index].type_id)
 								}
 							};
 							if(this.form.dangerous_waste==1){
+								this.show7 =true
 								this.form.dangerous_waste_total=res.data.dangerous_waste_total;
 								this.form.dangerous_attach = JSON.parse(res.data.dangerous_attach) || []
 							};
 							if(this.form.noise==1){
+								this.show8 =true
 								this.form.noise_list=res.data.noise_list
 							};
 						}
@@ -1618,10 +1671,10 @@
 			savemodel(){
 				if(!this.enterprise_id){
 					debugger
-					this.$Notice.error({
-						title: '请选择企业',
-						duration: this.$parent.getInfoFailTime
-					});
+					// this.$Notice.error({
+					// 	title: '请选择企业',
+					// 	duration: this.$parent.getInfoFailTime
+					// });
 					return;
 				};
 				this.$refs.form.validate((valid) => {
@@ -1674,13 +1727,29 @@
 						};
 						savemodel(data).then(res=>{
 							if(res.errno==0){
-								this.$toast('保存成功')
+								this.$Notice.success({
+									title: '保存成功',
+									duration: this.$parent.successTime
+								});
+								if(!sessionStorage.getItem('set_level_3')){
+									sessionStorage.setItem('per',JSON.stringify(this.level_3_access))
+									sessionStorage.setItem('set_level_3',true)
+									this.$router.push({
+										name:'home'
+									})
+									alert('权限更新！')
+									this.$router.go(0)
+								}
 							}else{
-								this.$toast('保存失败')
+								this.$Notice.error({
+									title: '保存失败',
+									desc: res.errmsg,
+									duration: this.$parent.getInfoFailTime
+								});
 							}
 						})
 					} else {
-						this.$toast('请查看信息是否填写完整')
+						this.$Message.error('请查看信息是否填写完整！');
 					}
 				})
 			},
@@ -1811,7 +1880,7 @@
 			//通用
 			//插入排水口或排气口或危险物
 			add_total(e,index){
-				console.log(index);
+				// console.log(index);
 				if(e=='water_waste'){
 					let data={
 						type_id:'',
@@ -2196,9 +2265,15 @@
 					}
 				}
 			},
-			hidden(){
-				this.show1= false
-				console.log(this.form.affect_book);
+			onChange1(e){
+				if(e===1){
+					this.show1 = true
+				}
+			},
+			hidden(item){
+				if(item===1){
+					this.show1= false
+				}
 			}
 
 		},
@@ -2245,6 +2320,11 @@
 			.card{
 				border-top:solid 1px #ECECEC;
 				padding: 30px 44px;
+				.icon{
+					position: absolute;
+					right: 10px;
+					top: 10px;
+				}
 			}
 			.card:first-child{
 				border:none;
@@ -2255,16 +2335,16 @@
 				padding: 0 20px;
 				border-radius: 10px;
 				position: relative;
-				>div{
-					padding: 20px 0;
+				.w-card{
+					padding: 30px 0 40px;
 				}
 				.fold{
-					font-size: 40px;
+					font-size: 45px;
 					position: absolute;
+					bottom: 0px;
 					right: 10px;
-					top: 10px;
-					width: 80px;
-					height: 80px;
+					width: 100px;
+					height: 100px;
 					display: flex;
 					align-items: center;
 					justify-content: center;
@@ -2320,7 +2400,7 @@
 			box-shadow:0px 4px 18px 0px rgba(166,172,191,0.5);
 			border-radius:52px;
 			color: #ffffff;
-			margin: 0 auto;
+			margin: 30px auto;
 		}
 	}
 </style>
