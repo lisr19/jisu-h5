@@ -35,6 +35,11 @@ export function getEnterInfo(params) {
     return fetch('home/index/enterprise_static', params);
 }
 
+// 获取管理统计数据
+export function indexList(params) {
+    return fetch('home/index/index', params);
+}
+
 
 
 

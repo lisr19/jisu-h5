@@ -35,19 +35,19 @@
 			<div class="title" style="margin-bottom: 0">
 				大气主要污染物排放情况
 			</div>
-			<ve-bar  :data="chartData1" width="325px"  height="260px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
+			<ve-bar  :data="chartData1" width="340px"  height="260px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
 		</div>
 
 		<div class="my-chart">
 			<div class="title">
 				水体主要污染物排放情况
 			</div>
-			<ve-bar  :data="chartData2" width="325px"  height="260px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
+			<ve-bar  :data="chartData2" width="340px"  height="260px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
 		</div>
 	</div>
 </template>
 <script>
-	import {getEnterInfo} from '@/lib/API/comment'
+	import {getEnterInfo,indexList} from '@/lib/API/comment'
 	export default {
 		data(){
 			this.chartExtend = {
@@ -57,6 +57,21 @@
 				},
 			};
 			return{
+				inforCardData: [
+					{ title: '注册企业', icon: 'android-person-add', count:0, color: '#2d8cf0' },
+					{ title: '正常运行', icon: 'load-a', count:0, color: '#19be6b' },
+					{ title: '工业废水', icon: 'waterdrop', count:0, color: '#ed3f14' },
+					{ title: '工业废气', icon: 'fireball', count:0, color: '#ed3f14' },
+					{ title: '危险废物', icon: 'nuclear', count:0, color: '#ed3f14' },
+					{ title: '噪声污染', icon: 'radio-waves', count:0, color: '#ed3f14' },
+					{ title: '环境违法', icon: 'leaf', count:0, color: '#ed3f14' },
+					{ title: '申报环保税', icon: 'ios-compose', count:0, color: '#E46CBB' },
+				],
+				chartData3: {
+					columns: ['类型', '数量'],
+					rows: []
+				},
+				markers: [],
 				//表格
 				tabledata:[],
 				dataEmpty1: false,
@@ -84,11 +99,60 @@
 			// this.getEnterInfo()
 		},
 		mounted(){
+			// this.account_type=sessionStorage.getItem("account_type");
+			// if(this.account_type!=1){
+			// 	this.getinfolist();
+			// }else{
+			// 	this.getEnterInfo()
+			// }
 			this.getEnterInfo()
 		},
 		activated() {
+			this.getEnterInfo()
 		},
 		methods:{
+			//管理员账户，获取统计数据
+			getinfolist(){
+				indexList().then(res=>{
+					console.log(res);
+					if(res.errno==0){
+						this.list=res.data;
+						this.product_count=res.data.product_count;
+						this.use_count=res.data.use_count;
+						this.out_count=res.data.out_count;
+						this.remain_count=res.data.remain_count;
+						let enterprise_list=res.data.enterprise_list;
+						for(var i in enterprise_list){
+							if(enterprise_list[i].longit&&enterprise_list[i].lati){
+								let maker_info={
+									label:{
+										content:enterprise_list[i].enterprise_name,
+										offset:[20,3]
+									},
+									position:[enterprise_list[i].longit,enterprise_list[i].lati]
+								};
+								this.markers.push(maker_info)
+							}
+						}
+						this.inforCardData[0].count=this.list.enterprise_list.length;
+						this.inforCardData[1].count=this.list.normal_list.length;
+						this.inforCardData[2].count=this.list.wastewater_list.length;
+						this.inforCardData[3].count=this.list.wastegas_list.length;
+						this.inforCardData[4].count=this.list.dangerous_waste_list.length;
+						this.inforCardData[5].count=this.list.noise_list.length;
+						this.inforCardData[6].count=this.list.illegal_record_list.length;
+						this.inforCardData[7].count=this.list.et_list.length;
+						if(this.list.wastewater_control.length==0&&this.list.wastegas_control.length==0){
+							this.dataEmpty4=true;
+						}else{
+							this.chartData3.rows.push({'类型':'废水','数量':this.list.wastewater_control.length});
+							this.chartData3.rows.push({'类型':'废气','数量':this.list.wastegas_control.length});
+						}
+					}else{
+						// this.$toast('获取统计数据出错')
+					}
+				})
+			},
 			openAd(){
 				// this.$toast('建设中……')
 				this.$router.push({name:"建设"})
@@ -98,12 +162,15 @@
 			},
 			//企业账户，获取单个企业统计数据
 			async getEnterInfo(){
+				this.chartData.rows=[]
+				this.chartData1.rows=[]
+				this.chartData2.rows=[]
 				let res = await getEnterInfo()
 				if(res.errno==100){
 					sessionStorage.setItem('has_enterprise_detail', 0)
-					this.dataEmpty1 = true
-					this.dataEmpty2 = true
-					this.dataEmpty3 = true
+					// this.dataEmpty1 = true
+					// this.dataEmpty2 = true
+					// this.dataEmpty3 = true
 					return
 				} else {
 					sessionStorage.setItem('has_enterprise_detail', 1)
@@ -259,7 +326,7 @@
 					}else{
 						this.dataEmpty3=true;
 					};
-					console.log(gasdata)
+					// console.log(gasdata)
 
 				};
 				// console.log(data);

@@ -109,6 +109,12 @@
 			}
 		},
 		mounted(){
+			// this.account_type = sessionStorage.getItem('account_type')
+			// if(this.account_type!=1){
+			// 	console.log('管理员');
+			// 	this.canEdit1 =true
+			// 	this.canEdit2 = true
+			// }
 			if(this.has_eia_other_info==1){
 				this.thirdEnterpriseList()
 				this.reportList()
@@ -129,6 +135,8 @@
 					this.$toast('请先填写企业信息')
 				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
+				} else if(this.has_eia_other_info==0){
+					this.$toast('请先填写其他环保手续')
 				}else  {
 					this.$router.push({name:'第三方公司'})
 				}
@@ -169,9 +177,10 @@
 					this.$toast('请先填写企业信息')
 				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
-				}else  {
-					console.log('去动态数据');
-					// this.$router.push({name:'其他环保手续'})
+				} else if(this.has_eia_other_info==0){
+					this.$toast('请先填写其他环保手续')
+				} else  {
+					this.$router.push({name:'建设'})
 				}
 			},
 			//获取第三方公司列表
@@ -185,7 +194,7 @@
 					if(res.data.data.length==0){
 						console.log('暂无第三方公司信息');
 					}else {
-						this.companyList = res.data.data
+						this.companyList = res.data.data.splice(0,3)
 					}
 				} else {
 					this.$toast(res.errmsg)

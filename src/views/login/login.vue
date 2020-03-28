@@ -18,7 +18,6 @@
 	import {mapActions} from 'vuex'
 	import {userLogin} from '@/lib/API/comment'
 	export default {
-
 		data(){
 			return{
 				username:null,
@@ -53,8 +52,26 @@
 					this.$toast('登录成功')
 					localStorage.setItem('token',res.data.token)
 					localStorage.setItem('userId',res.data.id)
+
+					//token
 					sessionStorage.setItem('token',res.data.token)
-					sessionStorage.setItem('account_id',res.data.id)
+					//用户id
+					sessionStorage.setItem("account_id", res.data.id);
+					//用户名
+					sessionStorage.setItem("account_name", res.data.name);
+					//用户类型
+					// sessionStorage.setItem("account_type", res.data.type);
+					//所属区域管家
+					sessionStorage.setItem("belong_2", res.data.belong_2);
+					//所属企业管家
+					sessionStorage.setItem("belong_3", res.data.belong_3);
+					//权限
+					if(res.data.type==1) {
+						sessionStorage.setItem('allPer',res.data.acce)
+						sessionStorage.setItem('per',JSON.stringify([]))
+					} else {
+						sessionStorage.setItem("per", res.data.acce);
+					}
 					this.$store.dispatch('setUserInfo',res.data)
 					this.$router.push({name:'首页'})
 				} else {
