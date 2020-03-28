@@ -10,18 +10,15 @@
 		<div class="content">
 			<Form ref="form" :model="form"   :rules="ruleValidate" label-position="left">
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png"  v-if="form.affect_book==1&&!show1" @click="show1=true" alt="">
 					<p>1、是否有做环境影响评价报告</p>
 					<RadioGroup v-model="form.affect_book" @on-change="onChange1">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.affect_book==1&&!show1" @click="show1=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card" >
 					<div class="w-card" v-if="form.affect_book==1&&show1" >
-						<div  class="fold"  >
-							<Icon @click="show1=false" type="md-arrow-round-up" size="30"/>
-						</div>
 						<div style="margin-bottom:5px">
 							<FormItem prop="unit_name" label="编制单位：">
 								<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">编制单位：</p>  -->
@@ -83,22 +80,22 @@
 							<p>其他附件：</p>
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.affect_book_other_attach"></Table>
 						</FormItem>
+						<div  class="fold"  >
+							<img src="@/assets/img/up.png"  @click="show1=false" alt="">
+						</div>
 					</div>
 				</div>
 
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png" v-if="form.department_reply==1&&!show2" @click="show2=true" alt="">
 					<p >2、是否有环保部门的环评批复意见</p>
 					<RadioGroup v-model="form.department_reply">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.department_reply==1&&!show2" @click="show2=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.department_reply==1&&show2">
-						<div  class="fold" @click="show2=false" >
-							<Icon  type="md-arrow-round-up" />
-						</div>
 						<div style="margin-bottom:5px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环保批准部门：</p> -->
 							<FormItem prop="department_reply_name" label="环保批准部门：">
@@ -130,21 +127,22 @@
 							<span style="color:red;font-size:14px;margin-left:5px">其他附件</span>
 						</div>
 						<Table style="margin-bottom: 30px" border highlight-row size="small" :columns="columns_attach" :data="form.department_reply_other_attach"></Table>
+						<div  class="fold"  >
+							<img src="@/assets/img/up.png"  @click="show2=false" alt="">
+						</div>
 					</div>
 				</div>
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png" v-if="form.check_accept==1&&!show3" @click="show3=true" alt="">
 					<p >3、是否有环评验收手续</p>
 					<RadioGroup v-model="form.check_accept">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.check_accept==1&&!show3" @click="show3=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
+
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.check_accept==1&&show3">
-						<div  class="fold" @click="show3=false" >
-							<Icon   type="md-arrow-round-up" />
-						</div>
 						<div style="margin-bottom:5px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环评验收单位：</p> -->
 							<FormItem prop="check_accept_name" label="环评验收单位：">
@@ -165,23 +163,23 @@
 							<p>佐证文件：</p>
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.check_accept_attach"></Table>
 						</FormItem>
+						<div  class="fold"  >
+							<img src="@/assets/img/up.png"  @click="show3=false" alt="">
+						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png" v-if="form.waste_water==1&&!show4" @click="show4=true" alt="">
 					<p >4、是否产生工业废水</p>
 					<RadioGroup v-model="form.waste_water">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.waste_water==1&&!show4" @click="show4=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.waste_water==1&&show4">
-						<div  class="fold" @click="show4=false" >
-							<Icon   type="md-arrow-round-up" />
-						</div>
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废水指标';pe_index=1" style="margin-bottom:5px">添加环评废水指标</Button>
 							<FormItem prop="po_emit_prove_index_array1" label="">
@@ -224,22 +222,22 @@
 								</div>
 							</div>
 						</FormItem>
+						<div  class="fold"  >
+							<img src="@/assets/img/up.png"  @click="show4=false" alt="">
+						</div>
 					</div>
 				</div>
 
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png" v-if="form.waste_gas==1&&!show5" @click="show5=true" alt="">
 					<p >5、是否产生工业废气</p>
 					<RadioGroup v-model="form.waste_gas">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.waste_gas==1&&!show5" @click="show5=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div  class="inner-card">
 					<div class="w-card" v-if="form.waste_gas==1&&show5">
-						<div  class="fold" @click="show5=false" >
-							<Icon   type="md-arrow-round-up" />
-						</div>
 						<div style="margin-bottom:5px;">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废气指标';pe_index=2" >添加环评废气指标</Button>
 							<FormItem prop="po_emit_prove_index_array2" label="">
@@ -280,24 +278,24 @@
 									<!--								<Table border highlight-row size="small" :columns="columns_index1" :data="item.index_array"></Table>-->
 								</div>
 							</FormItem>
+							<div  class="fold"  >
+								<img src="@/assets/img/up.png"  @click="show5=false" alt="">
+							</div>
 						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png" v-if="form.solid_waste==1&&!show6" @click="show6=true" alt="">
 					<p >6、是否产生一般固废</p>
 					<RadioGroup v-model="form.solid_waste">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.solid_waste==1&&!show6" @click="show6=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.solid_waste==1&&show6">
-						<div  class="fold" @click="show6=false" >
-							<Icon   type="md-arrow-round-up" />
-						</div>
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评固废指标';pe_index=3" style="width:150px;margin-bottom:5px">添加环评固废指标</Button>
 							<FormItem prop="po_emit_prove_index_array3" label="">
@@ -338,6 +336,9 @@
 									</div>
 								</div>
 							</FormItem>
+							<div  class="fold"  >
+								<img src="@/assets/img/up.png"  @click="show6=false" alt="">
+							</div>
 						</div>
 
 					</div>
@@ -345,18 +346,15 @@
 
 
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png" v-if="form.dangerous_waste==1&&!show7" @click="show7=true" alt="">
 					<p >7、是否产生危险废物</p>
 					<RadioGroup v-model="form.dangerous_waste">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.dangerous_waste==1&&!show7" @click="show7=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.dangerous_waste==1&&show7">
-						<div  class="fold" @click="show7=false" >
-							<Icon   type="md-arrow-round-up" />
-						</div>
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评危险废物指标';pe_index=4" >添加环评危险废物指标</Button>
 							<FormItem prop="po_emit_prove_index_array4" label="">
@@ -402,23 +400,23 @@
 							<p>危险废物服务合同:</p>
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.dangerous_attach"></Table>
 						</FormItem>
+						<div  class="fold"  >
+							<img src="@/assets/img/up.png"  @click="show7=false" alt="">
+						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
+					<img class="icon-down" src="@/assets/img/down.png" v-if="form.noise==1&&!show8" @click="show8=true" alt="">
 					<p >8、是否有噪音排放</p>
 					<RadioGroup v-model="form.noise">
 						<Radio :label="0" border>否</Radio>
 						<Radio :label="1" border>是</Radio>
-						<Icon v-if="form.noise==1&&!show8" @click="show8=true" type="md-arrow-round-down" size="30" style="margin-left: 5px"/>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
 					<div  class="w-card" v-if="form.noise==1&&show8" >
-						<div  class="fold" @click="show8=false" >
-							<Icon   type="md-arrow-round-up" />
-						</div>
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评噪音指标';pe_index=5" style="width:150px;margin-bottom:5px">添加环评噪音指标</Button>
 							<FormItem prop="po_emit_prove_index_array5" label=" ">
@@ -467,6 +465,9 @@
 						<!-- <div style="margin-top:5px;margin-bottom:5px">
                           <Button type="primary" class="button1" @click="add_total('noise')"  style="width:200px">添加噪音监测点</Button>
                         </div> -->
+						<div  class="fold"  >
+							<img src="@/assets/img/up.png"  @click="show8=false" alt="">
+						</div>
 					</div>
 				</div>
 			</Form>
@@ -2320,10 +2321,12 @@
 			.card{
 				border-top:solid 1px #ECECEC;
 				padding: 30px 44px;
-				.icon{
+				position: relative;
+				.icon-down{
 					position: absolute;
-					right: 10px;
-					top: 10px;
+					right: 30px;
+					top: 30px;
+					height: 45px;
 				}
 			}
 			.card:first-child{
@@ -2339,16 +2342,15 @@
 					padding: 30px 0 40px;
 				}
 				.fold{
-					font-size: 45px;
-					position: absolute;
-					bottom: 0px;
-					right: 10px;
-					width: 100px;
-					height: 100px;
 					display: flex;
 					align-items: center;
 					justify-content: center;
-					z-index: 9999;
+					border-top: solid 1px #B3B3B3;
+					padding-top: 15px;
+					img{
+						height: 45px;
+						margin-top: 10px;
+					}
 				}
 			}
 			.item-card{

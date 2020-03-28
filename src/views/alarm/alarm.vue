@@ -3,7 +3,8 @@
 		<head-bar title="预警告警"></head-bar>
 		<div class="msg-content" >
 			<ul class="items" >
-				<li class="item" v-for="item in 5" @click="">
+				<li class="item" v-for="item in 8" @click="">
+					<img class="icon" src="@/assets/img/over.png" alt="">
 					<p class="num">
 						<span class="">1号监测点</span>
 						<span class="time">2020-3-16</span>
@@ -12,7 +13,7 @@
 						<p>排放物：<strong>贡</strong></p>
 						<p>
 							<span style="margin-right: 15px">测量数据：<em>120kg</em></span>
-							<span>标准数据：<em>90kg</em></span>
+							<span>标准数据：100kg</span>
 						</p>
 					</div>
 				</li>
@@ -54,7 +55,7 @@
 	}
 	.msg{
 		.msg-content{
-			padding: 150px 0 0;
+			padding: 150px 0 50px;
 			text-align: left;
 			display: flex;
 			align-items: center;
@@ -74,6 +75,12 @@
 					color:rgba(153,153,153,1);
 					padding: 0 30px 30px;
 					flex-direction: column;
+					position: relative;
+					.icon{
+						position: absolute;
+						width: 102px;
+						right: 0;
+					}
 					.num{
 						border-bottom: solid #EDEDED 1px;
 						height: 66px;

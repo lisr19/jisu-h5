@@ -51,6 +51,21 @@ const routes = [
 		name: '其他环保手续',
 		component: () => import('@/views/eia/other-eia.vue')
 	},
+	{
+		path: '/third-ent',
+		name: '第三方公司',
+		component: () => import('@/views/third-ent/third-ent.vue')
+	},
+	{
+		path: '/third-detail',
+		name: '第三方公司详情',
+		component: () => import('@/views/third-ent/third-detail.vue')
+	},
+	{
+		path: '/develop',
+		name: '建设',
+		component: () => import('@/views/my/develop.vue')
+	},
 ]
 
 const router = new VueRouter({

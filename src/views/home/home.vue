@@ -5,7 +5,7 @@
 			环保数据
         </div>
 		<div class="card">
-			<div class="item">
+			<div class="item" @click="openAlarm">
 				<p class="type">预警告警
 					<img src="@/assets/img/warn.png" alt="">
 				</p>
@@ -14,7 +14,7 @@
 					<span class="tip">超出标准</span>
 				</div>
 			</div>
-			<div class="item">
+			<div class="item" @click="openAd">
 				<p class="type">税务核算<img src="@/assets/img/icon8.png" alt=""></p>
 				<div class="ctx">
 					<div>
@@ -89,6 +89,13 @@
 		activated() {
 		},
 		methods:{
+			openAd(){
+				// this.$toast('建设中……')
+				this.$router.push({name:"建设"})
+			},
+			openAlarm(){
+				this.$router.push({name:'告警'})
+			},
 			//企业账户，获取单个企业统计数据
 			async getEnterInfo(){
 				let res = await getEnterInfo()

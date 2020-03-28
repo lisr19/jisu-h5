@@ -2,7 +2,6 @@
 	<div class="page">
 		<div class="login">
 			<div class="logo">
-<!--				<img src="@/assets/img/logo.png" alt="">-->
 				<p>环保</p>
 			</div>
 			<div class="inputs" >
@@ -53,8 +52,9 @@
 				if(res.errno ==0){
 					this.$toast('登录成功')
 					localStorage.setItem('token',res.data.token)
-					sessionStorage.setItem('token',res.data.token)
 					localStorage.setItem('userId',res.data.id)
+					sessionStorage.setItem('token',res.data.token)
+					sessionStorage.setItem('account_id',res.data.id)
 					this.$store.dispatch('setUserInfo',res.data)
 					this.$router.push({name:'首页'})
 				} else {
@@ -76,11 +76,11 @@
 		position: absolute;
 		height: 100%;
 		width: 100%;
-		/*background: url("../../assets/img/login-bg.png") no-repeat;*/
+		background: url("../../assets/img/bg.png") no-repeat;
 		background-size:100% 100%;
 		.logo{
 			text-align: center;
-			margin-top: 130px;
+			margin-top: 320px;
 			img{
 				width:130px;
 				height:130px;
@@ -142,7 +142,6 @@
 			height:88px;
 			line-height: 88px;
 			background:#999;
-			box-shadow:0px 4px 8px 0px rgba(5,59,123,1);
 			border-radius:8px;
 			font-size:30px;
 			font-family:PingFangSC-Medium,PingFang SC;

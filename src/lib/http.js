@@ -31,8 +31,8 @@ axios.interceptors.request.use(
         //   };
         // }
         // 若是有token , 就给头部授权带上token
-        if (localStorage.getItem('token')) {
-            config.headers.authorization = localStorage.getItem('token');
+        if (sessionStorage.getItem('token')) {
+            config.headers.authorization = sessionStorage.getItem('token');
         }
         return config;
     },

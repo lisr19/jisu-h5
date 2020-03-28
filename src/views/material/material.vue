@@ -7,10 +7,7 @@
 		<div v-if="reportData.length>0" class="card">
 			<div class="content">
 				<h2>环保动态数据
-					<span class="hist">
-				<img src="" alt="">
-				历史记录
-			</span>
+					<span class="hist" @click="openAd"><img src="" alt="">历史记录</span>
 				</h2>
 				<div class="items">
 					<p class="item" v-for="item in reportData">
@@ -31,7 +28,7 @@
 					</p>
 				</div>
 			</div>
-			<div class="btn">上传数据/文件</div>
+			<div class="btn" @click="$toast('建设中')">上传数据/文件</div>
 		</div>
 		<div v-else class="card">
 			<div class="content null">
@@ -63,19 +60,19 @@
 		</div>
 		<div class="card3" v-if="companyList.length>0">
 			<h2>第三方公司
-				<span class="hist">
+				<span class="hist" @click="openThird">
 					<img src="" alt="">
 					管理
 				</span>
 			</h2>
 			<div class="items">
-				<p v-for="(item,index) in companyList">{{index+1}}、{{item.code}}</p>
+				<p v-for="(item,index) in companyList">{{index+1}}、{{item.name}}</p>
 			</div>
 		</div>
-		<div class="card3" v-else>
+		<div class="card3" v-else @click="openThird">
 			<h2>第三方公司
 			</h2>
-			<p style="margin: 25px auto;text-align: center">未添加公司</p>
+			<p  style="margin: 25px auto;text-align: center">未添加公司</p>
 		</div>
 	</div>
 </template>
@@ -117,7 +114,25 @@
 				this.reportList()
 			}
 		},
+		activated() {
+			if(this.has_eia_other_info==1){
+				this.thirdEnterpriseList()
+				this.reportList()
+			}
+		},
 		methods:{
+			openAd(){
+				this.$router.push({name:"建设"})
+			},
+			openThird(){
+				if(!this.canEdit1){
+					this.$toast('请先填写企业信息')
+				} else if(this.has_eia_basic_info==0){
+					this.$toast('请先填写环评信息')
+				}else  {
+					this.$router.push({name:'第三方公司'})
+				}
+			},
 			//获取企业列表
 			async enterpriseList(params) {
 				let res = await enterpriseList(params)
@@ -145,7 +160,8 @@
 				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
 				}else  {
-					this.$router.push({name:'其他环保手续'})
+					this.$router.push({name:'建设'})
+					// this.$router.push({name:'其他环保手续'})
 				}
 			},
 			openReport(){

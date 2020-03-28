@@ -1,6 +1,6 @@
 import { fetch, post } from '../http'
 
-// 获取列表
+// 获取第三方列表
 export function thirdEnterpriseList(params) {
   return fetch('home/third_enterprise/list', params);
 }

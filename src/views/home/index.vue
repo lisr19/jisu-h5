@@ -61,9 +61,9 @@
             }
         },
         created() {
-            this.userId = localStorage.getItem('userId')
-            // this.token = sessionStorage.getItem('token')
-            if(!this.userId){
+            // this.userId = localStorage.getItem('userId')
+            this.token = sessionStorage.getItem('token')
+            if(!this.token){
                 this.$router.push({name:'登录'})
             }
         },
