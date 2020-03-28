@@ -456,6 +456,10 @@
 			},
 			//保存更新信息
 			handleUpdate() {
+				if(!this.isEdit){
+					this.$toast('请先点击编辑')
+					return
+				}
 				this.$refs.enterDate.validate((valid) => {
 					if (valid) {
 						let len=this.area.length;

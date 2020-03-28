@@ -35,14 +35,14 @@
 			<div class="title" style="margin-bottom: 0">
 				大气主要污染物排放情况
 			</div>
-			<ve-bar  :data="chartData1" width="340px"  height="260px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
+			<ve-bar  :data="chartData1" width="320px"  height="260px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
 		</div>
 
 		<div class="my-chart">
 			<div class="title">
 				水体主要污染物排放情况
 			</div>
-			<ve-bar  :data="chartData2" width="340px"  height="260px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
+			<ve-bar  :data="chartData2" width="320px"  height="260px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
 		</div>
 	</div>
 </template>

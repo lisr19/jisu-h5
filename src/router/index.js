@@ -71,5 +71,12 @@ const routes = [
 const router = new VueRouter({
 	routes
 })
-
+// router.beforeEach((to, from, next) => {
+// 	if(to.name==='登录'){
+// 		if(sessionStorage.getItem('token')){
+// 			return
+// 		}
+// 	}
+// 	next();
+// })
 export default router

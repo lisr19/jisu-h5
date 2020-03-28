@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Vant from 'vant';
+import "./exit";//监听返回
 // import echarts from 'echarts'
 import VCharts from 'v-charts';
 import iView from 'iview'

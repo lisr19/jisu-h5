@@ -45,43 +45,43 @@
         },
         computed: {
             //第一级权限：企业用户账号未填写企业信息时触发
-            level_1_access(){
-                let acc = JSON.parse(sessionStorage.getItem('allPer'))
-                let res = []
-                for (let i in acc) {
-                    if (acc[i].access == 'pe_report' || acc[i].access == 'enterprise_detail' || acc[i].access == 'enterprise_manager') {
-                        res.push(acc[i])
-                    }
-                }
-                return res
-            },
-            level_2_access(){
-                let acc = JSON.parse(sessionStorage.getItem('allPer'))
-                let res = []
-                for (let i in acc) {
-                    if (
-                        acc[i].access !== 'third_enterprise_manager' &&
-                        acc[i].access !== 'third_enterprise_detail' &&
-                        acc[i].access !== 'report_manager' &&
-                        acc[i].access !== 'report_detail' &&
-                        acc[i].access !== 'warn_alarms' &&
-                        acc[i].access !== 'warn_manager' &&
-                        acc[i].access !== 'tax' &&
-                        acc[i].access !== 'tax_manager' &&
-                        acc[i].access !== 'report_look' &&
-                        acc[i].access !== 'report_verity' &&
-                        acc[i].access !== 'procedure_manager' &&
-                        acc[i].access !== 'procedure_detail'
-                    ) {
-                        res.push(acc[i])
-                    }
-                }
-                return res
-            },
-            level_3_access() {
-                let acc = JSON.parse(sessionStorage.getItem('allPer'))
-                return acc
-            }
+            // level_1_access(){
+            //     let acc = JSON.parse(sessionStorage.getItem('allPer'))
+            //     let res = []
+            //     for (let i in acc) {
+            //         if (acc[i].access == 'pe_report' || acc[i].access == 'enterprise_detail' || acc[i].access == 'enterprise_manager') {
+            //             res.push(acc[i])
+            //         }
+            //     }
+            //     return res
+            // },
+            // level_2_access(){
+            //     let acc = JSON.parse(sessionStorage.getItem('allPer'))
+            //     let res = []
+            //     for (let i in acc) {
+            //         if (
+            //             acc[i].access !== 'third_enterprise_manager' &&
+            //             acc[i].access !== 'third_enterprise_detail' &&
+            //             acc[i].access !== 'report_manager' &&
+            //             acc[i].access !== 'report_detail' &&
+            //             acc[i].access !== 'warn_alarms' &&
+            //             acc[i].access !== 'warn_manager' &&
+            //             acc[i].access !== 'tax' &&
+            //             acc[i].access !== 'tax_manager' &&
+            //             acc[i].access !== 'report_look' &&
+            //             acc[i].access !== 'report_verity' &&
+            //             acc[i].access !== 'procedure_manager' &&
+            //             acc[i].access !== 'procedure_detail'
+            //         ) {
+            //             res.push(acc[i])
+            //         }
+            //     }
+            //     return res
+            // },
+            // level_3_access() {
+            //     let acc = JSON.parse(sessionStorage.getItem('allPer'))
+            //     return acc
+            // }
         },
         data() {
             return {
@@ -133,12 +133,12 @@
                 if(res.errno==100){
                     sessionStorage.setItem('has_enterprise_detail', 0)
                     localStorage.setItem('has_enterprise_detail', 0)
-                    if(sessionStorage.getItem('has_enterprise_detail') == 0 && !JSON.parse(sessionStorage.getItem('per')).length>0) {
-                        sessionStorage.setItem('per',JSON.stringify(this.level_1_access))
-                        sessionStorage.setItem('set_level_1',true)
-                        alert('权限更新！')
-                        this.$router.go(0)
-                    }
+                    // if(sessionStorage.getItem('has_enterprise_detail') == 0 && !JSON.parse(sessionStorage.getItem('per')).length>0) {
+                    //     sessionStorage.setItem('per',JSON.stringify(this.level_1_access))
+                    //     sessionStorage.setItem('set_level_1',true)
+                    //     alert('权限更新！')
+                    //     this.$router.go(0)
+                    // }
                 } else {
                     this.enterId = res.data.enterprise_info.id
                     localStorage.setItem('has_enterprise_detail', 1)
@@ -162,19 +162,19 @@
                 } else if (res.data.count == 0) {
                     localStorage.setItem('has_eia_basic_info', 0);
                     sessionStorage.setItem('has_eia_basic_info', 0);
-                    if(!sessionStorage.getItem('set_level_2') && !sessionStorage.getItem('set_level_1')) {
-                        sessionStorage.setItem('per',JSON.stringify(this.level_2_access))
-                        sessionStorage.setItem('set_level_2',true)
-                        this.$router.go(0)
-                    }
+                    // if(!sessionStorage.getItem('set_level_2') && !sessionStorage.getItem('set_level_1')) {
+                    //     sessionStorage.setItem('per',JSON.stringify(this.level_2_access))
+                    //     sessionStorage.setItem('set_level_2',true)
+                    //     this.$router.go(0)
+                    // }
                 } else {
                     localStorage.setItem('has_eia_basic_info', 1);
                     sessionStorage.setItem('has_eia_basic_info', 1);
-                    if(!sessionStorage.getItem('set_level_3')) {
-                        sessionStorage.setItem('per',JSON.stringify(this.level_3_access))
-                        sessionStorage.setItem('set_level_3',true)
-                        this.$router.go(0)
-                    }
+                    // if(!sessionStorage.getItem('set_level_3')) {
+                    //     sessionStorage.setItem('per',JSON.stringify(this.level_3_access))
+                    //     sessionStorage.setItem('set_level_3',true)
+                    //     this.$router.go(0)
+                    // }
                 }
             },
 
