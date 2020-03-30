@@ -224,9 +224,9 @@
 			box-shadow:0px 4px 18px 0px rgba(166,172,191,0.5);
 			border-radius:52px;
 			color: #ffffff;
-			position: absolute;
+			position: fixed;
 			left: 17%;
-			bottom: 0;
+			bottom: 50px;
 		}
 	}
 </style>

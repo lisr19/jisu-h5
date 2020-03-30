@@ -168,8 +168,8 @@
 				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
 				}else  {
-					this.$router.push({name:'建设'})
-					// this.$router.push({name:'其他环保手续'})
+					// this.$router.push({name:'建设'})
+					this.$router.push({name:'其他环保手续'})
 				}
 			},
 			openReport(){

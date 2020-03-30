@@ -353,21 +353,36 @@
 						render: (h, params) => {
 							return h('Row', [
 										h('Col', {
-										}, [h('Button', {
+										}, [h('Icon', {
+											props: {
+												type: 'ios-eye',
+											},
+											style: {
+												fontSize: '20px',
+												width: 'auto',
+												marginRight:'10px'
+											},
 											on: {
 												click: () => {
 													//console.log(params.row.url);
 													window.open(params.row.url,'_blank');
 												}
 											}
-										}, '查看'),
-											h('Button', {
+										},),
+											h('Icon', {
+												props: {
+													type: 'md-close',
+												},
+												style: {
+													fontSize: '20px',
+													width: 'auto'
+												},
 												on: {
 													click: () => {
 														this.data1.splice(params.index,1);
 													}
 												}
-											},'删除' )
+											},)
 										], ),
 									]
 							);

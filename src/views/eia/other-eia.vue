@@ -3,21 +3,22 @@
 		<head-bar title="其他环保手续"></head-bar>
 		<div class="table" v-if="otherEiaList.length>0">
 			<van-row  style="background:rgba(213,239,234,1);margin-bottom: 0">
-				<van-col span="12">添加时间</van-col>
+				<van-col span="12">企业名称</van-col>
 				<van-col span="4">年份</van-col>
 				<van-col span="8">操作</van-col>
 			</van-row>
 			<van-row class="item" v-for="item in otherEiaList">
-				<van-col span="12">{{item.add_time}}</van-col>
+<!--				<van-col span="12">{{item.add_time}}</van-col>-->
+				<van-col span="12">{{item.enterprise_name}}</van-col>
 				<van-col span="4">{{item.year}}</van-col>
 				<van-col span="8">
-					<img style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
+					<img   @click="openDetail(item)" style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
 					<img  @click="comFn(item)" src="@/assets/img/del.png" alt="">
 				</van-col>
 			</van-row>
 		</div>
 		<div v-else style="margin-top: 50px">暂无数据</div>
-		<div class="btn">新增</div>
+		<div class="btn" @click="addDetail">新增</div>
 	</div>
 </template>
 
@@ -44,6 +45,12 @@
 
 		},
 		methods: {
+			addDetail(){
+				this.$router.push({path:'/other-eia-detail'})
+			},
+			openDetail(item){
+				this.$router.push({path:'/other-eia-detail',query:{id:item.id}})
+			},
 			//获取企业是否填写其他环保信息
 			async procedureList() {
 				let params = {
@@ -137,9 +144,9 @@
 			box-shadow:0px 4px 18px 0px rgba(166,172,191,0.5);
 			border-radius:52px;
 			color: #ffffff;
-			position: absolute;
+			position: fixed;
 			left: 17%;
-			bottom: 0;
+			bottom: 50px;
 		}
 	}
 </style>

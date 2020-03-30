@@ -52,6 +52,11 @@ const routes = [
 		component: () => import('@/views/eia/other-eia.vue')
 	},
 	{
+		path: '/other-eia-detail',
+		name: '其他环保手续详情',
+		component: () => import('@/views/eia/other-eia-detail.vue')
+	},
+	{
 		path: '/third-ent',
 		name: '第三方公司',
 		component: () => import('@/views/third-ent/third-ent.vue')
