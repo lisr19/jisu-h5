@@ -214,7 +214,9 @@
 									</div>
 									<div style="margin-top: 10px" class="item-card" v-for="(item3,index3) in item2.index_array">
 										<p class="name">{{index3+1}} 、{{item3.name}} <span @click="delFszb(item3,index3)">删除</span></p>
+										<p>年排污总量(Kg)：{{item3.year_total}}</p>
 										<p>排污浓度限值（mg/l)：{{item3.limit_value}}</p>
+										<p>排放速率(m³/h)：{{item3.speed}}</p>
 										<p>执行标准名称及标准号：{{item3.standard}}</p>
 										<p>备注：{{item3.remarks}}</p>
 									</div>
@@ -544,15 +546,6 @@
 		<Modal v-model="add_index" :title="index_title" @on-ok="addData()">
 			<div style="margin-bottom:10px" >
 				<span>废物名称：</span>
-				<!-- <Select v-show="index_type==31" v-model="id"  :label-in-value="true" style="width:200px" @on-change="all_index_change" >
-                    <Option v-for="(item,index) in wa_tr_fa_index_data" v-bind:key="index" :value="item.id" :label="item.name"></Option>
-                </Select>
-                <Select  v-show="index_type==33" v-model="id"   :label-in-value="true" style="width:200px" @on-change="all_index_change" >
-                    <Option v-for="(item,index) in ga_tr_fa_index_data" v-bind:key="index" :value="item.id" :label="item.name"></Option>
-                </Select>
-                <Select  v-show="index_type==35" v-model="id"   :label-in-value="true" style="width:200px" @on-change="all_index_change" >
-                    <Option v-for="(item,index) in dangerous_waste_index_data" v-bind:key="index" :value="item.id" :label="item.name"></Option>
-                </Select> -->
 				<Select  v-show="index_type.toString().indexOf('water')!= -1" v-model="id"  :label-in-value="true" style="width:200px" @on-change="all_index_change"  >
 					<Option v-for="(item,index) in form.po_emit_prove_index_array1" v-bind:key="index" :value="item.id" :label="item.name"></Option>
 				</Select>
@@ -2013,6 +2006,8 @@
 						if(this.form.po_emit_prove_index_array1[j].name==this.name){
 							index_array.limit_value=this.form.po_emit_prove_index_array1[j].density;
 							index_array.standard=this.form.po_emit_prove_index_array1[j].standard
+							index_array.speed = this.form.po_emit_prove_index_array1[j].speed
+							index_array.year_total = this.form.po_emit_prove_index_array1[j].total
 						}
 					}
 					this.form.water_waste_total[this.water_index].wastewater_total[index].index_array.push(index_array)
@@ -2030,6 +2025,8 @@
 						if(this.form.po_emit_prove_index_array2[j].name==this.name){
 							index_array.limit_value=this.form.po_emit_prove_index_array2[j].density;
 							index_array.standard=this.form.po_emit_prove_index_array2[j].standard
+							index_array.speed = this.form.po_emit_prove_index_array2[j].speed
+							index_array.year_total = this.form.po_emit_prove_index_array2[j].total
 						}
 					}
 					this.form.wastegas_total[index].index_array.push(index_array)

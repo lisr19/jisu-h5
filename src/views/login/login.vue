@@ -5,7 +5,7 @@
 				<p>环保</p>
 			</div>
 			<div class="inputs" >
-				<input  v-model="username"  placeholder='账号' @keyup="changColor" oninput="if(value.length>11)value=value.slice(0,11)">
+				<input  v-model="username"  placeholder='账号' @keyup="changColor">
 				<input  v-model="password"  type="password" placeholder='密码'  @keyup="changColor" name="" oninput="if(value.length>16)value=value.slice(0,16)">
 			</div>
 
@@ -84,7 +84,7 @@
 				if(!this.username|!this.password){
 					this.$refs.loginBtn.style.background='#999'
 				}else {
-					this.$refs.loginBtn.style.background='#0075FF'
+					this.$refs.loginBtn.style.background='#189458'
 				}
 			},
 		}
