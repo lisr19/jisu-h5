@@ -2,13 +2,14 @@
 	<div class="main">
 		<head-bar title="企业信息"></head-bar>
 		<div class="base-info">
-			<img class="head-img" src="@/assets/img/headimg.jpg" alt="">
+			<img class="head-img" src="@/assets/img/ent-img.png" alt="">
 			<!--				<van-uploader v-model="fileList"  :max-count="1" :after-read="afterRead"  />-->
 			<div class="desc">
 				<p class="name">{{enterDate.name}}</p>
 				<p class="ID">营业执照：{{enterDate.code}}</p>
 				<p class="address" @click="showMap=!showMap">
-					定位：<van-icon name="location" color="#999999" />
+					定位：	<img class="" src="@/assets/img/location.png" alt="">
+<!--					<van-icon name="location" color="#999999" />-->
 					{{enterDate.address}}
 				</p>
 				<span v-if="isEdit" class="edit-btn" @click="handleUpdate">保存</span>
@@ -16,6 +17,10 @@
 			</div>
 		</div>
 		<div class="map-box" v-if="showMap">
+<!--			<div class="auto-tip">-->
+<!--				<img class="" src="@/assets/img/location.png" alt="">-->
+<!--				重新自动定位-->
+<!--			</div>-->
 			<div style="display:flex;justify-content: space-between;margin: 0 0 10px">
 				<span>经度：
 				<Input style="width: 60%" type="number" placeholder="经度" v-model="enterDate.longit" @on-change="updatemap"></Input>
@@ -139,7 +144,7 @@
 <script>
 	import headBar from '@/components/head-bar/head-bar'
 	import {enterpriseUpdate,enterpriseList,enterpriseDetail,industrySelect,scaleSelect,registertypeSelect,enterpriseAdd} from '@/lib/API/enterprise'
-	// import { Toast,Dialog } from 'vant'
+	import { Toast,Dialog } from 'vant'
 	export default {
 		components:{
 			headBar
@@ -180,6 +185,8 @@
 		},
 		data() {
 			return {
+				hasAddr:false,
+				city: '定位中...',
 				files_name:'',
 				files_url:'',
 				headers: {
@@ -403,8 +410,69 @@
 			this.industrySelect()
 			this.scaleSelect()
 			this.registertypeSelect()
+			if(!this.hasAddr){
+				// this.getLocation()
+			}
 		},
 		methods: {
+			// 获取当前位置
+			getLocation () {
+				const self = this;
+				AMap.plugin('AMap.Geolocation', function () {
+					var geolocation = new AMap.Geolocation({
+						// 是否使用高精度定位，默认：true
+						enableHighAccuracy: true,
+						// 设置定位超时时间，默认：无穷大
+						timeout: 10000
+					});
+
+					geolocation.getCurrentPosition();
+					AMap.event.addListener(geolocation, 'complete', onComplete);
+					AMap.event.addListener(geolocation, 'error', onError);
+
+					function onComplete (data) {
+						console.log(data.formattedAddress);
+						this.enterDate.address = data.formattedAddress
+						// data是具体的定位信息
+						// console.log('定位成功信息：', data.addressComponent.city);
+						// self.city = data.addressComponent.city;
+					}
+
+					function onError (data) {
+						// 定位出错
+						console.log('定位失败错误：', data);
+						// 调用IP定位
+						self.getLngLatLocation();
+					}
+				});
+			},
+			// 通过IP获取当前位置
+			getLngLatLocation () {
+				AMap.plugin('AMap.CitySearch', function () {
+					var citySearch = new AMap.CitySearch();
+					citySearch.getLocalCity(function (status, result) {
+						if (status === 'complete' && result.info === 'OK') {
+							// 查询成功，result即为当前所在城市信息
+							console.log('通过ip获取当前城市：', result);
+							// 逆向地理编码
+							AMap.plugin('AMap.Geocoder', function () {
+								var geocoder = new AMap.Geocoder({
+									// city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+									city: result.adcode
+								});
+
+								var lnglat = result.rectangle.split(';')[0].split(',');
+								geocoder.getAddress(lnglat, function (status, data) {
+									if (status === 'complete' && data.info === 'OK') {
+										// result为对应的地理位置详细信息
+										console.log(data);
+									}
+								});
+							});
+						}
+					});
+				});
+			},
 			//获取账户列表
 			async enterpriseList(params) {
 				let res = await enterpriseList(params)
@@ -425,6 +493,11 @@
 				let res = await enterpriseDetail(params)
 				if(res.errno ==0){
 					this.enterDate =res.data
+					if(res.data.address){
+						this.hasAddr =true
+					}else {
+						this.hasAddr =false
+					}
 					this.account_name=res.data.account_name;
 					let code=res.data.area;
 					let pro=code.substring(0,2)+'0000';
@@ -690,7 +763,8 @@
 				.address{
 					display: flex;
 					align-items: center;
-					i{
+					img{
+						width: 30px;
 						margin-right: 10px;
 					}
 				}
@@ -725,6 +799,12 @@
 			width: 680px;
 			height: 600px;
 			margin: 20px auto;
+			.auto-tip{
+				height: 120px;
+				display: flex;
+				align-items: center;
+				font-size: 30px;
+			}
 			span{
 				display: inline-block;
 			}

@@ -62,7 +62,7 @@
 					//用户名
 					sessionStorage.setItem("account_name", res.data.name);
 					//用户类型
-					// sessionStorage.setItem("account_type", res.data.type);
+					sessionStorage.setItem("account_type", res.data.type);
 					//所属区域管家
 					sessionStorage.setItem("belong_2", res.data.belong_2);
 					//所属企业管家

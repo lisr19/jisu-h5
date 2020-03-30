@@ -135,9 +135,7 @@
 					this.$toast('请先填写企业信息')
 				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
-				} else if(this.has_eia_other_info==0){
-					this.$toast('请先填写其他环保手续')
-				}else  {
+				} else  {
 					this.$router.push({name:'第三方公司'})
 				}
 			},

@@ -10,8 +10,8 @@
 					<img src="@/assets/img/warn.png" alt="">
 				</p>
 				<div class="ctx">
-					<p >水体污染</p>
-					<span class="tip">超出标准</span>
+					<p >水体污染（总铅、六价铬）</p>
+					<span class="tip">超出标准2mg/l</span>
 				</div>
 			</div>
 			<div class="item" @click="openAd">
