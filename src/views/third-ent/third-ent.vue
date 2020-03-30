@@ -17,6 +17,7 @@
 					<img  @click="comFn(item)" src="@/assets/img/del.png" alt="">
 				</van-col>
 			</van-row>
+
 		</div>
 		<div v-else style="margin-top: 50px">暂无数据</div>
 		<div class="btn" @click="addDetail">新增</div>
@@ -73,8 +74,7 @@
 			//查看第三方详情
 			openDetail(item){
 				console.log(item);
-				this.$toast('建设中')
-				// this.$router.push({path:'/eia-detail',query:{enterprise_id:item.enterprise_id}})
+				this.$router.push({path:'/third-detail',query:{id:item.id}})
 			},
 			//确定弹窗
 			comFn(item){
@@ -139,7 +139,7 @@
 </style>
 <style lang="less" scoped>
 	.page{
-		padding-top: 112px;
+		padding: 112px 0 180px;
 		.table{
 			.item{
 				img{
@@ -156,9 +156,9 @@
 			box-shadow:0px 4px 18px 0px rgba(166,172,191,0.5);
 			border-radius:52px;
 			color: #ffffff;
-			position: absolute;
+			position: fixed;
 			left: 17%;
-			bottom: 0;
+			bottom: 50px;
 		}
 	}
 </style>

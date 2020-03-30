@@ -35,14 +35,14 @@
 			<div class="title" style="margin-bottom: 0">
 				大气主要污染物排放情况
 			</div>
-			<ve-bar  :data="chartData1" width="320px"  height="260px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
+			<ve-bar  :data="chartData1" width="320px"  height="250px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
 		</div>
 
 		<div class="my-chart">
-			<div class="title">
+			<div class="title" style="margin-bottom: 0">
 				水体主要污染物排放情况
 			</div>
-			<ve-bar  :data="chartData2" width="320px"  height="260px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
+			<ve-bar  :data="chartData2" width="320px"  height="250px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
 		</div>
 	</div>
 </template>
@@ -105,10 +105,16 @@
 			// }else{
 			// 	this.getEnterInfo()
 			// }
+			console.log(111);
 			this.getEnterInfo()
 		},
 		activated() {
-			this.getEnterInfo()
+			console.log(222);
+			if(localStorage.getItem('from')==='login'){
+				console.log(333);
+				this.getEnterInfo()
+				localStorage.setItem('from','')
+			}
 		},
 		methods:{
 			//管理员账户，获取统计数据
@@ -162,9 +168,6 @@
 			},
 			//企业账户，获取单个企业统计数据
 			async getEnterInfo(){
-				this.chartData.rows=[]
-				this.chartData1.rows=[]
-				this.chartData2.rows=[]
 				let res = await getEnterInfo()
 				if(res.errno==100){
 					sessionStorage.setItem('has_enterprise_detail', 0)

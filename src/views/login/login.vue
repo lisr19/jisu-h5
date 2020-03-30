@@ -1,5 +1,5 @@
 <template>
-	<div class="page">
+	<div class="page" >
 		<div class="login">
 			<div class="logo">
 				<p>环保</p>
@@ -50,7 +50,9 @@
 				let res = await userLogin(params)
 				if(res.errno ==0){
 					this.$toast('登录成功')
+
 					localStorage.setItem('token',res.data.token)
+					localStorage.setItem('from','login')
 					localStorage.setItem('userId',res.data.id)
 
 					//token

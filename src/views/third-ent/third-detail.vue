@@ -78,7 +78,7 @@
 			},
 			//可添加
 			canAdd() {
-				if (this.$route.params.id == 0) {
+				if (this.$route.query.id == 0) {
 					return true;
 				} else {
 					return false;
@@ -86,7 +86,7 @@
 			},
 			//可保存
 			canSave() {
-				if (this.$route.params.id != 0) {
+				if (this.$route.query.id != 0) {
 					return true;
 				} else {
 					return false;
@@ -94,7 +94,7 @@
 			},
 			//可删除
 			canDelete() {
-				if (this.$route.params.id != 0) {
+				if (this.$route.query.id != 0) {
 					return true;
 				} else {
 					return false;
@@ -194,14 +194,15 @@
 		},
 		//页面初始化
 		mounted() {
-			// if (this.$route.params.id != 0) {
-			// 	this.handleGetInfo();
-			// }
-			// if(sessionStorage.getItem('account_type')!=1){
-			// 	this.handleGetaccount()
-			// }else{
-			// 	this.form.account_id=sessionStorage.getItem('account_id');
-			// }
+			if (this.$route.query.id) {
+				this.isAdd =false
+				this.handleGetInfo({id:this.$route.query.id})
+			}
+			if(sessionStorage.getItem('account_type')!=1){
+				this.handleGetaccount()
+			}else{
+				this.form.account_id=sessionStorage.getItem('account_id');
+			}
 		},
 		methods: {
 			handleGetaccount(){
@@ -224,10 +225,7 @@
 			//上传文件插入数据
 			adddata1(){
 				if(!this.files_name||!this.files_url){
-					this.$Notice.error({
-						title: '文件不能为空',
-						duration: this.$parent.getInfoFailTime
-					});
+					this.$toast('文件不能为空')
 					return;
 				};
 				let data={
@@ -239,17 +237,10 @@
 				this.files_url=''
 			},
 			//获取信息
-			handleGetInfo() {
-				let data = {
-					id: this.$route.params.id
-				};
+			handleGetInfo(data) {
 				thirdEnterpriseDetail(data).then(res => {
 					if (res.errno) {
-						this.$Notice.error({
-							title: '获取第三方公司信息出错',
-							desc: res.errmsg,
-							duration: this.$parent.getInfoFailTime
-						});
+						this.$toast('获取第三方公司信息出错')
 					} else {
 						this.form = res.data;
 						this.data1=res.data.attach
@@ -286,7 +277,7 @@
 				this.$refs.form.validate((valid) => {
 					if (valid) {
 						let data = {
-							id: parseInt(this.$route.params.id),
+							id: parseInt(this.$route.query.id),
 							name:this.form.name,
 							link_name:this.form.link_name,
 							link_phone:this.form.link_phone,
@@ -297,17 +288,12 @@
 						};
 						thirdEnterpriseUpdate(data).then(res => {
 							if (res.errno) {
-								this.$Notice.error({
-									title: '保存第三方公司信息出错',
-									duration: this.$parent.saveFailTime
-								});
+								this.$toast('保存第三方公司信息出错')
 							} else {
-								this.$Notice.success({
-									title: '成功保存第三方公司信息',
-									duration: this.$parent.successTime
-								});
+								this.$toast('成功保存第三方公司信息')
+								this.$router.back()
 							}
-							this.$parent.reload();
+							// this.$parent.reload();
 						})
 						this.inputError = false;
 					} else {
