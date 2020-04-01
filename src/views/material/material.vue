@@ -7,7 +7,7 @@
 		<div v-if="reportData.length>0" class="card">
 			<div class="content">
 				<h2>环保动态数据
-					<span class="hist" @click="openAd"><img src="" alt="">历史记录</span>
+					<span class="hist" @click="openReport"><img src="" alt="">历史记录</span>
 				</h2>
 				<div class="items">
 					<p class="item" v-for="item in reportData">
@@ -109,19 +109,19 @@
 			}
 		},
 		mounted(){
-			// this.account_type = sessionStorage.getItem('account_type')
-			// if(this.account_type!=1){
-			// 	console.log('管理员');
-			// 	this.canEdit1 =true
-			// 	this.canEdit2 = true
-			// }
-			if(this.has_eia_other_info==1){
+			this.account_type = sessionStorage.getItem('account_type')
+			if(this.account_type!=1){
+				console.log('管理员');
+				this.canEdit1 =true
+				this.canEdit2 = true
+			}
+			if(this.has_eia_basic_info==1){
 				this.thirdEnterpriseList()
 				this.reportList()
 			}
 		},
 		activated() {
-			if(this.has_eia_other_info==1){
+			if(this.has_eia_basic_info==1){
 				this.thirdEnterpriseList()
 				this.reportList()
 			}
@@ -155,7 +155,14 @@
 			},
 			openEia(){
 				if(this.canEdit1){
-					this.$router.push({name:'环评'})
+					if(this.account_type==1){
+						//企业用户
+						console.log('企业用户');
+						// this.$router.push({path:'/eia-detail',query:{enterprise_id:this.enterId}})
+						this.$router.push({name:'环评'})
+					}else {
+						this.$router.push({name:'环评'})
+					}
 				} else {
 					this.$toast('请先填写企业信息')
 				}
@@ -166,7 +173,6 @@
 				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
 				}else  {
-					// this.$router.push({name:'建设'})
 					this.$router.push({name:'其他环保手续'})
 				}
 			},
@@ -175,10 +181,9 @@
 					this.$toast('请先填写企业信息')
 				} else if(this.has_eia_basic_info==0){
 					this.$toast('请先填写环评信息')
-				} else if(this.has_eia_other_info==0){
-					this.$toast('请先填写其他环保手续')
-				} else  {
-					this.$router.push({name:'建设'})
+				}else  {
+					this.$router.push({name:'动态数据'})
+					// this.$router.push({name:'建设'})
 				}
 			},
 			//获取第三方公司列表

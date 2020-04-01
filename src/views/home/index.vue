@@ -144,6 +144,7 @@
                     localStorage.setItem('has_enterprise_detail', 1)
                     localStorage.setItem('enterId',this.enterId)
                     sessionStorage.setItem('has_enterprise_detail', 1)
+                    sessionStorage.setItem('enterprise_id', this.enterId)
                     // sessionStorage.setItem('per',JSON.stringify(this.level_1_access))
                 }
 

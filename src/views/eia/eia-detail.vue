@@ -422,7 +422,6 @@
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评噪音指标';pe_index=5" style="width:150px;margin-bottom:5px">添加环评噪音指标</Button>
 							<FormItem prop="po_emit_prove_index_array5" label=" ">
-
 								<p><em style="color: #ed4014">*</em>噪音指标：</p>
 								<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array5">
 									<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs5(index)">删除</span></p>
@@ -1484,6 +1483,7 @@
 		},
 		created() {
 			this.enterprise_id=this.$route.query.enterprise_id;
+			console.log(this.enterprise_id);
 			this.enterpriseSelect()
 			if(this.enterprise_id){
 				this.nextaction()
@@ -1502,7 +1502,6 @@
 
 		},
 		activated() {
-
 		},
 		methods: {
 			//危废typeID类型转换

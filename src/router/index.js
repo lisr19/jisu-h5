@@ -67,6 +67,16 @@ const routes = [
 		component: () => import('@/views/third-ent/third-detail.vue')
 	},
 	{
+		path: '/report',
+		name: '动态数据',
+		component: () => import('@/views/report/report-list.vue')
+	},
+	{
+		path: '/report-detail',
+		name: '动态数据详情',
+		component: () => import('@/views/report/report-detail.vue')
+	},
+	{
 		path: '/develop',
 		name: '建设',
 		component: () => import('@/views/my/develop.vue')

@@ -17,10 +17,10 @@
 			</div>
 		</div>
 		<div class="map-box" v-if="showMap">
-<!--			<div class="auto-tip">-->
-<!--				<img class="" src="@/assets/img/location.png" alt="">-->
-<!--				重新自动定位-->
-<!--			</div>-->
+			<div class="auto-tip" @click="getLocation">
+				<img class="" src="@/assets/img/location.png" alt="">
+				重新自动定位
+			</div>
 			<div style="display:flex;justify-content: space-between;margin: 0 0 10px">
 				<span>经度：
 				<Input style="width: 60%" type="number" placeholder="经度" v-model="enterDate.longit" @on-change="updatemap"></Input>
@@ -402,6 +402,7 @@
 			this.enterId = localStorage.getItem('enterId')
 			if(!this.enterId){
 				this.enterpriseList()
+				this.getLocation()
 			}else {
 				this.getEnterDetail({id:this.enterId})
 			}
@@ -410,9 +411,9 @@
 			this.industrySelect()
 			this.scaleSelect()
 			this.registertypeSelect()
-			if(!this.hasAddr){
-				// this.getLocation()
-			}
+			// if(!this.hasAddr){
+			// 	this.getLocation()
+			// }
 		},
 		methods: {
 			// 获取当前位置
@@ -431,13 +432,11 @@
 					AMap.event.addListener(geolocation, 'error', onError);
 
 					function onComplete (data) {
-						console.log(data.formattedAddress);
-						this.enterDate.address = data.formattedAddress
+						self.enterDate.address = data.formattedAddress
 						// data是具体的定位信息
 						// console.log('定位成功信息：', data.addressComponent.city);
 						// self.city = data.addressComponent.city;
 					}
-
 					function onError (data) {
 						// 定位出错
 						console.log('定位失败错误：', data);
@@ -448,6 +447,7 @@
 			},
 			// 通过IP获取当前位置
 			getLngLatLocation () {
+				var that = this
 				AMap.plugin('AMap.CitySearch', function () {
 					var citySearch = new AMap.CitySearch();
 					citySearch.getLocalCity(function (status, result) {
@@ -465,7 +465,9 @@
 								geocoder.getAddress(lnglat, function (status, data) {
 									if (status === 'complete' && data.info === 'OK') {
 										// result为对应的地理位置详细信息
-										console.log(data);
+										// console.log(data);
+										console.log(data.regeocode);
+										that.enterDate.address = data.regeocode.formattedAddress
 									}
 								});
 							});
@@ -797,13 +799,17 @@
 		}
 		.map-box{
 			width: 680px;
-			height: 600px;
+			height: 650px;
 			margin: 20px auto;
 			.auto-tip{
-				height: 120px;
+				height: 80px;
 				display: flex;
 				align-items: center;
 				font-size: 30px;
+				img{
+					width: 30px;
+					margin-right: 20px;
+				}
 			}
 			span{
 				display: inline-block;
