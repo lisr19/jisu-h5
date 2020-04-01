@@ -15,7 +15,7 @@
 		<div class="content">
 			<Form ref="form" :model="form" >
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png"  v-if="form.po_emit_prove==1&&!show1" @click="show1=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png"  v-if="form.po_emit_prove==1&&!show1" @click="show1=true" alt="">
 					<p>1、是否有污染物排放许可证</p>
 					<RadioGroup v-model="form.po_emit_prove">
 						<Radio :label="0" border>否</Radio>
@@ -65,7 +65,7 @@
 								</div>
 								<Table border highlight-row size="small" :columns="columns_attach" :data="po_emit_prove_attach"></Table>
 								<div  class="fold"  style="margin-top: 30px">
-									<img src="@/assets/img/up.png"  @click="show1=false" alt="">
+									<img src="@/assets/img/uptwo.png"  @click="show1=false" alt="">
 								</div>
 							</div>
 						</FormItem>
@@ -74,7 +74,7 @@
 				</div>
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.ra_safe_prove==1&&!show2" @click="show2=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.ra_safe_prove==1&&!show2" @click="show2=true" alt="">
 					<p >2、是否有辐射安全许可证</p>
 					<RadioGroup v-model="form.ra_safe_prove">
 						<Radio :label="0" border>否</Radio>
@@ -91,12 +91,12 @@
 						</div>
 						<Table border highlight-row size="small" :columns="columns_attach" :data="ra_safe_prove_attach"></Table>
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show2=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show2=false" alt="">
 						</div>
 					</div>
 				</div>
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.drainage_prove==1&&!show3" @click="show3=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.drainage_prove==1&&!show3" @click="show3=true" alt="">
 					<p >3、是否有排水许可证</p>
 					<RadioGroup v-model="form.drainage_prove">
 						<Radio :label="0" border>否</Radio>
@@ -117,14 +117,14 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show3=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show3=false" alt="">
 						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.em_manager==1&&!show4" @click="show4=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.em_manager==1&&!show4" @click="show4=true" alt="">
 					<p >4、是否有环境应急预案</p>
 					<RadioGroup v-model="form.em_manager">
 						<Radio :label="0" border>否</Radio>
@@ -145,13 +145,13 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show4=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show4=false" alt="">
 						</div>
 					</div>
 				</div>
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.se_ou_manager==1&&!show5" @click="show5=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.se_ou_manager==1&&!show5" @click="show5=true" alt="">
 					<p >5、是否规范排污口管理</p>
 					<RadioGroup v-model="form.se_ou_manager">
 						<Radio :label="0" border>否</Radio>
@@ -171,14 +171,14 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show5=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show5=false" alt="">
 						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.cl_pr_manager==1&&!show6" @click="show6=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.cl_pr_manager==1&&!show6" @click="show6=true" alt="">
 					<p >6、是否清洁生产管理</p>
 					<RadioGroup v-model="form.cl_pr_manager">
 						<Radio :label="0" border>否</Radio>
@@ -197,14 +197,14 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show6=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show6=false" alt="">
 						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.po_co_fa==1&&!show7" @click="show7=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.po_co_fa==1&&!show7" @click="show7=true" alt="">
 					<p >7、是否有污染治理设施</p>
 					<RadioGroup v-model="form.po_co_fa">
 						<Radio :label="0" border>否</Radio>
@@ -225,14 +225,14 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show7=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show7=false" alt="">
 						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.ba_pr_power==1&&!show8" @click="show8=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.ba_pr_power==1&&!show8" @click="show8=true" alt="">
 					<p >8、是否有淘汰落后产能</p>
 					<RadioGroup v-model="form.ba_pr_power">
 						<Radio :label="0" border>否</Radio>
@@ -252,13 +252,13 @@
 						</FormItem>
 
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show8=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show8=false" alt="">
 						</div>
 					</div>
 				</div>
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.other_data==1&&!show9" @click="show9=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.other_data==1&&!show9" @click="show9=true" alt="">
 					<p >9、是否有其他数据</p>
 					<RadioGroup v-model="form.other_data">
 						<Radio :label="0" border>否</Radio>
@@ -276,7 +276,7 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  style="margin-top: 30px">
-							<img src="@/assets/img/up.png"  @click="show9=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show9=false" alt="">
 						</div>
 					</div>
 				</div>

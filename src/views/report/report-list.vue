@@ -25,9 +25,9 @@
 					<van-col span="5" v-if="item.status==4">已完成</van-col>
 				</template>
 
-				<van-col span="8">
+				<van-col style="display: flex;align-items: center;justify-content: center;height: 100%" span="8">
 					<img v-if="item.status==1||item.status==3" @click="openDetail(item)"  src="@/assets/img/edit.png" alt="">
-					<van-icon @click="openDetail(item)" name="eye-o"  style="margin:0 16px;padding-top: 8px" size="26"/>
+					<img  @click="lookDetail(item)" style="margin: 0 15px;" src="@/assets/img/eye.png" alt="">
 					<img v-if="item.status==1||item.status==3"  @click="comFn(item)" src="@/assets/img/del.png" alt="">
 				</van-col>
 			</van-row>
@@ -84,9 +84,12 @@
 			},
 			//查看环评信息详情
 			openDetail(item){
-				console.log(item);
+				// console.log(item);
+				// this.$toast('建设中')
+				this.$router.push({path:'/report-detail',query:{id:item.id}})
+			},
+			lookDetail(item){
 				this.$toast('建设中')
-				// this.$router.push({path:'/eia-detail',query:{enterprise_id:item.enterprise_id}})
 			},
 			//确定弹窗
 			comFn(item){
@@ -155,7 +158,6 @@
 			.item{
 				img{
 					width: 40px;
-					margin-top: 13px;
 				}
 			}
 		}

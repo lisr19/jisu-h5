@@ -2,17 +2,18 @@
 	<div class="msg">
 		<head-bar title="预约培训"></head-bar>
 		<div class="msg-content" >
-			<ul class="items" >
-				<li class="item" v-for="item in 5" @click="">
-					<div class="info">
-						<img class="img"  src="@/assets/img/couse.png"  alt="">
-						<div class="content">
-							<p class="name">环保管理课程</p>
-							<p class="add-time">发送时间：2019-12-21</p>
-						</div>
-					</div>
-				</li>
-			</ul>
+<!--			<ul class="items" >-->
+<!--				<li class="item" v-for="item in 5" @click="">-->
+<!--					<div class="info">-->
+<!--						<img class="img"  src="@/assets/img/couse.png"  alt="">-->
+<!--						<div class="content">-->
+<!--							<p class="name">环保管理课程</p>-->
+<!--							<p class="add-time">发送时间：2019-12-21</p>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</li>-->
+<!--			</ul>-->
+			<div>暂无数据</div>
 		</div>
 	</div>
 </template>

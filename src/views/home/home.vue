@@ -7,19 +7,18 @@
 		<div class="card">
 			<div class="item" @click="openAlarm">
 				<p class="type">预警告警
-					<img src="@/assets/img/warn.png" alt="">
+<!--					<img src="@/assets/img/warn.png" alt="">-->
 				</p>
 				<div class="ctx">
-					<p >水体污染（总铅、六价铬）</p>
-					<span class="tip">超出标准2mg/l</span>
+					<img src="@/assets/img/i-one.png" alt="" style="width: 65%">
 				</div>
 			</div>
 			<div class="item" @click="openAd">
-				<p class="type">税务核算<img src="@/assets/img/icon8.png" alt=""></p>
+				<p class="type">税务核算
+<!--					<img src="@/assets/img/icon8.png" alt="">-->
+				</p>
 				<div class="ctx">
-					<div>
-						水体污染超出指标10%，如本季度未控制排放，税收将增加
-					</div>
+					<img src="@/assets/img/i-two.png" alt="" style="width: 50%;margin:8px 0 0 10px">
 				</div>
 			</div>
 		</div>
@@ -399,21 +398,26 @@
 				font-family:PingFangSC-Regular,PingFang SC;
 				font-weight:400;
 				color:rgba(102,102,102,1);
-				>p{
-					font-size:28px;
+				.type{
+					font-size:38px;
 					font-family:PingFangSC-Medium,PingFang SC;
 					font-weight:500;
 					color:rgba(51,51,51,1);
-					line-height:40px;
+					line-height:50px;
+					text-align: center;
 				}
 				.ctx{
 					width:290px;
 					height:160px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
 					margin-top: 10px;
-					background:rgba(247,247,247,1);
 					border-radius:10px;
-					padding: 14px 18px;
 					box-sizing: border-box;
+					img{
+						width:60%;
+					}
 					.tip{
 						font-size:22px;
 						font-weight:400;

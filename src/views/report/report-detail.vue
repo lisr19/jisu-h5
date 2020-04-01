@@ -4,9 +4,10 @@
 		<div class="content">
 			<Form ref="form3" :model="form3"  :label-width="100">
 				<div  class="card">
+					<img class="icon-down" src="@/assets/img/down2.png"  @click="base_show=true" v-if="base_show==false" alt="">
 					<p >1、企业季度信息</p>
-					<a href="#" @click="base_show=true" v-if="base_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
-					<a href="#" @click="base_show=false" v-if="base_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
+<!--					<a href="#" @click="base_show=true" v-if="base_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>-->
+<!--					<a href="#" @click="base_show=false" v-if="base_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>-->
 				</div>
 				<div class="inner-card" v-if="base_show==true">
 					<div v-if="quarter_info_base.length>0" class="w-card">
@@ -26,8 +27,11 @@
 								<Input type="number" placeholder="0" v-model="item.use_electricity"></Input>
 							</p>
 							<p>生产时间（h）：
-								<Input type="number" placeholder="" v-model="item.time"></Input>
+								<Input type="number" placeholder="" v-model="item.time" ></Input>
 							</p>
+						</div>
+						<div  class="fold"  style="margin-top: 30px">
+							<img src="@/assets/img/uptwo.png"  @click="base_show=false" alt="">
 						</div>
 					</div>
 					<div v-else class="null">暂无数据</div>
@@ -35,12 +39,12 @@
 				</div>
 
 				<div class="card" v-if="showWater">
+					<img class="icon-down" src="@/assets/img/down2.png"  @click="water_show=true" v-if="water_show==false" alt="">
 					<p >2、是否产生工业废水</p>
 					<RadioGroup v-model="form3.waste_water"  >
 						<Radio :label="0" border disabled>否</Radio>
 						<Radio :label="1" border disabled>是</Radio>
-						<a href="#" @click="water_show=true" v-if="water_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
-						<a href="#" @click="water_show=false" v-if="water_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
+
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
@@ -56,7 +60,7 @@
 									</i-select>
 								</p>
 								<p style="margin-top:5px;">
-									<span>废水流量：</span> <InputNumber  v-model="item2.count" placeholder="请输入废水流量" style="width:200px" @on-change="update_outfall_count(index,index1)"></InputNumber>m³/h
+									<span>废水流量：</span> <InputNumber  v-model="item2.count" placeholder="请输入废水流量"  @on-change="update_outfall_count(index,index1)"></InputNumber>m³/h
 								</p>
 								<p class="line"></p>
 								<p style="margin-top:20px;">
@@ -65,7 +69,7 @@
 								<div class="card-two" v-for="(item3,index3) in item2.outfall_count" :key="index3">
 									<p class="name">月份：{{item3.month}}</p>
 									<p>生产时间（h）：
-										<Input type="number" placeholder="0" v-model="item3.hours"></Input>
+										<Input type="number" placeholder="0" v-model="item3.hours" @on-change='update_outfall_count(index,index1)'></Input>
 									</p>
 									<p>总量(m³)：
 										{{item3.total}}
@@ -76,16 +80,17 @@
 								<p style="margin-top:20px;">
 									<span>污染物分月浓度（mg/l）</span>
 								</p>
-								<div class="card-two" v-for="(item3,index3) in item2.index_array" >
-									<p class="name">污染物名称：{{item3.name}}</p>
-									<p>月份：
-<!--										<Input type="number" placeholder="0" v-model="item3.hours"></Input>-->
-									</p>
-									<p>阈值： {{item3.limit_value}}</p>
-									<p>执行标准： {{item3.standard}}</p>
-									<p>备注： {{item3.remarks}}</p>
-								</div>
-<!--								<Table border highlight-row size="small" :columns="columns_index" :data="item2.index_array" @on-row-click='water_waste_index(index,index1)'></Table>-->
+<!--								<div class="card-two" v-for="(item3,index3) in item2.index_array" >-->
+<!--									<p class="name">污染物名称：{{item3.name}}</p>-->
+<!--									<p>月份：{{item3.month}}-->
+<!--&lt;!&ndash;										<Input type="number" placeholder="0" v-model="item3.hours"></Input>&ndash;&gt;-->
+<!--									</p>-->
+<!--									<p>阈值： {{item3.limit_value}}</p>-->
+<!--									<p>执行标准： {{item3.standard}}</p>-->
+<!--									<p>备注： {{item3.remarks}}</p>-->
+<!--								</div>-->
+
+								<Table border highlight-row size="small" :columns="columns_index" :data="item2.index_array" @on-row-click='water_waste_index(index,index1)'></Table>
 							</div>
 							<p class="line"></p>
 							<p style="margin-top:20px;">
@@ -180,18 +185,19 @@
 								</div>
 							</div>
 						</div>
-
+						<div  class="fold"  style="margin-top: 30px">
+							<img src="@/assets/img/uptwo.png"  @click="water_show=false" alt="">
+						</div>
 					</div>
 				</div>
 
 				<div class="card" v-if="showGas">
+					<img class="icon-down" src="@/assets/img/down2.png"  @click="gas_show=true" v-if="gas_show==false" alt="">
 					<p >3、是否产生工业废气</p>
 					<RadioGroup v-model="form3.waste_gas" >
 						<Radio :label="0" border disabled>否</Radio>
 						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
-					<a href="#" @click="gas_show=true" v-if="gas_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
-					<a href="#" @click="gas_show=false" v-if="gas_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
 				<div class="inner-card" v-if="showGas" v-show="gas_show">
 					<div class="w-card">
@@ -240,28 +246,42 @@
 							<!-- <Button type="primary" class="button1" @click="add_total('gas')" style="width:150px">添加排气监测点</Button> -->
 						</p>
 						<div style="margin:10px 0 0 0;padding:10px;border:1px solid #007aff;border-radius:2px" v-for="(item,index) in wastegas_total" :key="index">
-							<span>排气监测点：</span> <i-input disabled type="text" v-model="item.vent_name" placeholder="请输入排气监测点名称" style="width:300px"></i-input>
+							<p>排气监测点：<i-input disabled type="text" v-model="item.vent_name" placeholder="请输入排气监测点名称" style="width:200px"></i-input>
+							</p>
 							<!-- <Button type="primary" class="button1" @click="delete_total('gas',index)" style="width:60px">删除</Button> -->
 
 							<p style="margin-top:5px;margin-bottom:5px">
 								<span style="margin-left:12px">排放风量：</span> <InputNumber  v-model="item.count" placeholder="请输入排放风量" style="width:100px" @on-change="update_gas_outfall_count(index)"></InputNumber>标杆m³/h
 							</p>
+							<p class="line"></p>
 							<p style="margin-top:5px;">
 								<span>污染物分月排量（m³）</span>
 							</p>
-
+<!--							<div class="card-two" v-for="(item3,index3) in item.outfall_count" >-->
+<!--								<p class="name">月份：{{item3.month}}</p>-->
+<!--								<p>生产时间（h）：{{item3.hours}}</p>-->
+<!--								<p>总量(m³)：{{item3.total}}</p>-->
+<!--							</div>-->
 
 							<Table border highlight-row size="small" :columns="columns5" :data="item.outfall_count" @on-row-click='gas_waste_index(index)'></Table>
 
 							<!-- <div style="margin-top:5px;margin-bottom:5px">
                               <Button type="primary" class="button1" @click="add_index=true;index_title='排气监测点数据';index_type=index.toString()+'gas'"  style="width:100px">添加指标</Button>
                             </div> -->
+							<p class="line"></p>
 							<p style="margin-top:5px;">
 								<span>污染物分月浓度（mg/m³）</span>
 							</p>
+<!--							<div class="card-two" v-for="(item3,index3) in item.index_array" >-->
+<!--								<p class="name">污染物名称：{{item3.name}}</p>-->
+<!--								<p>月份：</p>-->
+<!--								<p>阈值： {{item3.limit_value}}</p>-->
+<!--								<p>执行标准： {{item3.standard}}</p>-->
+<!--								<p>备注： {{item3.remarks}}</p>-->
+<!--							</div>-->
 							<Table style="margin-top:5px" border highlight-row size="small" :columns="columns_index1" :data="item.index_array" @on-row-click='gas_waste_index(index)'></Table>
 						</div>
-						<div class="item-card">
+						<div class="item-card" style="margin-top: 20px">
 							<div >
 								<span>环境监测类型</span>
 								<i-select v-model="form3.em_type_info[1].em_type" style="width:150px;margin-left:30px" >
@@ -317,19 +337,21 @@
 								</div>
 							</div>
 						</div>
+						<div  class="fold"  style="margin-top: 30px">
+							<img src="@/assets/img/uptwo.png"  @click="gas_show=false" alt="">
+						</div>
 					</div>
 				</div>
 
 				<div class="card" v-if="showSolid">
+					<img class="icon-down" src="@/assets/img/down2.png"  @click="solid_show=true" v-if="solid_show==false" alt="">
 					<p >4、是否产生一般固废</p>
 					<RadioGroup v-model="form3.solid_waste"  >
 						<Radio :label="0" border disabled>否</Radio>
 						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
-					<a href="#" @click="solid_show=true" v-if="solid_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
-					<a href="#" @click="solid_show=false" v-if="solid_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
-				<div  class="inner-card" v-if="showSolid" v-show="solid_show" style="padding-bottom: 30px">
+				<div  class="inner-card" v-if="showSolid" v-show="solid_show" style="padding-bottom: 15px">
 					<div class="w-card" v-for="(item,index) in solid_total_info" :key="index" >
 						<div style="margin:15px 0">
 							<p>
@@ -348,7 +370,28 @@
 								</Select>
 							</p>
 						</div>
-						<Table border highlight-row size="small" :columns="columns2" :data="item.month_count" @on-row-click='solid_index(index)'></Table>
+						<div class="item-card" v-for="(item3,index3) in item.month_count" >
+							<p class="name">月份：{{item3.month}}</p>
+							<p>产生量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_product_count"></Input>
+							</p>
+							<p>使用量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_use_count"></Input>
+							</p>
+							<p>委外处理量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_out_count"></Input>
+							</p>
+							<p>剩余存量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_remain_count"></Input>
+							</p>
+							<p>阈值（吨）：
+								<Input type="number" placeholder="0" v-model="item3.limit"></Input>
+							</p>
+							<p>执行标准：
+								<Input type="number" placeholder="0" v-model="item3.standard"></Input>
+							</p>
+						</div>
+<!--						<Table border highlight-row size="small" :columns="columns2" :data="item.month_count" @on-row-click='solid_index(index)'></Table>-->
 					</div>
 
 					<div class="item-card">
@@ -407,18 +450,20 @@
 							</div>
 						</div>
 					</div>
+					<div  class="fold"  style="margin-top: 30px">
+						<img src="@/assets/img/uptwo.png"  @click="solid_show=false" alt="">
+					</div>
 				</div>
 
 				<div class="card" v-if="showDanger">
+					<img class="icon-down" src="@/assets/img/down2.png"  @click="dangerous_show=true" v-if="dangerous_show==false" alt="">
 					<p >5、是否产生危险废物</p>
 					<RadioGroup v-model="form3.dangerous_waste"  >
 						<Radio :label="0" border disabled>否</Radio>
 						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
-					<a href="#" @click="dangerous_show=true" v-if="dangerous_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
-					<a href="#" @click="dangerous_show=false" v-if="dangerous_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
-				<div  class="inner-card" v-if="showDanger" v-show="dangerous_show" style="padding-top: 15px;padding-bottom: 30px">
+				<div  class="inner-card" v-if="showDanger" v-show="dangerous_show" style="padding-top: 15px;padding-bottom:15px">
 					<div  class="item-card" v-for="(item,index) in dangerous_waste_total" :key="index">
 						<div style="margin-bottom:10px">
 							<p>废物名称：<i-input disabled type="text" v-model="item.name" placeholder="请输入危险废物名称" style="width:150px"></i-input></p>
@@ -430,9 +475,32 @@
 						</div>
 						<div style="margin-bottom:10px">
 							<span>种类代码：</span>
-							<Cascader disabled :data="dangerous_waste_type_data" :value="getDangerousValue(index)" placeholder="请选择种类代码" trigger="hover" style="width: 100%"></Cascader>
+							<Cascader disabled :data="dangerous_waste_type_data" :value="getDangerousValue(index)" placeholder="请选择种类代码" trigger="hover"></Cascader>
 						</div>
-						<Table border highlight-row size="small" :columns="columns3" :data="item.month_count" @on-row-click='dangerous_index(index)'></Table>
+
+						<div class="card-two" v-for="(item3,index3) in item.month_count" >
+							<p class="name">月份：{{item3.month}}</p>
+							<p>产生量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_product_count"></Input>
+							</p>
+							<p>使用量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_use_count"></Input>
+							</p>
+							<p>处理量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_out_count"></Input>
+							</p>
+							<p>剩余存量（吨）：
+								<Input type="number" placeholder="0" v-model="item3.solid_remain_count"></Input>
+							</p>
+							<p>阈值（吨）：
+								<Input type="number" placeholder="0" v-model="item3.limit"></Input>
+							</p>
+							<p>执行标准：
+								<Input type="number" placeholder="0" v-model="item3.standard"></Input>
+							</p>
+						</div>
+
+<!--						<Table border highlight-row size="small" :columns="columns3" :data="item.month_count" @on-row-click='dangerous_index(index)'></Table>-->
 					</div>
 
 					<div class="item-card">
@@ -491,19 +559,20 @@
 							</div>
 						</div>
 					</div>
-
+					<div  class="fold"  style="margin-top: 30px">
+						<img src="@/assets/img/uptwo.png"  @click="dangerous_show=false" alt="">
+					</div>
 				</div>
 
 				<div class="card" v-if="showNoise">
+					<img class="icon-down" src="@/assets/img/down2.png"  @click="noise_show=true" v-if="noise_show==false" alt="">
 					<p >6、是否有噪音排放</p>
 					<RadioGroup v-model="form3.noise"  >
 						<Radio :label="0" border disabled>否</Radio>
 						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
-					<a href="#" @click="noise_show=true" v-if="noise_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
-					<a href="#" @click="noise_show=false" v-if="noise_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
-				<div class="inner-card" v-if="showNoise" v-show="noise_show" style="padding-bottom: 30px">
+				<div class="inner-card" v-if="showNoise" v-show="noise_show" style="padding-bottom: 15px">
 					<div style="margin:15px 0;padding-top: 15px">
 						<span>厂界长度：</span>
 						<InputNumber disabled placeholder="请输入厂界长度" v-model="form3.factory_length" style="width:200px"></InputNumber>m
@@ -522,7 +591,20 @@
 								<i-option v-for="item1 in noise_type" v-bind:key="item1.id" :value="item1.id">{{item1.name}}</i-option>
 							</i-select></p>
 						</div>
-						<Table border highlight-row size="small" :columns="columns_noise" :data="item.month_count" @on-row-click='noise_index(index)'></Table>
+
+						<div class="card-two" v-for="(item3,index3) in item.month_count" >
+							<p class="name">月份：{{item3.month}}</p>
+							<p>昼间噪声（dB）：
+								<Input type="number" placeholder="0" v-model="item3.day_noise"></Input>
+							</p>
+							<p>夜间噪声（dB）：
+								<Input type="number" placeholder="0" v-model="item3.night_noise"></Input>
+							</p>
+							<p>昼间阈值（dB）：{{item3.limit_day}}</p>
+							<p>夜间阈值（dB）：{{item3.limit_night}}</p>
+							<p>执行标准：{{item3.standard}}</p>
+						</div>
+<!--						<Table border highlight-row size="small" :columns="columns_noise" :data="item.month_count" @on-row-click='noise_index(index)'></Table>-->
 					</div>
 
 					<div class="item-card">
@@ -581,6 +663,9 @@
 							</div>
 						</div>
 					</div>
+					<div  class="fold"  style="margin-top: 30px">
+						<img src="@/assets/img/uptwo.png"  @click="noise_show=false" alt="">
+					</div>
 				</div>
 
 				<div class="card">
@@ -590,7 +675,6 @@
 						<Radio :label="1" border>是</Radio>
 					</RadioGroup>
 				</div>
-				<FormItem label="" prop="et" ></FormItem>
 
 				<div class="card">
 					<p >8、是否有环境违法记录</p>
@@ -702,9 +786,10 @@
 				<span>{{attach_url}}</span>
 			</div>
 		</Modal>
-
-		<div class="btn" @click="handleSave3">保存</div>
-		<div class="btn" @click="handleSave5">提交审核</div>
+		<div class="btns">
+			<div class="btn" @click="handleSave3">保存</div>
+			<div class="btn" @click="handleSave5">提交审核</div>
+		</div>
 	</div>
 </template>
 
@@ -1214,11 +1299,12 @@
 						align: 'center'
 					},
 				],
-				columns_index: [{
-					title: '污染物名称',
+				columns_index: [
+					{
+					title: '污染物',
 					key:'name',
 					align: 'center',
-				},
+					width: '100',},
 					{
 						title: '1月',
 						align: 'center',
@@ -1282,24 +1368,24 @@
 							])
 						}
 					},
-					{
-						title: '阈值',
-						key:'limit_value',
-						align: 'center'
-					},
-					{
-						title:'执行标准',
-						key:'standard',
-						align:'center',
-					},
-					{
-						title: '备注',
-						key:'remarks',
-						align: 'center'
-					}
+					// {
+					// 	title: '阈值',
+					// 	key:'limit_value',
+					// 	align: 'center'
+					// },
+					// {
+					// 	title:'执行标准',
+					// 	key:'standard',
+					// 	align:'center',
+					// },
+					// {
+					// 	title: '备注',
+					// 	key:'remarks',
+					// 	align: 'center'
+					// }
 				],
 				columns_index1: [{
-					title: '污染物名称',
+					title: '污染物',
 					key:'name',
 					align: 'center',
 				},
@@ -1367,22 +1453,22 @@
 							])
 						}
 					},
-					{
-						title:'阈值',
-						key:'limit_value',
-						align:'center',
-						width:80
-					},
-					{
-						title:'执行标准',
-						key:'standard',
-						align:'center',
-					},
-					{
-						title: '备注',
-						key:'remarks',
-						align: 'center'
-					}
+					// {
+					// 	title:'阈值',
+					// 	key:'limit_value',
+					// 	align:'center',
+					// 	width:80
+					// },
+					// {
+					// 	title:'执行标准',
+					// 	key:'standard',
+					// 	align:'center',
+					// },
+					// {
+					// 	title: '备注',
+					// 	key:'remarks',
+					// 	align: 'center'
+					// }
 				],
 				columns_attach: [{
 					title: '文件名',
@@ -1589,9 +1675,9 @@
 			this.getselectdata();
 			//不属于企业账户获取企业列表
 			this.handleGetenterpriseList();
-			// if (this.$route.params.id != 0) {
-			// 	this.handleGetenterpriseDetail();
-			// }
+			if (this.$route.query.id != 0) {
+				this.handleGetenterpriseDetail();
+			}
 			//上传验证
 			this.headers.Authorization = sessionStorage.token;
 		},
@@ -1724,7 +1810,7 @@
 						this.$toast('获取企业选择列表出错')
 					} else {
 						this.enterpriseData=res.data
-						console.log(this.enterpriseData);
+						// console.log(this.enterpriseData);
 					}
 				})
 			},
@@ -1764,10 +1850,10 @@
 					if(res.errno==0){
 						this.report_id=res.data.id;
 						this.getModel();
-						this.$Notice.success({
-							title: '信息保存成功',
-							duration: this.$parent.successTime
-						});
+						// this.$Notice.success({
+						// 	title: '信息保存成功',
+						// 	duration: this.$parent.successTime
+						// });
 					}else{
 						this.$Notice.error({
 							title: '保存失败',
@@ -1781,10 +1867,11 @@
 			//获取第一步信息
 			handleGetenterpriseDetail(){
 				let data={};
-				if (this.$route.params.id != 0) {
-					data.id=this.$route.params.id
-				};
+				if (this.$route.query.id != 0) {
+					data.id=this.$route.query.id
+				}
 				getsave1(data).then(res=>{
+					console.log(res);
 					this.report_id=res.data.id
 					this.form1=res.data
 				})
@@ -1816,6 +1903,7 @@
 							};
 							if(this.form3.waste_water==1){
 								this.water_waste_total=res.data.waste_water_total
+								console.log(this.water_waste_total);
 							};
 							if(this.form3.waste_gas==1){
 								this.ga_tr_fa=res.data.waste_gas_info.ga_tr_fa;
@@ -2406,8 +2494,6 @@
 				getmodel(data).then(res=>{
 					if(res.errno==0){
 						this.model_data=res.data;
-						console.log(this.model_data);
-						console.log(res.data.waste_water);
 						if(res.data.waste_water == 1) {
 							this.form3.waste_water = 1
 							this.waste_water_change()
@@ -2489,7 +2575,7 @@
 			waste_gas_change(){
 				//如果等于1获取模板
 				if(this.model_data.waste_gas==1){
-					console.log(this.wastegas_total)
+					// console.log(this.wastegas_total)
 					let data=this.wastegas_total.length>0 ? this.wastegas_total : this.model_data.waste_gas_info.wastegas_total_info;
 					for(let i in data){
 						if(!data[i].outfall_count) {
@@ -2701,35 +2787,38 @@
 	}
 </script>
 
-<style >
-	.ivu-modal-body{
+<style scoped>
+	.page>>>.ivu-modal-body{
 		font-size: 28px;
 	}
-	.ivu-input-wrapper{
+	.page>>>.ivu-input-wrapper{
 		width: auto;
 	}
-	.ivu-input{
-
+	.page>>>.ivu-input{
+		width: 250px;
 	}
-	.ivu-radio-group{
+	.page>>>.ivu-radio-group{
 		font-size: 28px;
 	}
-	.ivu-radio-wrapper{
+	.page>>>.ivu-radio-wrapper{
 		font-size: 32px;
 		margin-right: 100px;
 	}
-	.ivu-form .ivu-form-item-label{
+	.page>>>.ivu-form .ivu-form-item-label{
 		font-size: 28px;
 	}
-	.ivu-form-item-content{
+	.page>>>.ivu-form-item-content{
 		font-size: 28px;
 		text-align: left;
 	}
-	.ivu-btn{
+	.page>>>.ivu-btn{
 		font-size: 28px;
 	}
-	.ivu-modal-body{
-
+	.page>>>.ivu-table-cell{
+		padding:0 10px;
+	}
+	.page>>>.ivu-input-number{
+		width: auto;
 	}
 </style>
 <style lang="less" scoped>
@@ -2751,7 +2840,8 @@
 					position: absolute;
 					right: 30px;
 					top: 30px;
-					height: 45px;
+					height: 50px;
+					width: 52px;
 				}
 			}
 			.card:first-child{
@@ -2780,7 +2870,8 @@
 					border-top: solid 1px #B3B3B3;
 					padding-top: 15px;
 					img{
-						height: 45px;
+						height: 50px;
+						width: 52px;
 						margin-top: 10px;
 					}
 				}
@@ -2788,7 +2879,7 @@
 			.item-card{
 				background:rgba(255,255,255,1);
 				border-radius:10px;
-				padding: 16px 30px;
+				padding: 16px 15px;
 				margin-bottom: 15px;
 				p{
 					margin-bottom: 18px;
@@ -2830,15 +2921,21 @@
 				background: #f2faff;
 			}
 		}
-		.btn{
-			width:522px;
-			height:90px;
-			line-height: 90px;
-			background:rgba(33,68,61,1);
-			box-shadow:0px 4px 18px 0px rgba(166,172,191,0.5);
-			border-radius:52px;
-			color: #ffffff;
-			margin: 30px auto;
+		.btns{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			.btn{
+				width:40%;
+				height:90px;
+				line-height: 90px;
+				background:rgba(33,68,61,1);
+				box-shadow:0px 4px 18px 0px rgba(166,172,191,0.5);
+				border-radius:52px;
+				color: #ffffff;
+				margin: 30px auto;
+			}
 		}
+
 	}
 </style>

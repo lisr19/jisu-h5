@@ -28,7 +28,7 @@
 					</p>
 				</div>
 			</div>
-			<div class="btn" @click="$toast('建设中')">上传数据/文件</div>
+			<div class="btn" @click="addDetail">上传数据/文件</div>
 		</div>
 		<div v-else class="card">
 			<div class="content null">
@@ -127,6 +127,9 @@
 			}
 		},
 		methods:{
+			addDetail(){
+				this.$router.push({path:'/report-detail'})
+			},
 			openAd(){
 				this.$router.push({name:"建设"})
 			},

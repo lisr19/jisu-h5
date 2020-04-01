@@ -81,7 +81,7 @@
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.affect_book_other_attach"></Table>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up2.png"  @click="show1=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show1=false" alt="">
 						</div>
 					</div>
 				</div>
@@ -128,7 +128,7 @@
 						</div>
 						<Table style="margin-bottom: 30px" border highlight-row size="small" :columns="columns_attach" :data="form.department_reply_other_attach"></Table>
 						<div  class="fold"  >
-							<img src="@/assets/img/up2.png"  @click="show2=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show2=false" alt="">
 						</div>
 					</div>
 				</div>
@@ -164,7 +164,7 @@
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.check_accept_attach"></Table>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up2.png"  @click="show3=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show3=false" alt="">
 						</div>
 					</div>
 				</div>
@@ -225,7 +225,7 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up2.png"  @click="show4=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show4=false" alt="">
 						</div>
 					</div>
 				</div>
@@ -281,7 +281,7 @@
 								</div>
 							</FormItem>
 							<div  class="fold"  >
-								<img src="@/assets/img/up2.png"  @click="show5=false" alt="">
+								<img src="@/assets/img/uptwo.png"  @click="show5=false" alt="">
 							</div>
 						</div>
 					</div>
@@ -339,7 +339,7 @@
 								</div>
 							</FormItem>
 							<div  class="fold"  >
-								<img src="@/assets/img/up2.png"  @click="show6=false" alt="">
+								<img src="@/assets/img/uptwo.png"  @click="show6=false" alt="">
 							</div>
 						</div>
 
@@ -403,7 +403,7 @@
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.dangerous_attach"></Table>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up2.png"  @click="show7=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show7=false" alt="">
 						</div>
 					</div>
 				</div>
@@ -467,7 +467,7 @@
                           <Button type="primary" class="button1" @click="add_total('noise')"  style="width:200px">添加噪音监测点</Button>
                         </div> -->
 						<div  class="fold"  >
-							<img src="@/assets/img/up2.png"  @click="show8=false" alt="">
+							<img src="@/assets/img/uptwo.png"  @click="show8=false" alt="">
 						</div>
 					</div>
 				</div>
