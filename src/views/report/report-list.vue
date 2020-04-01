@@ -27,7 +27,7 @@
 
 				<van-col span="8">
 					<img v-if="item.status==1||item.status==3" @click="openDetail(item)"  src="@/assets/img/edit.png" alt="">
-					<van-icon name="eye-o"  style="margin:0 16px;padding-top: 8px" size="26"/>
+					<van-icon @click="openDetail(item)" name="eye-o"  style="margin:0 16px;padding-top: 8px" size="26"/>
 					<img v-if="item.status==1||item.status==3"  @click="comFn(item)" src="@/assets/img/del.png" alt="">
 				</van-col>
 			</van-row>
@@ -85,7 +85,8 @@
 			//查看环评信息详情
 			openDetail(item){
 				console.log(item);
-				this.$router.push({path:'/eia-detail',query:{enterprise_id:item.enterprise_id}})
+				this.$toast('建设中')
+				// this.$router.push({path:'/eia-detail',query:{enterprise_id:item.enterprise_id}})
 			},
 			//确定弹窗
 			comFn(item){

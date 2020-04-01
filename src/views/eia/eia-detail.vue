@@ -10,7 +10,7 @@
 		<div class="content">
 			<Form ref="form" :model="form"   :rules="ruleValidate" label-position="left">
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png"  v-if="form.affect_book==1&&!show1" @click="show1=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png"  v-if="form.affect_book==1&&!show1" @click="show1=true" alt="">
 					<p>1、是否有做环境影响评价报告</p>
 					<RadioGroup v-model="form.affect_book" @on-change="onChange1">
 						<Radio :label="0" border>否</Radio>
@@ -81,13 +81,13 @@
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.affect_book_other_attach"></Table>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up.png"  @click="show1=false" alt="">
+							<img src="@/assets/img/up2.png"  @click="show1=false" alt="">
 						</div>
 					</div>
 				</div>
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.department_reply==1&&!show2" @click="show2=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.department_reply==1&&!show2" @click="show2=true" alt="">
 					<p >2、是否有环保部门的环评批复意见</p>
 					<RadioGroup v-model="form.department_reply">
 						<Radio :label="0" border>否</Radio>
@@ -128,12 +128,12 @@
 						</div>
 						<Table style="margin-bottom: 30px" border highlight-row size="small" :columns="columns_attach" :data="form.department_reply_other_attach"></Table>
 						<div  class="fold"  >
-							<img src="@/assets/img/up.png"  @click="show2=false" alt="">
+							<img src="@/assets/img/up2.png"  @click="show2=false" alt="">
 						</div>
 					</div>
 				</div>
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.check_accept==1&&!show3" @click="show3=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.check_accept==1&&!show3" @click="show3=true" alt="">
 					<p >3、是否有环评验收手续</p>
 					<RadioGroup v-model="form.check_accept">
 						<Radio :label="0" border>否</Radio>
@@ -164,14 +164,14 @@
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.check_accept_attach"></Table>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up.png"  @click="show3=false" alt="">
+							<img src="@/assets/img/up2.png"  @click="show3=false" alt="">
 						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.waste_water==1&&!show4" @click="show4=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.waste_water==1&&!show4" @click="show4=true" alt="">
 					<p >4、是否产生工业废水</p>
 					<RadioGroup v-model="form.waste_water">
 						<Radio :label="0" border>否</Radio>
@@ -225,13 +225,13 @@
 							</div>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up.png"  @click="show4=false" alt="">
+							<img src="@/assets/img/up2.png"  @click="show4=false" alt="">
 						</div>
 					</div>
 				</div>
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.waste_gas==1&&!show5" @click="show5=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.waste_gas==1&&!show5" @click="show5=true" alt="">
 					<p >5、是否产生工业废气</p>
 					<RadioGroup v-model="form.waste_gas">
 						<Radio :label="0" border>否</Radio>
@@ -281,7 +281,7 @@
 								</div>
 							</FormItem>
 							<div  class="fold"  >
-								<img src="@/assets/img/up.png"  @click="show5=false" alt="">
+								<img src="@/assets/img/up2.png"  @click="show5=false" alt="">
 							</div>
 						</div>
 					</div>
@@ -289,7 +289,7 @@
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.solid_waste==1&&!show6" @click="show6=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.solid_waste==1&&!show6" @click="show6=true" alt="">
 					<p >6、是否产生一般固废</p>
 					<RadioGroup v-model="form.solid_waste">
 						<Radio :label="0" border>否</Radio>
@@ -339,7 +339,7 @@
 								</div>
 							</FormItem>
 							<div  class="fold"  >
-								<img src="@/assets/img/up.png"  @click="show6=false" alt="">
+								<img src="@/assets/img/up2.png"  @click="show6=false" alt="">
 							</div>
 						</div>
 
@@ -348,7 +348,7 @@
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.dangerous_waste==1&&!show7" @click="show7=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.dangerous_waste==1&&!show7" @click="show7=true" alt="">
 					<p >7、是否产生危险废物</p>
 					<RadioGroup v-model="form.dangerous_waste">
 						<Radio :label="0" border>否</Radio>
@@ -403,14 +403,14 @@
 							<Table border highlight-row size="small" :columns="columns_attach" :data="form.dangerous_attach"></Table>
 						</FormItem>
 						<div  class="fold"  >
-							<img src="@/assets/img/up.png"  @click="show7=false" alt="">
+							<img src="@/assets/img/up2.png"  @click="show7=false" alt="">
 						</div>
 					</div>
 				</div>
 
 
 				<div class="card">
-					<img class="icon-down" src="@/assets/img/down.png" v-if="form.noise==1&&!show8" @click="show8=true" alt="">
+					<img class="icon-down" src="@/assets/img/down2.png" v-if="form.noise==1&&!show8" @click="show8=true" alt="">
 					<p >8、是否有噪音排放</p>
 					<RadioGroup v-model="form.noise">
 						<Radio :label="0" border>否</Radio>
@@ -467,7 +467,7 @@
                           <Button type="primary" class="button1" @click="add_total('noise')"  style="width:200px">添加噪音监测点</Button>
                         </div> -->
 						<div  class="fold"  >
-							<img src="@/assets/img/up.png"  @click="show8=false" alt="">
+							<img src="@/assets/img/up2.png"  @click="show8=false" alt="">
 						</div>
 					</div>
 				</div>
@@ -2322,7 +2322,7 @@
 					position: absolute;
 					right: 30px;
 					top: 30px;
-					height: 45px;
+					height: 50px;
 				}
 			}
 			.card:first-child{
@@ -2344,7 +2344,7 @@
 					border-top: solid 1px #B3B3B3;
 					padding-top: 15px;
 					img{
-						height: 45px;
+						height: 50px;
 						margin-top: 10px;
 					}
 				}

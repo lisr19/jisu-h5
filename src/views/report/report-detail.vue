@@ -37,38 +37,58 @@
 				<div class="card" v-if="showWater">
 					<p >2、是否产生工业废水</p>
 					<RadioGroup v-model="form3.waste_water"  >
-						<Radio :label="0" border>否</Radio>
-						<Radio :label="1" border>是</Radio>
+						<Radio :label="0" border disabled>否</Radio>
+						<Radio :label="1" border disabled>是</Radio>
+						<a href="#" @click="water_show=true" v-if="water_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
+						<a href="#" @click="water_show=false" v-if="water_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="showWater">
+					<div class="w-card" v-if="showWater" v-show="water_show">
 						<div class="item-card" v-for="(item,index) in water_waste_total" :key="index">
 							<div style="margin:5px 0 0 0;" v-for="(item2,index1) in item.wastewater_total" :key="index1">
-								<span>排污监测点：</span> <i-input disabled type="text" v-model="item2.outfall_name" placeholder="请输入排污监测点名称" style="width:300px"></i-input>
+								<span>排污监测点：</span> <i-input disabled type="text" v-model="item2.outfall_name" placeholder="请输入排污监测点名称" ></i-input>
 								<!-- <Button type="primary" class="button1" @click="delete_total('water',index,index1)" style="width:60px">删除</Button> -->
 								<p style="margin-top:5px;">
-									<span style="margin-left:12px">废水类型：</span>
+									<span>废水类型：</span>
 									<i-select v-model="item.type_id" disabled style="width:200px" >
 										<i-option v-for="item1 in wastewater_type_data" v-bind:key="item1.id" :value="item1.id">{{item1.name}}</i-option>
 									</i-select>
 								</p>
 								<p style="margin-top:5px;">
-									<span style="margin-left:12px">废水流量：</span> <InputNumber  v-model="item2.count" placeholder="请输入废水流量" style="width:100px" @on-change="update_outfall_count(index,index1)"></InputNumber>m³/h
+									<span>废水流量：</span> <InputNumber  v-model="item2.count" placeholder="请输入废水流量" style="width:200px" @on-change="update_outfall_count(index,index1)"></InputNumber>m³/h
 								</p>
-								<p style="margin-top:5px;">
+								<p class="line"></p>
+								<p style="margin-top:20px;">
 									<span>污染物分月排量（m³）</span>
 								</p>
-								<Table border highlight-row size="small" :columns="columns4" :data="item2.outfall_count" @on-row-click='water_waste_index(index,index1)'></Table>
-								<!-- <div style="margin-top:5px;margin-bottom:5px">
-                                  <Button type="primary" class="button1" @click="add_index=true;index_title='排污监测点数据';water_index=index;index_type=index1.toString()+'water'"  style="width:100px">添加指标</Button>
-                                </div> -->
-								<p style="margin-top:5px;">
+								<div class="card-two" v-for="(item3,index3) in item2.outfall_count" :key="index3">
+									<p class="name">月份：{{item3.month}}</p>
+									<p>生产时间（h）：
+										<Input type="number" placeholder="0" v-model="item3.hours"></Input>
+									</p>
+									<p>总量(m³)：
+										{{item3.total}}
+									</p>
+								</div>
+<!--								<Table border highlight-row size="small" :columns="columns4" :data="item2.outfall_count" @on-row-click='water_waste_index(index,index1)'></Table>-->
+								<p class="line"></p>
+								<p style="margin-top:20px;">
 									<span>污染物分月浓度（mg/l）</span>
 								</p>
-								<Table border highlight-row size="small" :columns="columns_index" :data="item2.index_array" @on-row-click='water_waste_index(index,index1)'></Table>
+								<div class="card-two" v-for="(item3,index3) in item2.index_array" >
+									<p class="name">污染物名称：{{item3.name}}</p>
+									<p>月份：
+<!--										<Input type="number" placeholder="0" v-model="item3.hours"></Input>-->
+									</p>
+									<p>阈值： {{item3.limit_value}}</p>
+									<p>执行标准： {{item3.standard}}</p>
+									<p>备注： {{item3.remarks}}</p>
+								</div>
+<!--								<Table border highlight-row size="small" :columns="columns_index" :data="item2.index_array" @on-row-click='water_waste_index(index,index1)'></Table>-->
 							</div>
-							<p style="margin:10px 0 0 0">
+							<p class="line"></p>
+							<p style="margin-top:20px;">
 								<span>是否有废水治理设施：</span>
 								<RadioGroup v-model="item.wa_tr_fa">
 									<Radio :label="0" border>否</Radio>
@@ -78,11 +98,12 @@
 							<div v-if="item.wa_tr_fa==1">
 								<div style="margin-bottom:5px">
 									<Button type="primary" class="button1" @click="attach_type=31;water_attach=index;attach_title='主要污染物治理设施方案、污染防治设施日常运行记录表';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">主要污染物治理设施方案、污染防治设施日常运行记录表</span>
+									<p style="color:red">主要污染物治理设施方案、污染防治设施日常运行记录表</p>
 								</div>
 								<Table border highlight-row size="small" :columns="columns_attach" :data="item.wa_tr_fa_attach"></Table>
 							</div>
-							<p style="margin:10px 0 0 0">
+							<p class="line"></p>
+							<p style="margin-top:20px;">
 								<span>委外运行废水治理设施：</span>
 								<RadioGroup v-model="item.ou_wa_fa">
 									<Radio :label="0" border>自营</Radio>
@@ -92,7 +113,7 @@
 							<div v-if="item.ou_wa_fa==0">
 								<div style="margin-bottom:5px">
 									<Button type="primary" class="button1" @click="attach_type=32;water_attach=index;attach_title='运营方案、责任人和运营技术团队资料等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">运营方案、数据</span>
+									<p style="color:red">运营方案、数据</p>
 								</div>
 								<Table border highlight-row size="small" :columns="columns_attach" :data="item.ou_wa_fa_attach"></Table>
 							</div>
@@ -103,111 +124,118 @@
 								</i-select>
 							</div>
 						</div>
-						<div style="background-color:#fff;padding:10px;font-weight:bold;">
-							<p >环境监测类型</p>
-							<i-select v-model="form3.em_type_info[0].em_type" style="width:200px;margin-left:50px" >
-								<i-option  :value="1">自行监控</i-option>
-								<i-option  :value="2">委托监控</i-option>
-								<i-option  :value="3">自动监控</i-option>
-								<i-option  :value="4">其他</i-option>
-							</i-select>
-						</div>
-						<div >
-							<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
-								<div v-if="form3.em_type_info[0].em_type==1">
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">企业实验室的监测资质文件,监测报告</span>
-										<Button type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+						<div class="item-card">
+							<div >
+								<span>环境监测类型</span>
+								<i-select v-model="form3.em_type_info[0].em_type" style="width:150px;margin-left:30px" >
+									<i-option  :value="1">自行监控</i-option>
+									<i-option  :value="2">委托监控</i-option>
+									<i-option  :value="3">自动监控</i-option>
+									<i-option  :value="4">其他</i-option>
+								</i-select>
+							</div>
+							<div >
+								<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
+									<div v-if="form3.em_type_info[0].em_type==1">
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">企业实验室的监测资质文件,监测报告</p>
+											<Button type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
-								</div>
-								<div v-if="form3.em_type_info[0].em_type==2">
-									<p  style="margin-bottom:5px">
-										<span>选择第三方公司：</span>
-										<i-select v-model="form3.em_type_info[0].em_type_third_enterprise_id" style="width:200px" >
-											<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
-										</i-select>
-									</p>
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=38;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</span>
-										<Button  type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+									<div v-if="form3.em_type_info[0].em_type==2">
+										<p  style="margin-bottom:5px">
+											<span>选择第三方公司：</span>
+											<i-select v-model="form3.em_type_info[0].em_type_third_enterprise_id" style="width:200px" >
+												<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
+											</i-select>
+										</p>
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=38;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</p>
+											<Button  type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
-								</div>
-								<div v-if="form3.em_type_info[0].em_type==3">
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=38;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</span>
-										<Button  type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+									<div v-if="form3.em_type_info[0].em_type==3">
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=38;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</p>
+											<Button  type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
-								</div>
-								<div v-if="form3.em_type_info[0].em_type==4">
-									<p style="margin-bottom:5px">
-										<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[0].em_type_explain" placeholder="请输入说明" style="width:400px"></i-input>
-									</p>
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=38;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">相关佐证材料</span>
-										<Button  type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+									<div v-if="form3.em_type_info[0].em_type==4">
+										<p style="margin-bottom:5px">
+											<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[0].em_type_explain" placeholder="请输入说明" ></i-input>
+										</p>
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=38;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">相关佐证材料</p>
+											<Button  type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[0].em_type_attach"></Table>
 								</div>
 							</div>
 						</div>
+
 					</div>
 				</div>
 
 				<div class="card" v-if="showGas">
 					<p >3、是否产生工业废气</p>
 					<RadioGroup v-model="form3.waste_gas" >
-						<Radio :label="0" border>否</Radio>
-						<Radio :label="1" border>是</Radio>
+						<Radio :label="0" border disabled>否</Radio>
+						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
+					<a href="#" @click="gas_show=true" v-if="gas_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
+					<a href="#" @click="gas_show=false" v-if="gas_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
-				<div style="margin:0 50px 10px 50px;" v-if="showGas">
-					<div style="margin:10px 0 10px 0;padding:10px;background-color:#fff">
-						<p style="margin:0">
+				<div class="inner-card" v-if="showGas" v-show="gas_show">
+					<div class="w-card">
+						<p>
 							<span>是否废气治理设施：</span>
 							<RadioGroup v-model="ga_tr_fa">
 								<Radio :label="0" border>否</Radio>
 								<Radio :label="1" border>是</Radio>
 							</RadioGroup>
 						</p>
-						<div v-if="ga_tr_fa==1">
+						<div class="item-card"  v-if="ga_tr_fa==1">
 							<!-- <div style="margin-bottom:5px">
                               <Button type="primary" class="button1" @click="add_index=true;index_title='废气治理设施';index_type=33"  style="width:100px">添加测试指标</Button>
                             </div>
                             <Table border highlight-row size="small" :columns="columns_index" :data="ga_tr_fa_index_array"></Table> -->
-							<div style="margin-bottom:5px">
+							<div style="margin-bottom:15px">
 								<Button type="primary" class="button1" @click="attach_type=33;attach_title='主要污染物治理设施方案、污染防治设施日常运行记录表';add_attach=true" style="width:100px">添加附件</Button>
-								<span style="color:red">主要污染物治理设施方案、污染防治设施日常运行记录表</span>
+								<p style="color:red">主要污染物治理设施方案、污染防治设施日常运行记录表</p>
 							</div>
 							<Table border highlight-row size="small" :columns="columns_attach" :data="ga_tr_fa_attach"></Table>
 						</div>
-						<p style="margin:10px 0 0 0">
+						<p class="line"></p>
+						<p style="margin:20px 0">
 							<span>委外运行废气治理设施：</span>
 							<RadioGroup v-model="ou_ga_fa">
 								<Radio :label="0" border>自营</Radio>
 								<Radio :label="1" border>委外</Radio>
 							</RadioGroup>
 						</p>
-						<div v-if="ou_ga_fa==0">
+						<div class="item-card" v-if="ou_ga_fa==0">
 							<div style="margin-bottom:5px">
 								<Button type="primary" class="button1" @click="attach_type=34;attach_title='运营方案、责任人和运营技术团队资料等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-								<span style="color:red">运营方案、数据</span>
+								<p style="color:red">运营方案、数据</p>
 							</div>
 							<Table border highlight-row size="small" :columns="columns_attach" :data="ou_ga_fa_attach"></Table>
 						</div>
-						<div v-else>
+						<div v-else  class="item-card">
 							<span>选择第三方公司：</span>
 							<i-select v-model="ou_ga_fa_third_enterprise_id" style="width:200px" >
 								<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
 							</i-select>
 						</div>
-						<p style="margin:10px 0 0 0">
+						<p class="line" style="margin: 20px 0"></p>
+						<p style="margin:15px 0 0 0">
 							<span>废气分布：</span>
 							<!-- <Button type="primary" class="button1" @click="add_total('gas')" style="width:150px">添加排气监测点</Button> -->
 						</p>
@@ -221,6 +249,8 @@
 							<p style="margin-top:5px;">
 								<span>污染物分月排量（m³）</span>
 							</p>
+
+
 							<Table border highlight-row size="small" :columns="columns5" :data="item.outfall_count" @on-row-click='gas_waste_index(index)'></Table>
 
 							<!-- <div style="margin-top:5px;margin-bottom:5px">
@@ -231,57 +261,59 @@
 							</p>
 							<Table style="margin-top:5px" border highlight-row size="small" :columns="columns_index1" :data="item.index_array" @on-row-click='gas_waste_index(index)'></Table>
 						</div>
-						<div style="background-color:#fff;padding:10px;font-weight:bold;">
-							<p >环境监测类型</p>
-							<i-select v-model="form3.em_type_info[1].em_type" style="width:200px;margin-left:50px" >
-								<i-option  :value="1">自行监控</i-option>
-								<i-option  :value="2">委托监控</i-option>
-								<i-option  :value="3">自动监控</i-option>
-								<i-option  :value="4">其他</i-option>
-							</i-select>
-						</div>
-						<div >
-							<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
-								<div v-if="form3.em_type_info[1].em_type==1">
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">企业实验室的监测资质文件,监测报告</span>
-										<Button  type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+						<div class="item-card">
+							<div >
+								<span>环境监测类型</span>
+								<i-select v-model="form3.em_type_info[1].em_type" style="width:150px;margin-left:30px" >
+									<i-option  :value="1">自行监控</i-option>
+									<i-option  :value="2">委托监控</i-option>
+									<i-option  :value="3">自动监控</i-option>
+									<i-option  :value="4">其他</i-option>
+								</i-select>
+							</div>
+							<div >
+								<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
+									<div v-if="form3.em_type_info[1].em_type==1">
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">企业实验室的监测资质文件,监测报告</p>
+											<Button type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
-								</div>
-								<div v-if="form3.em_type_info[1].em_type==2">
-									<p  style="margin-bottom:5px">
-										<span>选择第三方公司：</span>
-										<i-select v-model="form3.em_type_info[1].em_type_third_enterprise_id" style="width:200px" >
-											<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
-										</i-select>
-									</p>
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=39;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</span>
-										<Button  type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+									<div v-if="form3.em_type_info[1].em_type==2">
+										<p  style="margin-bottom:5px">
+											<span>选择第三方公司：</span>
+											<i-select v-model="form3.em_type_info[1].em_type_third_enterprise_id" style="width:200px" >
+												<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
+											</i-select>
+										</p>
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=39;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</p>
+											<Button  type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
-								</div>
-								<div v-if="form3.em_type_info[1].em_type==3">
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=39;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</span>
-										<Button  type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+									<div v-if="form3.em_type_info[1].em_type==3">
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=38;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</p>
+											<Button  type="primary" class="button1" @click="attach_type=38;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
-								</div>
-								<div v-if="form3.em_type_info[1].em_type==4">
-									<p style="margin-bottom:5px">
-										<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[1].em_type_explain" placeholder="请输入说明" style="width:400px"></i-input>
-									</p>
-									<div style="margin-bottom:5px">
-										<Button type="primary" class="button1" @click="attach_type=39;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-										<span style="color:red">相关佐证材料</span>
-										<Button  type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+									<div v-if="form3.em_type_info[1].em_type==4">
+										<p style="margin-bottom:5px">
+											<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[1].em_type_explain" placeholder="请输入说明" ></i-input>
+										</p>
+										<div style="margin-bottom:5px">
+											<Button type="primary" class="button1" @click="attach_type=39;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+											<p style="color:red">相关佐证材料</p>
+											<Button  type="primary" class="button1" @click="attach_type=39;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+										</div>
+										<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
 									</div>
-									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[1].em_type_attach"></Table>
 								</div>
 							</div>
 						</div>
@@ -291,83 +323,87 @@
 				<div class="card" v-if="showSolid">
 					<p >4、是否产生一般固废</p>
 					<RadioGroup v-model="form3.solid_waste"  >
-						<Radio :label="0" border>否</Radio>
-						<Radio :label="1" border>是</Radio>
+						<Radio :label="0" border disabled>否</Radio>
+						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
+					<a href="#" @click="solid_show=true" v-if="solid_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
+					<a href="#" @click="solid_show=false" v-if="solid_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
-				<div style="margin:0 50px 10px 50px;" v-if="showSolid">
-					<!-- <div style="margin-bottom:5px">
-                      <Button type="primary" class="button1" @click="add_total('solid_total_info')" style="width:120px">添加固废信息</Button>
-                    </div> -->
-					<div style="margin:10px 0 0 0;padding:10px;background-color:#fff" v-for="(item,index) in solid_total_info" :key="index" >
-						<p style="margin-bottom:10px">
-							<span>固废名称：</span> <i-input disabled type="text" v-model="item.name" placeholder="请输入固废名称" style="width:200px"></i-input>
-							<span>第三方委外公司：</span>
-							<i-select v-model="item.third_enterprise_id" style="width:200px"  >
-								<i-option v-for="item1 in third_Enterprise_Select" v-bind:key="item1.id" :value="item1.id">{{item1.name}}</i-option>
-							</i-select>
-						</p>
-						<div style="height:32px;margin-bottom:10px">
-							<div style="float:left;width:63px;line-height:32px">固废类型：</div>
-							<Select disabled  :value="getSolidId(item.type_id)" placeholder="请选择固废类型" trigger="hover" style="width:200px;float:left;margin-right:10px">
-								<Option v-for="(item,index) in solid_waste_type" :key="index" :value="item.value">{{item.label}}</Option>
-							</Select>
-
-							<!-- <Button type="primary" class="button1" @click="delete_total('solid_total_info',index)" style="width:60px;margin-left:30px">删除</Button> -->
+				<div  class="inner-card" v-if="showSolid" v-show="solid_show" style="padding-bottom: 30px">
+					<div class="w-card" v-for="(item,index) in solid_total_info" :key="index" >
+						<div style="margin:15px 0">
+							<p>
+								<span>固废名称：</span> <i-input disabled type="text" v-model="item.name" placeholder="请输入固废名称" style="width:150px"></i-input>
+							</p>
+							<p style="margin:15px 0">
+								<span>第三方委外公司：</span>
+								<i-select v-model="item.third_enterprise_id" style="width:150px"  >
+									<i-option v-for="item1 in third_Enterprise_Select" v-bind:key="item1.id" :value="item1.id">{{item1.name}}</i-option>
+								</i-select>
+							</p>
+							<p>
+								<span >固废类型：</span>
+								<Select disabled  :value="getSolidId(item.type_id)" placeholder="请选择固废类型" trigger="hover" style="width:200px;">
+									<Option v-for="(item,index) in solid_waste_type" :key="index" :value="item.value">{{item.label}}</Option>
+								</Select>
+							</p>
 						</div>
 						<Table border highlight-row size="small" :columns="columns2" :data="item.month_count" @on-row-click='solid_index(index)'></Table>
 					</div>
-					<div style="background-color:#fff;padding:10px;font-weight:bold;">
-						<p >环境监测类型</p>
-						<i-select v-model="form3.em_type_info[2].em_type" style="width:200px;margin-left:50px" >
-							<i-option  :value="1">自行监控</i-option>
-							<i-option  :value="2">委托监控</i-option>
-							<i-option  :value="3">自动监控</i-option>
-							<i-option  :value="4">其他</i-option>
-						</i-select>
-					</div>
-					<div >
-						<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
-							<div v-if="form3.em_type_info[2].em_type==1">
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">企业实验室的监测资质文件,监测报告</span>
-									<Button  type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+
+					<div class="item-card">
+						<div >
+							<span>环境监测类型</span>
+							<i-select v-model="form3.em_type_info[2].em_type" style="width:150px;margin-left:30px" >
+								<i-option  :value="1">自行监控</i-option>
+								<i-option  :value="2">委托监控</i-option>
+								<i-option  :value="3">自动监控</i-option>
+								<i-option  :value="4">其他</i-option>
+							</i-select>
+						</div>
+						<div >
+							<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
+								<div v-if="form3.em_type_info[2].em_type==1">
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">企业实验室的监测资质文件,监测报告</p>
+										<Button type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[2].em_type==2">
-								<p  style="margin-bottom:5px">
-									<span>选择第三方公司：</span>
-									<i-select v-model="form3.em_type_info[2].em_type_third_enterprise_id" style="width:200px" >
-										<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
-									</i-select>
-								</p>
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=40;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</span>
-									<Button  type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[2].em_type==2">
+									<p  style="margin-bottom:5px">
+										<span>选择第三方公司：</span>
+										<i-select v-model="form3.em_type_info[2].em_type_third_enterprise_id" style="width:200px" >
+											<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
+										</i-select>
+									</p>
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=40;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</p>
+										<Button  type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[2].em_type==3">
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=40;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</span>
-									<Button  type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[2].em_type==3">
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=40;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</p>
+										<Button  type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[2].em_type==4">
-								<p style="margin-bottom:5px">
-									<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[2].em_type_explain" placeholder="请输入说明" style="width:400px"></i-input>
-								</p>
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=40;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">相关佐证材料</span>
-									<Button  type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[2].em_type==4">
+									<p style="margin-bottom:5px">
+										<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[2].em_type_explain" placeholder="请输入说明" ></i-input>
+									</p>
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=40;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">相关佐证材料</p>
+										<Button  type="primary" class="button1" @click="attach_type=40;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[2].em_type_attach"></Table>
 							</div>
 						</div>
 					</div>
@@ -376,179 +412,178 @@
 				<div class="card" v-if="showDanger">
 					<p >5、是否产生危险废物</p>
 					<RadioGroup v-model="form3.dangerous_waste"  >
-						<Radio :label="0" border>否</Radio>
-						<Radio :label="1" border>是</Radio>
+						<Radio :label="0" border disabled>否</Radio>
+						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
+					<a href="#" @click="dangerous_show=true" v-if="dangerous_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
+					<a href="#" @click="dangerous_show=false" v-if="dangerous_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
-				<div style="margin:0 50px 10px 50px;" v-if="showDanger">
-				
-					<div style="margin:10px 0 0 0;padding:10px;background-color:#fff" v-for="(item,index) in dangerous_waste_total" :key="index">
-						<p style="margin-bottom:10px">
-							<span>废物名称：</span> <i-input disabled type="text" v-model="item.name" placeholder="请输入危险废物名称" style="width:200px"></i-input>
-							<span>第三方处理公司：</span>
-							<i-select v-model="item.third_enterprise_id" style="width:200px" >
-								<i-option v-for="item2 in third_Enterprise_Select" v-bind:key="item2.id" :value="item2.id">{{item2.name}}</i-option>
-							</i-select>
-							<!-- <Button type="primary" class="button1" @click="delete_total('dangerous',index)" style="width:60px">删除</Button> -->
-						</p>
-						<div style="height:32px;margin-bottom:10px">
-							<div style="float:left;width:63px;line-height:32px">种类代码：</div>
-							<Cascader disabled :data="dangerous_waste_type_data" :value="getDangerousValue(index)" placeholder="请选择种类代码" trigger="hover" style="width:300px;float:left"></Cascader>
+				<div  class="inner-card" v-if="showDanger" v-show="dangerous_show" style="padding-top: 15px;padding-bottom: 30px">
+					<div  class="item-card" v-for="(item,index) in dangerous_waste_total" :key="index">
+						<div style="margin-bottom:10px">
+							<p>废物名称：<i-input disabled type="text" v-model="item.name" placeholder="请输入危险废物名称" style="width:150px"></i-input></p>
+							<p>第三方处理公司：
+								<i-select v-model="item.third_enterprise_id" style="width:150px" >
+									<i-option v-for="item2 in third_Enterprise_Select" v-bind:key="item2.id" :value="item2.id">{{item2.name}}</i-option>
+								</i-select>
+							</p>
+						</div>
+						<div style="margin-bottom:10px">
+							<span>种类代码：</span>
+							<Cascader disabled :data="dangerous_waste_type_data" :value="getDangerousValue(index)" placeholder="请选择种类代码" trigger="hover" style="width: 100%"></Cascader>
 						</div>
 						<Table border highlight-row size="small" :columns="columns3" :data="item.month_count" @on-row-click='dangerous_index(index)'></Table>
 					</div>
-					<div style="background-color:#fff;padding:10px;font-weight:bold;">
-						<p >环境监测类型</p>
-						<i-select v-model="form3.em_type_info[3].em_type" style="width:200px;margin-left:50px" >
-							<i-option  :value="1">自行监控</i-option>
-							<i-option  :value="2">委托监控</i-option>
-							<i-option  :value="3">自动监控</i-option>
-							<i-option  :value="4">其他</i-option>
-						</i-select>
-					</div>
-					<div >
-						<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
-							<div v-if="form3.em_type_info[3].em_type==1">
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">企业实验室的监测资质文件,监测报告</span>
-									<Button  type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+
+					<div class="item-card">
+						<div >
+							<span>环境监测类型</span>
+							<i-select v-model="form3.em_type_info[3].em_type" style="width:150px;margin-left:30px" >
+								<i-option  :value="1">自行监控</i-option>
+								<i-option  :value="2">委托监控</i-option>
+								<i-option  :value="3">自动监控</i-option>
+								<i-option  :value="4">其他</i-option>
+							</i-select>
+						</div>
+						<div >
+							<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
+								<div v-if="form3.em_type_info[3].em_type==1">
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">企业实验室的监测资质文件,监测报告</p>
+										<Button type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[3].em_type==2">
-								<p  style="margin-bottom:5px">
-									<span>选择第三方公司：</span>
-									<i-select v-model="form3.em_type_info[3].em_type_third_enterprise_id" style="width:200px" >
-										<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
-									</i-select>
-								</p>
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=41;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</span>
-									<Button  type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[3].em_type==2">
+									<p  style="margin-bottom:5px">
+										<span>选择第三方公司：</span>
+										<i-select v-model="form3.em_type_info[3].em_type_third_enterprise_id" style="width:200px" >
+											<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
+										</i-select>
+									</p>
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=41;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</p>
+										<Button  type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[3].em_type==3">
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=41;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</span>
-									<Button  type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[3].em_type==3">
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=41;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</p>
+										<Button  type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[3].em_type==4">
-								<p style="margin-bottom:5px">
-									<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[3].em_type_explain" placeholder="请输入说明" style="width:400px"></i-input>
-								</p>
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=41;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">相关佐证材料</span>
-									<Button  type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[3].em_type==4">
+									<p style="margin-bottom:5px">
+										<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[3].em_type_explain" placeholder="请输入说明" ></i-input>
+									</p>
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=41;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">相关佐证材料</p>
+										<Button  type="primary" class="button1" @click="attach_type=41;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
 							</div>
 						</div>
 					</div>
+
 				</div>
 
 				<div class="card" v-if="showNoise">
 					<p >6、是否有噪音排放</p>
 					<RadioGroup v-model="form3.noise"  >
-						<Radio :label="0" border>否</Radio>
-						<Radio :label="1" border>是</Radio>
+						<Radio :label="0" border disabled>否</Radio>
+						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
+					<a href="#" @click="noise_show=true" v-if="noise_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>
+					<a href="#" @click="noise_show=false" v-if="noise_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>
 				</div>
-				<div style="margin:0 50px 10px 50px;" v-if="showNoise">
-					<div style="margin-bottom:5px">
+				<div class="inner-card" v-if="showNoise" v-show="noise_show" style="padding-bottom: 30px">
+					<div style="margin:15px 0;padding-top: 15px">
 						<span>厂界长度：</span>
 						<InputNumber disabled placeholder="请输入厂界长度" v-model="form3.factory_length" style="width:200px"></InputNumber>m
 					</div>
-					<div style="margin:10px 0 0 0;padding:10px;background-color:#fff" v-for="(item,index) in noise_list" :key="index">
+					<div class="item-card" v-for="(item,index) in noise_list" :key="index">
+						<div style="margin-bottom:15px">
+							<p >监测点：<Input disabled placeholder="请输入监测点" v-model="item.name"  style="width:200px"></Input></p>
 
-						<div style="margin-bottom:5px">
-							<p style="width:100px;float:left;text-align:right;line-height:32px">监测点：</p>
-							<Input disabled placeholder="请输入监测点" v-model="item.name"  style="width:200px"></Input>
 						</div>
-						<div style="margin-bottom:5px">
-							<p style="width:100px;float:left;text-align:right;line-height:32px">编号：</p>
-							<Input  disabled placeholder="请输入监测点编号" v-model="item.num"  style="width:200px"></Input>
+						<div style="margin-bottom:15px">
+							<p >编号：	<Input  disabled placeholder="请输入监测点编号" v-model="item.num"  style="width:200px"></Input></p>
+
 						</div>
-						<div style="margin-bottom:5px">
-							<p style="width:100px;float:left;text-align:right;line-height:32px">类型：</p>
-							<i-select :value="getNoiseId(item.type_id)" style="width:200px" :label-in-value="true" disabled>
+						<div style="margin-bottom:15px">
+							<p >类型：<i-select :value="getNoiseId(item.type_id)" style="width:150px" :label-in-value="true" disabled>
 								<i-option v-for="item1 in noise_type" v-bind:key="item1.id" :value="item1.id">{{item1.name}}</i-option>
-							</i-select>
-							<!-- <span>阈值：{{item.limit}}dB</span>
-                            <span>执行标准：{{item.standard}}</span> -->
+							</i-select></p>
 						</div>
 						<Table border highlight-row size="small" :columns="columns_noise" :data="item.month_count" @on-row-click='noise_index(index)'></Table>
 					</div>
-					<!-- <div style="margin-bottom:5px">
-                      <Button type="primary" class="button1" @click="add_noise=true"  style="width:150px">添加噪音监测点</Button>
-                    </div>
-                    <div style="margin:10px 0 0 0;padding:10px;background-color:#fff">
-                      <Table border highlight-row size="small" :columns="columns_noise" :data="noise_list"></Table>
-                    </div> -->
-					<div style="background-color:#fff;padding:10px;font-weight:bold;">
-						<p >环境监测类型</p>
-						<i-select v-model="form3.em_type_info[4].em_type" style="width:200px;margin-left:50px" >
-							<i-option  :value="1">自行监控</i-option>
-							<i-option  :value="2">委托监控</i-option>
-							<i-option  :value="3">自动监控</i-option>
-							<i-option  :value="4">其他</i-option>
-						</i-select>
-					</div>
-					<div >
-						<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
-							<div v-if="form3.em_type_info[4].em_type==1">
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">企业实验室的监测资质文件,监测报告</span>
-									<Button  type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+
+					<div class="item-card">
+						<div >
+							<span>环境监测类型</span>
+							<i-select v-model="form3.em_type_info[4].em_type" style="width:150px;margin-left:30px" >
+								<i-option  :value="1">自行监控</i-option>
+								<i-option  :value="2">委托监控</i-option>
+								<i-option  :value="3">自动监控</i-option>
+								<i-option  :value="4">其他</i-option>
+							</i-select>
+						</div>
+						<div >
+							<div style="margin:0 0 10px 0;padding:10px;background-color:#fff" >
+								<div v-if="form3.em_type_info[4].em_type==1">
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">企业实验室的监测资质文件,监测报告</p>
+										<Button type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[3].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[4].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[4].em_type==2">
-								<p  style="margin-bottom:5px">
-									<span>选择第三方公司：</span>
-									<i-select v-model="form3.em_type_info[4].em_type_third_enterprise_id" style="width:200px" >
-										<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
-									</i-select>
-								</p>
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=42;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</span>
-									<Button  type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[4].em_type==2">
+									<p  style="margin-bottom:5px">
+										<span>选择第三方公司：</span>
+										<i-select v-model="form3.em_type_info[4].em_type_third_enterprise_id" style="width:200px" >
+											<i-option v-for="item in third_Enterprise_Select" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
+										</i-select>
+									</p>
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=42;attach_title='评测报告扫描件,委托合同、被委托单位的资质文件';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">评测报告扫描件,委托合同、被委托单位的资质文件</p>
+										<Button  type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[4].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[4].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[4].em_type==3">
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=42;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</span>
-									<Button  type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[4].em_type==3">
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=42;attach_title='自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">自动监控设备运行验收文件、自动监控设备运行（维护）委托合同等佐证材料</p>
+										<Button  type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[4].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[4].em_type_attach"></Table>
-							</div>
-							<div v-if="form3.em_type_info[4].em_type==4">
-								<p style="margin-bottom:5px">
-									<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[2].em_type_explain" placeholder="请输入说明" style="width:400px"></i-input>
-								</p>
-								<div style="margin-bottom:5px">
-									<Button type="primary" class="button1" @click="attach_type=42;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
-									<span style="color:red">相关佐证材料</span>
-									<Button  type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true" style="width:100px;margin-left:100px">选择历史附件</Button>
+								<div v-if="form3.em_type_info[4].em_type==4">
+									<p style="margin-bottom:5px">
+										<span>说明：</span> <i-input type="text" v-model="form3.em_type_info[4].em_type_explain" placeholder="请输入说明" ></i-input>
+									</p>
+									<div style="margin-bottom:5px">
+										<Button type="primary" class="button1" @click="attach_type=42;attach_title='相关佐证材料';add_attach=true" style="width:100px">添加附件</Button>
+										<p style="color:red">相关佐证材料</p>
+										<Button  type="primary" class="button1" @click="attach_type=42;attach_title='企业实验室的监测资质文件,监测报告';add_attach_history=true">选择历史附件</Button>
+									</div>
+									<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[4].em_type_attach"></Table>
 								</div>
-								<Table border highlight-row size="small" :columns="columns_attach" :data="form3.em_type_info[4].em_type_attach"></Table>
 							</div>
 						</div>
 					</div>
 				</div>
 
 				<div class="card">
-<!--					<img class="icon-down" src="@/assets/img/down.png" v-if="form.department_reply==1&&!show2" @click="show2=true" alt="">-->
 					<p>7、是否有申报环保税</p>
 					<RadioGroup v-model="form3.et" >
 						<Radio :label="0" border>否</Radio>
@@ -696,6 +731,13 @@
 		data() {
 			let self = this;
 			return {
+				//控制展开，收缩按钮
+				water_show:true,
+				gas_show:true,
+				solid_show:true,
+				dangerous_show:true,
+				noise_show:true,
+
 				baseURL: Config.baseURL,
 				//附件上传历史arr
 				attach_history:[],
@@ -1265,7 +1307,7 @@
 						title: '1月',
 						align: 'center',
 						render:(h,params)=>{
-							console.log('nd',params.row)
+							// console.log('nd',params.row)
 							return h('div',[
 								h('InputNumber',{
 									props:{
@@ -1429,7 +1471,7 @@
 						title: '昼间噪声（dB）',
 						align: 'center',
 						render:(h,params)=>{
-							console.log('params',params)
+							// console.log('params',params)
 							return h('div',[
 								h('InputNumber',{
 									props:{
@@ -1449,7 +1491,7 @@
 						title: '夜间噪声（dB）',
 						align: 'center',
 						render:(h,params)=>{
-							console.log('params',params)
+							// console.log('params',params)
 							return h('div',[
 								h('InputNumber',{
 									props:{
@@ -1561,7 +1603,7 @@
 			//获取危废类型
 			getDangerousValue(index) {
 				if(this.model_data.dangerous_waste_total) {
-					console.log(this.model_data.dangerous_waste_total)
+					// console.log(this.model_data.dangerous_waste_total)
 					let arr = this.model_data.dangerous_waste_total[index].type_id.split(',')
 					arr[0] = parseInt(arr[0])
 					arr[1] = parseInt(arr[1])
@@ -2364,6 +2406,8 @@
 				getmodel(data).then(res=>{
 					if(res.errno==0){
 						this.model_data=res.data;
+						console.log(this.model_data);
+						console.log(res.data.waste_water);
 						if(res.data.waste_water == 1) {
 							this.form3.waste_water = 1
 							this.waste_water_change()
@@ -2384,7 +2428,7 @@
 							this.form3.noise = 1
 							this.noise_change()
 						}
-					};
+					}
 				});
 			},
 			//废水
@@ -2437,7 +2481,7 @@
 						}
 						data[i].wastewater_total=data1
 					};
-					console.log(data);
+					// console.log(data);
 					this.water_waste_total=data
 				}
 			},
@@ -2669,7 +2713,6 @@
 	}
 	.ivu-radio-group{
 		font-size: 28px;
-		margin-top: 20px;
 	}
 	.ivu-radio-wrapper{
 		font-size: 32px;
@@ -2701,6 +2744,9 @@
 				border-top:solid 1px #ECECEC;
 				padding: 30px 44px;
 				position: relative;
+				>p{
+					margin-bottom:16px;
+				}
 				.icon-down{
 					position: absolute;
 					right: 30px;
@@ -2719,6 +2765,9 @@
 				position: relative;
 				.w-card{
 					padding: 30px 0 40px;
+					>p{
+						margin: 10px 0;
+					}
 				}
 				.null{
 					padding: 20px;
@@ -2763,25 +2812,22 @@
 			}
 		}
 		.line{
-			border-bottom: 3px solid #e0cece;
-			margin-bottom: 50px;
+			border-bottom: 2px solid #e0cece;
+			margin: 50px 0;
 		}
-		.card-one{
-			margin-top: 20px;
-			.card-two{
-				background: #fff;
-				border-radius: 10px;
-				padding: 10px 15px;
-				position: relative;
-				margin-bottom: 20px;
-				.del-btn{
-					position: absolute;
-					right: 15px;
-					top: 15px;
-				}
-				.item-card{
-					background: #f2faff;
-				}
+		.card-two{
+			background: #f2faff;
+			border-radius: 10px;
+			padding: 10px 15px;
+			position: relative;
+			margin-bottom: 20px;
+			.del-btn{
+				position: absolute;
+				right: 15px;
+				top: 15px;
+			}
+			.item-card{
+				background: #f2faff;
 			}
 		}
 		.btn{
