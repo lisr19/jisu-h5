@@ -89,7 +89,7 @@
 				this.$router.push({path:'/report-detail',query:{id:item.id}})
 			},
 			lookDetail(item){
-				this.$toast('建设中')
+				this.$router.push({path:'/report-detail',query:{id:item.id,from:'look'}})
 			},
 			//确定弹窗
 			comFn(item){

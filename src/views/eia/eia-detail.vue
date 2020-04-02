@@ -4,7 +4,7 @@
 		<p style="margin-bottom: 10px;display: flex;align-items: center;background-color: #fff;padding:  15px">
 			<span style="width: 80px">企业：</span>
 			<i-select v-model="enterprise_id"  >
-				<i-option v-for="item in enterpriseData" v-bind:key="item.id" :value="item.id">{{item.name}}</i-option>
+				<i-option v-for="item in enterpriseData"  :value="item.id">{{item.name}}</i-option>
 			</i-select>
 		</p>
 		<div class="content">
@@ -806,8 +806,6 @@
 				po_emit_prove_index_data:[],
 				po_emit_prove_index_data1:[],
 				add_index1:false,
-
-				first_show:false,
 				em_show:true,
 				limit_value:[],
 				//物种类型和测试指标类型
@@ -1526,7 +1524,6 @@
 				})
 			},
 			async nextaction(){
-				this.first_show= false;
 				await this.third_enterpriseSelect();
 				await this.getModelInfo();
 				await this.handleLimitvalue();
@@ -1577,6 +1574,7 @@
 				if (res.errno) {
 					this.$toast('获取企业选择列表出错')
 				} else {
+					console.log(res.data);
 					this.enterpriseData=res.data
 				}
 			},

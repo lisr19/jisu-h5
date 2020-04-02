@@ -786,7 +786,7 @@
 				<span>{{attach_url}}</span>
 			</div>
 		</Modal>
-		<div class="btns">
+		<div class="btns" v-if="!isLook">
 			<div class="btn" @click="handleSave3">保存</div>
 			<div class="btn" @click="handleSave5">提交审核</div>
 		</div>
@@ -816,6 +816,7 @@
 		data() {
 			let self = this;
 			return {
+				isLook:false,
 				//控制展开，收缩按钮
 				water_show:true,
 				gas_show:true,
@@ -1680,6 +1681,12 @@
 			}
 			//上传验证
 			this.headers.Authorization = sessionStorage.token;
+			console.log(this.$route.query);
+			if(this.$route.query.from==='look'){
+				this.isLook=true
+			}else {
+				this.isLook=false
+			}
 		},
 
 		activated() {
@@ -1867,14 +1874,13 @@
 			//获取第一步信息
 			handleGetenterpriseDetail(){
 				let data={};
-				if (this.$route.query.id != 0) {
+				if (this.$route.query.id) {
 					data.id=this.$route.query.id
+					getsave1(data).then(res=>{
+						this.report_id=res.data.id
+						this.form1=res.data
+					})
 				}
-				getsave1(data).then(res=>{
-					console.log(res);
-					this.report_id=res.data.id
-					this.form1=res.data
-				})
 			},
 
 			//获取第二步信息
@@ -1956,13 +1962,10 @@
 			//保存第二步信息
 			handleSave3(){
 				if(!this.report_id){
-					this.$Notice.error({
-						title: '没有选择并确认申报主体信息',
-						duration: this.$parent.getInfoFailTime
-					});
+					this.$toast('没有选择并确认申报主体信息')
 					this.first_show=true;
 					return;
-				};
+				}
 				let data={
 					report_id:this.report_id,
 					waste_water:this.form3.waste_water,
@@ -1998,10 +2001,8 @@
 				};
 				save3(data).then(res=>{
 					if(res.errno==0){
-						this.$Notice.success({
-							title: '保存成功',
-							duration: this.$parent.successTime
-						});
+						this.$toast('保存成功')
+						this.$router.back()
 					}else{
 						this.$Notice.error({
 							title: '保存失败',
@@ -2028,13 +2029,8 @@
 				};
 				sub_verity(data).then(res=>{
 					if(res.errno==0){
-						this.$Notice.success({
-							title: '提交成功',
-							duration: this.$parent.successTime
-						});
-						this.$router.push({
-							path: '/pe_report/report_manager'
-						});
+						this.$toast('提交成功')
+						this.$router.back()
 					}else{
 						this.$Notice.error({
 							title: '提交失败',

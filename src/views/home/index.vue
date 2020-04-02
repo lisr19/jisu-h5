@@ -36,7 +36,7 @@
     import home from '@/views/home/home'
     import mater from '@/views/material/material'
     import my from '@/views/my/my'
-
+    import { Toast,Dialog } from 'vant'
     export default {
         components: {
             home,
@@ -106,11 +106,22 @@
             if(!this.token){
                 this.$router.push({name:'登录'})
             }
+
         },
         mounted() {
-            // localStorage.setItem('token',this.token)
         },
         activated() {
+            if(sessionStorage.getItem('token')&&sessionStorage.getItem('account_type')!=1){
+                Dialog.alert({
+                    title: '标题',
+                    message: '该账号非企业用户'
+                }).then(() => {
+                    localStorage.clear()
+                    sessionStorage.clear()
+                    this.$toast('请用企业账号登录')
+                    this.$router.push({name:'登录'})
+                });
+            }
             // this.getUserDate()
             this.getEnterInfo()
             this.epList()

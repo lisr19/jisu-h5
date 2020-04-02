@@ -10,7 +10,7 @@
 <!--					<img src="@/assets/img/warn.png" alt="">-->
 				</p>
 				<div class="ctx">
-					<img src="@/assets/img/i-one.png" alt="" style="width: 65%">
+					<img src="@/assets/img/i-one.png" alt="" style="width: 65%;margin:0px 0 0 12px">
 				</div>
 			</div>
 			<div class="item" @click="openAd">
@@ -104,13 +104,10 @@
 			// }else{
 			// 	this.getEnterInfo()
 			// }
-			console.log(111);
 			this.getEnterInfo()
 		},
 		activated() {
-			console.log(222);
 			if(localStorage.getItem('from')==='login'){
-				console.log(333);
 				this.getEnterInfo()
 				localStorage.setItem('from','')
 			}

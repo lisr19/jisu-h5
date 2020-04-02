@@ -161,8 +161,8 @@
 					if(this.account_type==1){
 						//企业用户
 						console.log('企业用户');
-						// this.$router.push({path:'/eia-detail',query:{enterprise_id:this.enterId}})
-						this.$router.push({name:'环评'})
+						this.$router.push({path:'/eia-detail',query:{enterprise_id:parseInt(this.enterId)}})
+						// this.$router.push({name:'环评'})
 					}else {
 						this.$router.push({name:'环评'})
 					}
