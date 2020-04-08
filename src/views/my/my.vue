@@ -10,7 +10,7 @@
 <!--				<van-uploader v-model="fileList"  :max-count="1" :after-read="afterRead"  />-->
 				<div class="desc">
 					<p class="role">{{userDate.role_name}}</p>
-					<p class="ID">ID：{{userDate.id}}</p>
+					<p class="ID">ID：{{enterprise_id}}</p>
 					<van-icon name="arrow" size="20"/>
 				</div>
 			</div>
@@ -59,6 +59,7 @@
 			}
 		},
 		created() {
+			this.enterprise_id = sessionStorage.getItem('enterprise_id')
 			this.getUserDate()
 		},
 		methods: {

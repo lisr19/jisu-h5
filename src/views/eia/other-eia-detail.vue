@@ -38,27 +38,69 @@
 								<Row type="flex" justify="center" v-if="wasteWater">
 									<Col span="6"><h2 style="text-align:center;">废水表格</h2></Col>
 								</Row>
-								<Table border highlight-row size="small" :columns="columns_wasteWater" :data="wasteWater" v-if="wasteWater.length>0" style="margin-top:10px"></Table>
+								<div class="item-card" v-for="(item,index) in wasteWater">
+									<p class="name">{{index+1}} 、{{item.name}}
+<!--										<span @click="delFs(index)">删除</span>-->
+									</p>
+									<p>类型：废水</p>
+									<p>年排污总量(Kg)：{{item.total}}</p>
+									<p>排放浓度(mg/l)：{{item.density}}</p>
+									<p>排放速率(m³/h)：{{item.speed}}</p>
+									<p>执行标准：{{item.standard}}</p>
+								</div>
+
+<!--								<Table border highlight-row size="small" :columns="columns_wasteWater" :data="wasteWater" v-if="wasteWater.length>0" style="margin-top:10px"></Table>-->
 								<!-- 废气表格 -->
 								<Row type="flex" justify="center" v-if="wasteGas">
 									<Col span="6"><h2 style="text-align:center;">废气表格</h2></Col>
 								</Row>
-								<Table border highlight-row size="small" :columns="columns_wasteGas" :data="wasteGas" v-if="wasteGas.length>0" style="margin-top:10px"></Table>
+
+								<div class="item-card" v-for="(item,index) in wasteGas">
+									<p class="name">{{index+1}} 、{{item.name}}
+<!--										<span @click="delFs2(index)">删除</span>-->
+									</p>
+									<p>类型：废气</p>
+									<p>年排污总量(Kg)：{{item.total}}</p>
+									<p>排放浓度(mg/l)：{{item.density}}</p>
+									<p>排放速率(m³/h)：{{item.speed}}</p>
+									<p>执行标准：{{item.standard}}</p>
+								</div>
+
+<!--								<Table border highlight-row size="small" :columns="columns_wasteGas" :data="wasteGas" v-if="wasteGas.length>0" style="margin-top:10px"></Table>-->
 								<!-- 废固表格 -->
 								<Row type="flex" justify="center" v-if="wasteSolid">
 									<Col span="6"><h2 style="text-align:center;">废固表格</h2></Col>
 								</Row>
-								<Table border highlight-row size="small" :columns="columns_wasteSolid" :data="wasteSolid" v-if="wasteSolid.length>0" style="margin-top:10px"></Table>
+								<div class="item-card" v-for="(item,index) in wasteSolid">
+								<p class="name">{{index+1}} 、{{item.name}}</p>
+								<p>类型：废固</p>
+								<p>年排污总量(Kg)：{{item.total}}</p>
+								<p>执行标准：{{item.standard}}</p>
+							</div>
+<!--								<Table border highlight-row size="small" :columns="columns_wasteSolid" :data="wasteSolid" v-if="wasteSolid.length>0" style="margin-top:10px"></Table>-->
 								<!-- 噪音表格 -->
 								<Row type="flex" justify="center" v-if="noise_emission">
 									<Col span="6"><h2 style="text-align:center;">噪音表格</h2></Col>
 								</Row>
-								<Table border highlight-row size="small" :columns="columns_noise" :data="noise_emission" v-if="noise_emission.length>0" style="margin-top:10px"></Table>
+								<div class="item-card" v-for="(item,index) in noise_emission">
+									<p class="name">{{index+1}} 、{{item.name}}</p>
+									<p>类型：噪音</p>
+									<p>昼间噪音(dB)：{{item.day_noise}}</p>
+									<p>夜间噪音(dB)：{{item.night_noise}}</p>
+									<p>执行标准：{{item.standard}}</p>
+								</div>
+<!--								<Table border highlight-row size="small" :columns="columns_noise" :data="noise_emission" v-if="noise_emission.length>0" style="margin-top:10px"></Table>-->
 								<!-- 危废表格 -->
 								<Row type="flex" justify="center" v-if="wasteDanger">
 									<Col span="6"><h2 style="text-align:center;">危废表格</h2></Col>
 								</Row>
-								<Table border highlight-row size="small" :columns="columns_wasteDanger" :data="wasteDanger" v-if="wasteDanger.length>0" style="margin-top:10px"></Table>
+								<div class="item-card" v-for="(item,index) in wasteDanger">
+									<p class="name">{{index+1}} 、{{item.name}}</p>
+									<p>年排污总量(Kg)：{{item.total}}</p>
+									<p>执行标准：{{item.standard}}</p>
+								</div>
+
+<!--								<Table border highlight-row size="small" :columns="columns_wasteDanger" :data="wasteDanger" v-if="wasteDanger.length>0" style="margin-top:10px"></Table>-->
 								<div style="margin-top:5px;margin-bottom:5px">
 									<Button type="primary" class="button1" @click="attach_type=4;attach_title='污染物排放许可证（正本、副本）扫描件';add_attach=true" style="width:100px">添加附件</Button>
 									<p style="color:red">污染物排放许可证（正本、副本）扫描件</p>
@@ -354,7 +396,7 @@
 </template>
 
 <script>
-	import {procedureDetail,procedureAdd,procedureUpdate,procedureDelete} from '@/lib/API/otherEia';
+	import {procedureDetail,procedureAdd,procedureUpdate,procedureDelete,getProcedureEp} from '@/lib/API/otherEia';
 	import {select, enterpriseSelect} from '@/lib/API/model';
 	import Config from '@/Config'
 	import headBar from '@/components/head-bar/head-bar'
@@ -930,6 +972,12 @@
 
 		},
 		methods: {
+			delFs(index){
+				this.po_emit_prove_index_array.splice(index,1);
+			},
+			delFs2(index){
+				this.po_emit_prove_index_array.splice(index,1);
+			},
 			getselectdata(){
 				select().then(res => {
 					if (res.errno==0) {
@@ -952,6 +1000,66 @@
 					}
 				})
 			},
+
+			//获取指标表格数据
+			handleGetProcedureEp(id) {
+				let data={
+					id
+				};
+				getProcedureEp(data).then(res => {
+					if (res.errno == 0) {
+						if (res.data.length>0) {
+							let arr = res.data
+							for (let i in res.data) {
+								if (arr[i].pe_index == 1) {
+									this.wasteWater.push({
+										name:arr[i].name,
+										total:arr[i].total,
+										density:arr[i].density,
+										speed:arr[i].speed,
+										standard:arr[i].standard
+									})
+								}
+								if (arr[i].pe_index == 2) {
+									this.wasteGas.push({
+										name:arr[i].name,
+										total:arr[i].total,
+										density:arr[i].density,
+										speed:arr[i].speed,
+										standard:arr[i].standard
+									})
+								}
+								if (arr[i].pe_index == 3) {
+									this.wasteSolid.push({
+										name:arr[i].name,
+										total:arr[i].total,
+										standard:arr[i].standard
+									})
+								}
+								if (arr[i].pe_index == 4) {
+									this.wasteDanger.push({
+										name:arr[i].name,
+										total:arr[i].total,
+										density:arr[i].density,
+										speed:arr[i].speed,
+										standard:arr[i].standard
+									})
+								}
+								if (arr[i].pe_index == 5) {
+									this.noise_emission.push({
+										name:arr[i].name,
+										day_noise:arr[i].day_noise,
+										night_noise:arr[i].night_noise,
+										standard:arr[i].standard
+									})
+								}
+							}
+						}
+					}
+				})
+			},
+
+
 			//获取信息
 			handleGetInfo(){
 				let data={
@@ -961,6 +1069,7 @@
 					if(res.errno==0){
 						if(res.data){
 							this.form=res.data;
+							this.handleGetProcedureEp(res.data.enterprise_id)
 							if(this.form.po_emit_prove==1){
 								this.show1 =true
 								this.po_emit_prove_index_array=res.data.po_emit_prove_info.index_array;

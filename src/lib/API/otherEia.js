@@ -25,5 +25,10 @@ export function procedureDelete(params) {
    'home/procedure/delete', params);
 }
 
+//获取许可证指标
+export function getProcedureEp(params) {
+  return fetch('home/procedure/ep_enterprise_index', params)
+}
+
 
 

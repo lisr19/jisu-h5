@@ -77,6 +77,11 @@ const routes = [
 		component: () => import('@/views/report/report-detail.vue')
 	},
 	{
+		path: '/tax',
+		name: '税务',
+		component: () => import('@/views/tax/tax.vue')
+	},
+	{
 		path: '/develop',
 		name: '建设',
 		component: () => import('@/views/my/develop.vue')

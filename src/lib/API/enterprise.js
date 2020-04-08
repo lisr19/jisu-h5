@@ -42,6 +42,11 @@ export function registertypeSelect(params) {
     return fetch('home/enterprise/register_type',params);
 }
 
+//上传图片
+export function uploadImg(params) {
+    return post('home/file/report_upload',params);
+}
+
 
 
 

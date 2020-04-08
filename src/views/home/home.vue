@@ -13,7 +13,7 @@
 					<img src="@/assets/img/i-one.png" alt="" style="width: 65%;margin:0px 0 0 12px">
 				</div>
 			</div>
-			<div class="item" @click="openAd">
+			<div class="item" @click="openTax">
 				<p class="type">税务核算
 <!--					<img src="@/assets/img/icon8.png" alt="">-->
 				</p>
@@ -158,6 +158,9 @@
 			openAd(){
 				// this.$toast('建设中……')
 				this.$router.push({name:"建设"})
+			},
+			openTax(){
+				this.$router.push({name:"税务"})
 			},
 			openAlarm(){
 				this.$router.push({name:'告警'})

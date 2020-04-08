@@ -597,8 +597,15 @@
 							<p>昼间噪声（dB）：
 								<Input type="number" placeholder="0" v-model="item3.day_noise"></Input>
 							</p>
+							<p>昼间生产时间：
+								<Input type="number" placeholder="0" v-model="item3.day_time"></Input>
+							</p>
+
 							<p>夜间噪声（dB）：
 								<Input type="number" placeholder="0" v-model="item3.night_noise"></Input>
+							</p>
+							<p>夜间生产时间：
+								<Input type="number" placeholder="0" v-model="item3.night_time"></Input>
 							</p>
 							<p>昼间阈值（dB）：{{item3.limit_day}}</p>
 							<p>夜间阈值（dB）：{{item3.limit_night}}</p>
@@ -1673,19 +1680,21 @@
 		},
 		//页面初始化
 		mounted() {
+			this.headers.Authorization = sessionStorage.token;
 			this.getselectdata();
 			//不属于企业账户获取企业列表
 			this.handleGetenterpriseList();
-			if (this.$route.query.id != 0) {
+			if (this.$route.query.id&&this.$route.query.from!=='look') {
 				this.handleGetenterpriseDetail();
-			}
-			//上传验证
-			this.headers.Authorization = sessionStorage.token;
-			console.log(this.$route.query);
-			if(this.$route.query.from==='look'){
-				this.isLook=true
 			}else {
-				this.isLook=false
+				if(this.$route.query.from==='look'){
+					this.isLook=true
+					this.first_show=false
+					this.handleGetenterpriseDetail2()
+				}else {
+					this.isLook=false
+					this.first_show=true
+				}
 			}
 		},
 
@@ -1693,6 +1702,21 @@
 		},
 
 		methods: {
+			//获取申报基础信息
+			handleGetenterpriseDetail2(){
+				let data={};
+				if (this.$route.query.id) {
+					data.id=this.$route.query.id
+					getsave1(data).then(res=>{
+						this.report_id=res.data.id;
+						this.form1=res.data;
+						this.getModel();
+						this.third_enterpriseSelect();
+						this.getsave3info();
+					})
+				}
+			},
+
 			//获取危废类型
 			getDangerousValue(index) {
 				if(this.model_data.dangerous_waste_total) {
@@ -1871,6 +1895,8 @@
 					}
 				})
 			},
+
+
 			//获取第一步信息
 			handleGetenterpriseDetail(){
 				let data={};

@@ -3,7 +3,6 @@
 		<head-bar title="企业信息"></head-bar>
 		<div class="base-info">
 			<img class="head-img" src="@/assets/img/ent-img.png" alt="">
-			<!--				<van-uploader v-model="fileList"  :max-count="1" :after-read="afterRead"  />-->
 			<div class="desc">
 				<p class="name">{{enterDate.name}}</p>
 				<p class="ID">营业执照：{{enterDate.code}}</p>
@@ -101,11 +100,12 @@
 					</FormItem>
 
 				</i-col>
-				<FormItem label="上传附件" prop="attach"   >
-					<p style="text-align: left" >
-						<Button type="primary" :disabled="!isEdit" @click="toAddfiles" >添加文件</Button>
-						<span @click="showlist=true" style="color:red;margin-left: 15px"><Icon type="ios-help"></Icon>查看需上传附件内容</span>
-					</p>
+				<FormItem label="上传附件" prop="attach">
+					<div style="text-align: left">
+						<Button type="primary" :disabled="!isEdit" @click="toAddfiles" style="margin-right: 10px">添加文件</Button>
+						<Button type="primary"  @click="addImgs" >多图合并上传</Button>
+						<p @click="showlist=true" style="color:red;margin-top: 10px"><Icon type="ios-help" size="18"></Icon>查看需上传附件内容</p>
+					</div>
 				</FormItem>
 				<Table border highlight-row size="small" :columns="columns1" :data="data1"></Table>
 				<div v-if="isAdd" class="btn" @click="handleAdd" >新增</div>
@@ -121,8 +121,25 @@
 			<p>环境管理制度，责任人员组织结构，培训资料，签到表附照片等</p>
 		</Modal>
 
+		<Modal v-model="showImg" title="多图合并上传" >
+			<Input style="margin-bottom: 15px"  type="text" placeholder="请输入文件名" v-model="files_name"></Input>
+			<div style="display: flex;flex-wrap: wrap">
+				<div  class="posting-uploader-item" v-for="(item, index) in fileList2" :key="index">
+					<p class="num">{{index+1}}</p>
+					<img :src="item.content" alt="图片" class="img" style="width: 80px;height: 80px"/>
+					<van-icon name="close" @click="delImg(index)" class="del-icon" size="18"/>
+				</div>
+				<van-uploader multiple :after-read="afterRead2" style="margin-top: 24px"/>
+			</div>
+
+			<div slot="footer">
+				<Button type="text" size="large" @click="showImg=false">取消</Button>
+				<Button  type="primary" size="large" @click="pdfImg">合并上传</Button>
+			</div>
+		</Modal>
+
 		<Modal v-model="uploadmodel" title="上传文件"  @on-ok="adddata1">
-			<Input type="text" placeholder="请输入文件名" v-model="files_name"></Input>
+			<Input  type="text" placeholder="请输入文件名" v-model="files_name"></Input>
 			<Upload
 					:headers="headers"
 					:show-upload-list="false"
@@ -143,7 +160,7 @@
 
 <script>
 	import headBar from '@/components/head-bar/head-bar'
-	import {enterpriseUpdate,enterpriseList,enterpriseDetail,industrySelect,scaleSelect,registertypeSelect,enterpriseAdd} from '@/lib/API/enterprise'
+	import {enterpriseUpdate,enterpriseList,enterpriseDetail,industrySelect,scaleSelect,registertypeSelect,enterpriseAdd,uploadImg} from '@/lib/API/enterprise'
 	import { Toast,Dialog } from 'vant'
 	export default {
 		components:{
@@ -185,6 +202,12 @@
 		},
 		data() {
 			return {
+				dd:{
+					content:[],
+				},
+				fileList2: [],
+				showImg:false,
+				showAllimg:false,
 				hasAddr:false,
 				city: '定位中...',
 				files_name:'',
@@ -337,8 +360,8 @@
 					status:'',
 					describe:'',
 					register_time:'',
-					longit:'',
-					lati:'',
+					longit:113.264417,
+					lati:23.130067,
 					attach:[]
 				},
 				uploadmodel:false,
@@ -411,20 +434,22 @@
 			this.industrySelect()
 			this.scaleSelect()
 			this.registertypeSelect()
-			// if(!this.hasAddr){
-			// 	this.getLocation()
-			// }
 		},
 		methods: {
+
 			// 获取当前位置
 			getLocation () {
+				Toast.loading({
+					mask: true,
+					message: '定位中...'
+				});
 				const self = this;
 				AMap.plugin('AMap.Geolocation', function () {
 					var geolocation = new AMap.Geolocation({
 						// 是否使用高精度定位，默认：true
 						enableHighAccuracy: true,
 						// 设置定位超时时间，默认：无穷大
-						timeout: 10000
+						timeout: 5000
 					});
 
 					geolocation.getCurrentPosition();
@@ -432,12 +457,20 @@
 					AMap.event.addListener(geolocation, 'error', onError);
 
 					function onComplete (data) {
+						Toast.clear();
+						console.log(data);
 						self.enterDate.address = data.formattedAddress
+						self.enterDate.lati = data.position.lat
+						self.enterDate.longit = data.position.lng
+						self.markers[0].position=[data.position.lng, data.position.lat]
+						self.center= [data.position.lng, data.position.lat]
+						self.$toast('定位成功')
 						// data是具体的定位信息
 						// console.log('定位成功信息：', data.addressComponent.city);
 						// self.city = data.addressComponent.city;
 					}
 					function onError (data) {
+						Toast.clear();
 						// 定位出错
 						console.log('定位失败错误：', data);
 						// 调用IP定位
@@ -447,13 +480,17 @@
 			},
 			// 通过IP获取当前位置
 			getLngLatLocation () {
+				Toast.loading({
+					mask: true,
+					message: 'IP定位中...'
+				});
 				var that = this
 				AMap.plugin('AMap.CitySearch', function () {
 					var citySearch = new AMap.CitySearch();
 					citySearch.getLocalCity(function (status, result) {
 						if (status === 'complete' && result.info === 'OK') {
 							// 查询成功，result即为当前所在城市信息
-							console.log('通过ip获取当前城市：', result);
+							// console.log('通过ip获取当前城市：', result);
 							// 逆向地理编码
 							AMap.plugin('AMap.Geocoder', function () {
 								var geocoder = new AMap.Geocoder({
@@ -465,9 +502,15 @@
 								geocoder.getAddress(lnglat, function (status, data) {
 									if (status === 'complete' && data.info === 'OK') {
 										// result为对应的地理位置详细信息
-										// console.log(data);
-										console.log(data.regeocode);
+										// console.log(data.regeocode);
 										that.enterDate.address = data.regeocode.formattedAddress
+										let location = data.regeocode.addressComponent.businessAreas[0].location
+										console.log(data.regeocode.addressComponent.businessAreas[0].location);
+										that.enterDate.longit = location.lng
+										that.enterDate.lati = location.lat
+										that.markers[0].position=[location.lng, location.lat];
+										that.center= [location.lng, location.lat]
+										Toast.clear();
 									}
 								});
 							});
@@ -632,15 +675,21 @@
 					}
 				})
 			},
-			afterRead(file) {
-				this.uploadImg(file.file)
-			},
+
 			async uploadImg(params){
+				this.showImg = false
+				if(!this.files_name){
+					this.$toast('文件不能为空')
+					return;
+				}
+
 				let res = await uploadImg({
-					imgFile:params
+					file:params
 				})
-				if(res.code === 200){
-					this.imgUrl = res.data.url
+				if(res){
+					this.files_url = res.url
+					this.$toast('上传成功')
+					this.adddata1()
 				}
 			},
 			//更新地图坐标
@@ -673,6 +722,7 @@
 
 			//上传文件成功
 			uploadSuccess(res, file) {
+				console.log(file);
 				if (res.errno) {
 					this.$toast('上传失败')
 				} else {
@@ -684,14 +734,48 @@
 			uploadError(error, file) {
 				this.$toast('上传失败')
 			},
-			handleBeforeUpload() {
-				const check = this.uploadList.length < 2;
-				if (!check) {
-					this.$toast('最多只能上传 1个文件')
-				}
-				return check;
-			}
 
+			pdfImg(){
+				Toast.loading({
+					message: '合并中...',
+					forbidClick: true,
+					loadingType: 'spinner'
+				});
+				const pdfDocGenerator = pdfMake.createPdf(this.dd);
+				pdfDocGenerator.getDataUrl((dataUrl) => {
+					let filename =Math.ceil(Math.random()*10)+'.pdf'
+					this.dataURLtoFile(dataUrl,filename)
+					// this.showImg =false
+					// this.showAllimg = true
+					// this.files_name = ''
+					// pdfMake.createPdf(this.dd).open();
+				});
+			},
+			dataURLtoFile(dataurl, filename) {
+				//将base64转换为文件
+				var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+						bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+				while(n--){
+					u8arr[n] = bstr.charCodeAt(n);
+				}
+				let file = new File([u8arr], filename, {type:mime});
+				this.uploadImg(file)
+				// return new File([u8arr], filename, {type:mime});
+			},
+			addImgs(){
+				this.showImg =true
+				this.fileList2 = []
+				this.dd.content =[]
+			},
+			afterRead2(file) {
+				this.fileList2.push(file)
+				console.log(this.fileList2);
+				this.dd.content.push({image:file.content,width:300})
+				// console.log(this.dd.content);
+			},
+			delImg(file){
+				console.log(file);
+			},
 		}
 	}
 </script>
@@ -799,7 +883,7 @@
 		}
 		.map-box{
 			width: 680px;
-			height: 650px;
+			height: 680px;
 			margin: 20px auto;
 			.auto-tip{
 				height: 80px;
@@ -816,5 +900,23 @@
 			}
 		}
 
+	}
+	.posting-uploader-item{
+		position: relative;
+		margin:0 20px 20px 0;
+		.num{
+			font-size: 32px;
+			font-weight: 500;
+			text-align: center;
+		}
+		.img{
+			border-radius: 10px;
+		}
+		.del-icon{
+			position: absolute;
+			top: 20px;
+			left: -15px;
+			z-index: 99;
+		}
 	}
 </style>
