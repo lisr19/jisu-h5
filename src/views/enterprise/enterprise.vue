@@ -7,8 +7,7 @@
 				<p class="name">{{enterDate.name}}</p>
 				<p class="ID">营业执照：{{enterDate.code}}</p>
 				<p class="address" @click="showMap=!showMap">
-					定位：	<img class="" src="@/assets/img/location.png" alt="">
-<!--					<van-icon name="location" color="#999999" />-->
+					定位：<img class="" src="@/assets/img/location.png" alt="">
 					{{enterDate.address}}
 				</p>
 				<span v-if="isEdit" class="edit-btn" @click="handleUpdate">保存</span>
@@ -769,12 +768,13 @@
 			},
 			afterRead2(file) {
 				this.fileList2.push(file)
-				console.log(this.fileList2);
 				this.dd.content.push({image:file.content,width:300})
 				// console.log(this.dd.content);
 			},
-			delImg(file){
-				console.log(file);
+			delImg(index){
+				this.fileList2.splice(index,1);
+				this.dd.content.splice(index,1)
+				// console.log(this.fileList2);
 			},
 		}
 	}
