@@ -93,7 +93,7 @@
 					</FormItem>
 
 					<FormItem label="注册时间" prop="register_time"  >
-						<DatePicker  :disabled="!isEdit" type="date" placeholder="注册时间" @on-change="enterDate.register_time=$event" :value="enterDate.register_time" value-format="yyyy-MM-dd"></DatePicker>
+						<DatePicker οnfοcus="this.blur()"  :disabled="!isEdit" type="date" placeholder="注册时间" @on-change="enterDate.register_time=$event" :value="enterDate.register_time" value-format="yyyy-MM-dd"></DatePicker>
 					</FormItem>
 
 					<FormItem label="企业简介" prop="describe" class="my-form-item">
@@ -104,7 +104,7 @@
 				<FormItem label="上传附件" prop="attach">
 					<div style="text-align: left">
 						<Button type="primary" :disabled="!isEdit" @click="toAddfiles" style="margin-right: 10px">添加文件</Button>
-						<Button type="primary"  @click="addImgs" >多图合并上传</Button>
+						<Button type="primary" :disabled="!isEdit" @click="addImgs" >多图合并上传</Button>
 						<p @click="showlist=true" style="color:red;margin-top: 10px"><Icon type="ios-help" size="18"></Icon>查看需上传附件内容</p>
 					</div>
 				</FormItem>
@@ -162,8 +162,13 @@
 						@confirm="confirmIndus"  @cancel="showIndus = false"
 			/>
 		</van-popup>
+<!--		<van-datetime-picker-->
+<!--				v-model="currentDate"-->
+<!--				type="date"-->
+<!--				:formatter="formatter"-->
+<!--				@confirm="confirmPicker()"-->
 
-
+<!--		/>-->
 	</div>
 </template>
 
@@ -211,6 +216,8 @@
 		},
 		data() {
 			return {
+				currentDate: new Date(),
+				areaList:[],
 				currName:'',
 				showIndus:false,
 				indusList:[], //行业类型列表
@@ -449,7 +456,29 @@
 			this.registertypeSelect()
 		},
 		methods: {
-
+			formatter(type, val) {
+				if (type === 'year') {
+					return `${val}年`;
+				} else if (type === 'month') {
+					return `${val}月`
+				}else if (type === 'day') {
+					return `${val}日`
+				}
+				return val;
+			},
+			confirmPicker(value) {
+				var date = this.currentDate;
+				var m = date.getMonth() + 1;
+				var d = date.getDate();
+				if (m >= 1 && m <= 9) {
+					m = "0" + m;
+				}
+				if (d >= 0 && d <= 9) {
+					d = "0" + d;
+				}
+				var timer = date.getFullYear() + "-" + m + "-" + d
+				console.log(timer);
+			},
 			// 获取当前位置
 			getLocation () {
 				Toast.loading({
@@ -721,7 +750,8 @@
 				Toast.loading({
 					message: '合并中...',
 					forbidClick: true,
-					loadingType: 'spinner'
+					loadingType: 'spinner',
+					duration: 0
 				})
 				let res = await uploadImg({
 					file:params

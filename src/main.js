@@ -26,6 +26,9 @@ Vue.use(Vant)
 Vue.use(iView)
 Vue.use(VCharts)
 Vue.use(VueAMap)
+import { Area } from 'vant';
+Vue.use(Area);
+
 VueAMap.initAMapApiLoader({
   key: '5a0f5e90497c439340f86b81748bf1ca',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PolyEditor', 'AMap.CircleEditor', 'MarkerClusterer']
