@@ -3,8 +3,11 @@
 		<head-bar title="预警告警"></head-bar>
 		<div class="msg-content" >
 			<div class="date-box">
-				<Select v-model='selectIndex' @on-change="handleQuarterChange">
-					<Option v-for="item in dateSelect" :value="item.value" :key="item.value">{{item.label}}</Option>
+				<Select v-model='selectYear' @on-change="handleYearChange" style="margin-right: 10px">
+					<Option v-for="item in yearList" :value="item.value" :key="item.value">{{item.label}}年</Option>
+				</Select>
+				<Select v-model='selectQuarter' @on-change="handleQuarterChange" >
+					<Option v-for="item in quarterList" :value="item.value" :key="item.value">第{{item.label}}季度</Option>
 				</Select>
 			</div>
 			<ul class="items" v-if="data.length>0">
@@ -24,7 +27,7 @@
 					</div>
 				</li>
 			</ul>
-			<div class="null" v-else>
+			<div class="msg-null" v-else>
 				暂无数据
 			</div>
 		</div>
@@ -69,6 +72,41 @@
 		},
 		data() {
 			return {
+				selectYear:2020,
+				selectQuarter:1,
+				yearList:[{
+					value:2020,
+					label:2020,
+				},{
+					value:2019,
+					label:2019,
+				},{
+					value:2018,
+					label:2018,
+				},{
+					value:2017,
+					label:2017,
+				},{
+					value:2016,
+					label:2016,
+				},{
+					value:2015,
+					label:2015,
+				},],
+
+				quarterList:[{
+					value:1,
+					label:1
+				},{
+					value:2,
+					label:2
+				},{
+					value:3,
+					label:3
+				},{
+					value:4,
+					label:4
+				},],
 				column:[
 					{
 						title: '序号',
@@ -94,7 +132,6 @@
 					},
 					{
 						title: '测试数据',
-						align:'center',
 						align:'center',
 						key: 'test_value'
 					},
@@ -147,10 +184,8 @@
 		},
 		mounted(){
 			//数据初始化
-			this.getQuarter()
-			this.selectIndex = this.dateSelect[0].value
-			this.search.year = parseInt(this.dateSelect[this.selectIndex].label.slice(0,4))
-			this.search.quarter = parseInt(this.dateSelect[this.selectIndex].label.slice(5,7))
+			this.search.year = this.selectYear
+			this.search.quarter = this.selectQuarter
 			if(this.isCompanyCount){
 				this.getWarnListData()
 			} else {
@@ -165,7 +200,7 @@
 					year:this.search.year,
 					quarter:this.search.quarter,
 					search:this.search.search || '',
-					enterprise_id:'',
+					enterprise_id:this.search.enterprise_id || '',
 					page:this.currentPage || 1
 				}
 				getWarnList(data).then(res => {
@@ -176,34 +211,6 @@
 						this.currentPage = res.data.currentPage
 					}
 				})
-			},
-
-			//获取当前季度和前四个季度列表
-			getQuarter(){
-				let date = new Date()
-				let currentYear = date.getFullYear()
-				let currentMonth = date.getMonth()
-				let currentQuarter
-				if (currentMonth<=2){
-					currentQuarter = 1
-				}
-				if (currentMonth>2 && currentMonth<=5) {
-					currentQuarter = 2
-				}
-				if (currentMonth>5 && currentMonth<=8) {
-					currentQuarter = 3
-				}
-				if (currentMonth>8 && currentMonth<=11) {
-					currentQuarter = 4
-				}
-				let res = []
-				for (let i=0;i<5;i++) {
-					res.push({
-						value:i,
-						label:`${currentQuarter-i<=0?currentYear-1:currentYear}第${currentQuarter-i<=0?5-i:currentQuarter}季度`
-					})
-				}
-				this.dateSelect = res
 			},
 
 			//获取企业选择列表
@@ -217,12 +224,17 @@
 				})
 			},
 
-			//季度数据改变
-			handleQuarterChange(index){
-				this.search.year = parseInt(this.dateSelect[index].label.slice(0,4))
-				this.search.quarter = parseInt(this.dateSelect[index].label.slice(5,7))
+			//年份数据改变
+			handleYearChange(index){
+				this.search.year = this.selectYear
 				this.getWarnListData()
 			},
+			//季度数据变化
+			handleQuarterChange(index){
+				this.search.quarter = this.selectQuarter
+				this.getWarnListData()
+			},
+
 
 			//搜索框数据改变
 			handleSearchChange(){
@@ -248,8 +260,6 @@
 			flex-direction: column;
 			.date-box{
 				position: fixed;
-				height: 150px;
-				line-height: 150px;
 				top: 140px;
 				z-index: 99;
 				display: flex;
@@ -308,13 +318,7 @@
 			}
 		}
 		.msg-null{
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			img{
-				width:262px;
-				margin-top: 250px;
-			}
+			margin-top: 80px;
 		}
 	}
 </style>

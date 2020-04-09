@@ -58,6 +58,8 @@
 					</FormItem>
 
 					<FormItem label="行业类型" prop="industry_id"  >
+<!--						<input type="text" @click="showIndus=true" v-model="enterDate.industry_id"  placeholder="请选择行业类型" style="display: none">-->
+<!--						<input type="text" @click="showIndus=true" v-model="enterDate.industry_Name"  placeholder="请选择行业类型" >-->
 						<Cascader :disabled="!isEdit" :data="industrydata" v-model="enterDate.industry_id" placeholder="请选择行业类型" trigger="hover" ></Cascader>
 					</FormItem>
 					<FormItem prop="product" label="主要产品" >
@@ -154,13 +156,21 @@
 				<span>{{files_url}}</span>
 			</div>
 		</Modal>
+		<van-popup v-model="showIndus" closeable position="bottom" :style="{ height: '40%' }">
+			<div style="font-size: 16px;padding: 10px 20px">当前选择：{{currName}}</div>
+			<van-picker show-toolbar title="行业类型" :columns="indusList" @change="onChangeIndus"
+						@confirm="confirmIndus"  @cancel="showIndus = false"
+			/>
+		</van-popup>
+
+
 	</div>
 </template>
 
 <script>
 	import headBar from '@/components/head-bar/head-bar'
 	import {enterpriseUpdate,enterpriseList,enterpriseDetail,industrySelect,scaleSelect,registertypeSelect,enterpriseAdd,uploadImg} from '@/lib/API/enterprise'
-	import { Toast,Dialog } from 'vant'
+	import { Toast,Dialog,Notify} from 'vant'
 	export default {
 		components:{
 			headBar
@@ -201,6 +211,9 @@
 		},
 		data() {
 			return {
+				currName:'',
+				showIndus:false,
+				indusList:[], //行业类型列表
 				dd:{
 					content:[],
 				},
@@ -354,6 +367,7 @@
 					address:'',
 					account_id:'',
 					industry_id:[],
+					industry_Name:'',
 					scale_id:'',
 					register_id:'',
 					status:'',
@@ -565,9 +579,31 @@
 				let res = await industrySelect(params)
 				if(res.errno ==0){
 					this.industrydata=res.data
+					this.indusList=res.data
+					this.indusList.forEach((item,index)=>{
+						this.$set(item,'text',item.label);
+						item.children.forEach((item2,index2)=>{
+							this.$set(item2,'text',item2.label);
+							item2.children.forEach((item3,index3)=>{
+								this.$set(item3,'text',item3.label);
+							})
+						})
+					})
+					// console.log(this.indusList);
 				} else {
 					this.$toast(res.errmsg)
 				}
+			},
+			onChangeIndus(picker, values) {
+				this.currName = values
+			},
+
+			confirmIndus(values,index){
+				index= Array.from(index, x => x + 1)
+				this.enterDate.industry_id= index
+				this.enterDate.industry_Name= values
+				this.showIndus=false
+				// console.log(this.enterDate.industry_id);
 			},
 			async scaleSelect(params){
 				let res = await scaleSelect(params)
@@ -676,18 +712,24 @@
 			},
 
 			async uploadImg(params){
-				this.showImg = false
-				if(!this.files_name){
-					this.$toast('文件不能为空')
+				// this.showImg = false
+				if(!this.files_name||this.fileList2.length==0){
+					Notify({ type: 'warning', message: '文件不能为空' });
+					// this.$toast('文件不能为空')
 					return;
 				}
-
+				Toast.loading({
+					message: '合并中...',
+					forbidClick: true,
+					loadingType: 'spinner'
+				})
 				let res = await uploadImg({
 					file:params
 				})
 				if(res){
 					this.files_url = res.url
 					this.$toast('上传成功')
+					this.showImg =false
 					this.adddata1()
 				}
 			},
@@ -735,11 +777,6 @@
 			},
 
 			pdfImg(){
-				Toast.loading({
-					message: '合并中...',
-					forbidClick: true,
-					loadingType: 'spinner'
-				});
 				const pdfDocGenerator = pdfMake.createPdf(this.dd);
 				pdfDocGenerator.getDataUrl((dataUrl) => {
 					let filename =Math.ceil(Math.random()*10)+'.pdf'

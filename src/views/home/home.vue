@@ -156,8 +156,8 @@
 				})
 			},
 			openTax(){
-				this.$router.push({name:'建设'})
-				// this.$router.push({name:"税务"})
+				// this.$router.push({name:'建设'})
+				this.$router.push({name:"税务"})
 			},
 			openAlarm(){
 				this.$router.push({name:'告警'})
