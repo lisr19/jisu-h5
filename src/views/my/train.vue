@@ -2,18 +2,19 @@
 	<div class="msg">
 		<head-bar title="预约培训"></head-bar>
 		<div class="msg-content" >
-<!--			<ul class="items" >-->
-<!--				<li class="item" v-for="item in 5" @click="">-->
-<!--					<div class="info">-->
-<!--						<img class="img"  src="@/assets/img/couse.png"  alt="">-->
-<!--						<div class="content">-->
-<!--							<p class="name">环保管理课程</p>-->
-<!--							<p class="add-time">发送时间：2019-12-21</p>-->
-<!--						</div>-->
-<!--					</div>-->
-<!--				</li>-->
-<!--			</ul>-->
-			<div>暂无数据</div>
+			<ul class="items" v-if="trainList.length>0">
+				<li class="item" v-for="item in trainList"  @click="">
+					<div class="info">
+						<img class="img"  src="@/assets/img/couse.png"  alt="">
+						<div class="content">
+							<p class="name">{{item.title}}</p>
+							<p>企业名称：{{item.enterprise_name}}</p>
+							<p class="add-time">预约时间:{{item.appointment_time}}</p>
+						</div>
+					</div>
+				</li>
+			</ul>
+			<div v-else>暂无数据</div>
 		</div>
 	</div>
 </template>
@@ -27,12 +28,11 @@
 		},
 		data() {
 			return {
-
+				trainList:[]
 			}
 		},
 		created() {
-			// this.userId = localStorage.getItem('userId')
-			// this.getMsgList({userId :this.userId,size:this.size,page:1})
+			this.getTrainList({page:1,search:''})
 		},
 		mounted(){
 
@@ -40,13 +40,8 @@
 		methods: {
 			async getTrainList(params){
 				let res = await getTrainList(params)
-				if(res.code===200){
-					this.total = res.data.total
-					if(this.page===1){
-						this.msgList=res.data.list
-					}else {
-						this.msgList= this.msgList.concat(res.data.list)
-					}
+				if(res.errno == 0){
+					this.trainList=res.data.data
 				}
 			},
 		},
