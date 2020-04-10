@@ -69,6 +69,7 @@
 
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="attach_type=2;attach_title='环评报告文件';add_attach=true" style="width:150px">上传环评报告文件</Button>
+<!--							<Button type="primary"  @click="showImg=true;attach_type=2" >多图合并上传</Button>-->
 						</div>
 						<FormItem prop="affect_book_attach" >
 							<p>环评报告文件：</p>
@@ -76,6 +77,7 @@
 						</FormItem>
 						<div style="margin-top:5px;margin-bottom:5px">
 							<Button type="primary" class="button1" @click="attach_type=3;attach_title='其他附件';add_attach=true" >其他附件</Button>
+<!--							<Button type="primary"  @click="showImg=true;attach_type=3" >多图合并上传</Button>-->
 						</div>
 						<FormItem prop="affect_book_other_attach">
 							<p>其他附件：</p>

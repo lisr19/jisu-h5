@@ -43,11 +43,6 @@
       cancle(){
         this.$emit('cancle')
       },
-      addImgs(){
-        this.showImg =true
-        this.fileList = []
-        this.dd.content =[]
-      },
       afterRead(file) {
         this.fileList.push(file)
         this.dd.content.push({image:file.content,width:300})
@@ -76,7 +71,7 @@
 
       async uploadImg(params){
         if(!this.files_name||this.fileList.length==0){
-          Notify({ type: 'warning', message: '文件不能为空' });
+          Notify({ type: 'warning', message: '文件不能为空'});
           return;
         }
         Toast.loading({

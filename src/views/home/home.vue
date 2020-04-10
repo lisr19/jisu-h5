@@ -184,23 +184,24 @@
 					for(var i in water_total_list){
 						for(var j in water_total_list[i]){
 							let total_count=0;
+							let total_month;
 							if(water_total_list[i][j].outfall_count){
-								let total_month=JSON.parse(water_total_list[i][j].outfall_count);
-								for(var h in total_month){
-									total_count=parseFloat(total_month[h].total)+total_count
-								};
+								total_month=JSON.parse(water_total_list[i][j].outfall_count);
+								//for(var h in total_month){
+								//total_count=parseFloat(total_month[h].total)+total_count
+								//};
 							};
 							if(water_total_list[i][j].index_array){
 								let index_array=JSON.parse(water_total_list[i][j].index_array);
 								let outfall_name=water_total_list[i][j].outfall_name;
 								for(var k in index_array){
 									index_array[k].outfall_name=outfall_name;
-									let count_sum=total_count*index_array[k].index_value/1000;
+									let count_sum=(total_month[0].total*index_array[k].index_value1+total_month[1].total*index_array[k].index_value2+total_month[2].total*index_array[k].index_value3)/1000;
 									index_array[k].total=parseFloat(count_sum.toFixed(2));
 									let a=0;
 									for(var f in data){
 										if(data[f].name==index_array[k].name){
-											let avg=(data[f].index_value+index_array[k].index_value)/2
+											let avg=(data[f].index_value+index_array[k].index_value1+index_array[k].index_value2+index_array[k].index_value3)/4;
 											avg=parseFloat(avg.toFixed(2));
 											data[f].index_value=avg;
 											data[f].total=data[f].total+index_array[k].total;
@@ -208,6 +209,9 @@
 										}
 									};
 									if(a==0){
+										let avg=(index_array[k].index_value1+index_array[k].index_value2+index_array[k].index_value3)/3;
+										avg=parseFloat(avg.toFixed(2));
+										index_array[k].index_value=avg;
 										data.push(index_array[k])
 									}
 								}
@@ -219,24 +223,25 @@
 				if(gas_total_list){
 					for(var i in gas_total_list){
 						for(var j in gas_total_list[i]){
+							let total_month;
 							let total_count=0;
 							if(gas_total_list[i][j].outfall_count){
-								let total_month=JSON.parse(gas_total_list[i][j].outfall_count);
-								for(var h in total_month){
-									total_count=parseFloat(total_month[h].total)+total_count
-								};
+								total_month=JSON.parse(gas_total_list[i][j].outfall_count);
+								//for(var h in total_month){
+								//total_count=parseFloat(total_month[h].total)+total_count
+								//};
 							};
 							if(gas_total_list[i][j].index_array){
 								let index_array=JSON.parse(gas_total_list[i][j].index_array);
 								let outfall_name=gas_total_list[i][j].vent_name;
 								for(var k in index_array){
 									index_array[k].outfall_name=outfall_name;
-									let count_sum=total_count*index_array[k].index_value/1000000;
+									let count_sum=(total_month[0].total*index_array[k].index_value1+total_month[1].total*index_array[k].index_value2+total_month[2].total*index_array[k].index_value3)/1000000;
 									index_array[k].total=parseFloat(count_sum.toFixed(2));
 									let a=0;
 									for(var f in data){
 										if(data[f].name==index_array[k].name){
-											let avg=(data[f].index_value+index_array[k].index_value)/2
+											let avg=(data[f].index_value+index_array[k].index_value1+index_array[k].index_value2+index_array[k].index_value3)/4;
 											avg=parseFloat(avg.toFixed(2));
 											data[f].index_value=avg;
 											data[f].total=data[f].total+index_array[k].total;
@@ -244,6 +249,9 @@
 										}
 									};
 									if(a==0){
+										let avg=(index_array[k].index_value1+index_array[k].index_value2+index_array[k].index_value3)/3;
+										avg=parseFloat(avg.toFixed(2));
+										index_array[k].index_value=avg;
 										data.push(index_array[k])
 									}
 								}
@@ -251,9 +259,10 @@
 						}
 					}
 				};
-				if(data){
+				if(data.length>0){
 					//表格
-					for(var i in data){
+					console.log('data',data)
+					for(let i in data){
 						let status='未知';
 						if(data[i].limit_value!='无'){
 							let limit5=data[i].limit_value*0.5;
@@ -281,8 +290,8 @@
 					let bingdata_rows=[];
 					for(var i in data){
 						let info={
-							'污染物':data[i].name+'('+data[i].total+')',
-							'排放总量':data[i].total
+							'污染物':data[i].name+'('+data[i].total+')' || '暂无污染物',
+							'排放总量':data[i].total || 0
 						};
 						bingdata_rows.push(info);
 					};
@@ -311,7 +320,13 @@
 							this.chartData1.rows.push(info)
 						};
 					}else{
-						this.dataEmpty2=true;
+						// this.dataEmpty2=true;
+						let info={
+							'污染物':'暂无污染物',
+							'许可量（t/a）':100,
+							'排放量（t）':0,
+						};
+						this.chartData1.rows.push(info)
 					};
 					if(waterdata.length>0){
 						for(var i in waterdata){
@@ -325,9 +340,31 @@
 					}else{
 						this.dataEmpty3=true;
 					};
-					// console.log(gasdata)
+					console.log(gasdata)
 
-				};
+				}else{
+					let bingdata_rows=[];
+					let info={
+						'污染物':'暂无污染物',
+						'排放总量':0
+					};
+					bingdata_rows.push(info);
+					this.chartData.rows=bingdata_rows;
+
+					let info_1={
+						'污染物':'暂无',
+						'许可量（t/a）':'100',
+						'排放量（t）':'0',
+					};
+					this.chartData1.rows.push(info_1)
+
+					let info_2={
+						'污染物':'暂无',
+						'许可量（t/a）':'100',
+						'排放量（t）':'0',
+					};
+					this.chartData2.rows.push(info_2)
+				}
 				// console.log(data);
 			},
 		}
