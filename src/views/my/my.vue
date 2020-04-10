@@ -9,6 +9,7 @@
 				<img  src="@/assets/img/ent-img.png" alt="">
 <!--				<van-uploader v-model="fileList"  :max-count="1" :after-read="afterRead"  />-->
 				<div class="desc">
+					<p class="role">{{userDate.name}}</p>
 					<p class="role">{{userDate.role_name}}</p>
 					<p class="ID">ID：{{enterprise_id}}</p>
 					<van-icon name="arrow" size="20"/>

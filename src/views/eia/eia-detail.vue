@@ -27,6 +27,7 @@
 						</div>
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="attach_type=1;attach_title='单位资质证书';add_attach=true" >上传资质证书</Button>
+<!--							<Button type="primary"  @click="showImg=true;attach_type=1" >多图合并上传</Button>-->
 						</div>
 						<FormItem prop="unit_prove" >
 							<p><em style="color: #ed4014">*</em>资质证书：</p>
@@ -580,6 +581,7 @@
 			</div>
 		</Modal>
 		<div class="btn" @click="savemodel">保存</div>
+		<up-imgs v-if="showImg" @cancle="cancle" @adddata1="adddata1"></up-imgs>
 	</div>
 </template>
 
@@ -595,9 +597,11 @@
 	} from '@/lib/API/model';
 	import Config from '@/Config'
 	import headBar from '@/components/head-bar/head-bar'
+	import upImgs from '@/components/up-imgs/up-imgs'
 	export default {
 		components:{
 			headBar,
+			upImgs
 		},
 		watch:{
 			index_type:function(newVal,OldVal){
@@ -657,6 +661,7 @@
 				}
 			}
 			return {
+				showImg:false,
 				baseURL: Config.baseURL,
 				show1:false,
 				show2:false,
@@ -1502,6 +1507,9 @@
 		activated() {
 		},
 		methods: {
+			cancle(){
+				this.showImg =false
+			},
 			//危废typeID类型转换
 			getDangerousId(v) {
 				return v.join(',')
@@ -2037,7 +2045,11 @@
 				this.water_index='';
 			},
 			//上传文件插入数据
-			adddata1(){
+			adddata1(name,url){
+				if(name){
+					this.attach_name = name
+					this.attach_url = url
+				}
 				if(!this.attach_name||!this.attach_url){
 					this.$Notice.error({
 						title: '文件不能为空',
@@ -2397,6 +2409,9 @@
 			border-radius:52px;
 			color: #ffffff;
 			margin: 30px auto;
+		}
+		.button1{
+			margin-right: 20px;
 		}
 	}
 </style>
