@@ -27,7 +27,8 @@
 				</i-col>
 				<FormItem prop="attach" label="上传文件">
 					<p style="text-align: left" >
-						<Button type="primary"  @click="toAddfiles" >添加文件</Button><br>
+						<Button type="primary" style="margin-right: 20px"  @click="toAddfiles" >添加文件</Button>
+						<Button type="primary"  @click="addImgs" >多图合并上传</Button><br>
 						<span style="color:red">上传营业执照及相关资质文件（CMA证书及检测项目清单等文件扫描件）</span>
 					</p>
 				</FormItem>
@@ -36,7 +37,22 @@
 				<div v-else class="btn" @click="handleUpdate">保存</div>
 			</Form>
 		</div>
+		<Modal v-model="showImg" title="多图合并上传" >
+			<Input style="margin-bottom: 15px"  type="text" placeholder="请输入文件名" v-model="files_name"></Input>
+			<div style="display: flex;flex-wrap: wrap">
+				<div  class="posting-uploader-item" v-for="(item, index) in fileList2" :key="index">
+					<p class="num">{{index+1}}</p>
+					<img :src="item.content" alt="图片" class="img" style="width: 80px;height: 80px"/>
+					<van-icon name="close" @click="delImg(index)" class="del-icon" size="18"/>
+				</div>
+				<van-uploader multiple :after-read="afterRead2" style="margin-top: 24px"/>
+			</div>
 
+			<div slot="footer">
+				<Button type="text" size="large" @click="showImg=false">取消</Button>
+				<Button  type="primary" size="large" @click="pdfImg">合并上传</Button>
+			</div>
+		</Modal>
 		<Modal v-model="uploadmodel" title="上传文件"  @on-ok="adddata1">
 			<Input type="text" placeholder="请输入文件名" v-model="files_name"></Input>
 			<Upload
@@ -64,9 +80,10 @@
 		thirdEnterpriseAdd,
 		thirdEnterpriseUpdate,
 		thirdEnterpriseDelete,
-		accountSelect
+		accountSelect,
+		uploadImg
 	} from '@/lib/API/third_enterprise';
-	// import { Toast,Dialog } from 'vant'
+	import {Notify, Toast,Dialog} from "vant";
 	export default {
 		components:{
 			headBar
@@ -108,6 +125,11 @@
 		data() {
 			let self = this;
 			return {
+				dd:{
+					content:[],
+				},
+				fileList2: [],
+				showImg:false,
 				isAdd:true,
 				deleteModal: false,
 				inputError: false,
@@ -205,6 +227,20 @@
 			}
 		},
 		methods: {
+			addImgs(){
+				this.showImg =true
+				this.fileList2 = []
+				this.dd.content =[]
+			},
+			afterRead2(file) {
+				this.fileList2.push(file)
+				this.dd.content.push({image:file.content,width:300})
+				// console.log(this.dd.content);
+			},
+			delImg(index){
+				this.fileList2.splice(index,1);
+				this.dd.content.splice(index,1)
+			},
 			handleGetaccount(){
 				accountSelect().then(res => {
 					if (res.errno) {
@@ -363,7 +399,46 @@
 					});
 				}
 				return check;
-			}
+			},
+			pdfImg(){
+				const pdfDocGenerator = pdfMake.createPdf(this.dd);
+				pdfDocGenerator.getDataUrl((dataUrl) => {
+					let filename =Math.ceil(Math.random()*10)+'.pdf'
+					this.dataURLtoFile(dataUrl,filename)
+				});
+			},
+			dataURLtoFile(dataurl, filename) {
+				//将base64转换为文件
+				var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+						bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+				while(n--){
+					u8arr[n] = bstr.charCodeAt(n);
+				}
+				let file = new File([u8arr], filename, {type:mime});
+				this.uploadImg(file)
+			},
+
+			async uploadImg(params){
+				if(!this.files_name||this.fileList2.length==0){
+					Notify({ type: 'warning', message: '文件不能为空' });
+					return;
+				}
+				Toast.loading({
+					message: '合并中...',
+					forbidClick: true,
+					loadingType: 'spinner',
+					duration: 0
+				})
+				let res = await uploadImg({
+					file:params
+				})
+				if(res){
+					this.files_url = res.url
+					this.$toast('上传成功')
+					this.showImg =false
+					this.adddata1()
+				}
+			},
 		},
 	}
 </script>
@@ -477,5 +552,23 @@
 			}
 		}
 
+	}
+	.posting-uploader-item{
+		position: relative;
+		margin:0 40px 20px 0;
+		.num{
+			font-size: 32px;
+			font-weight: 500;
+			text-align: center;
+		}
+		.img{
+			border-radius: 10px;
+		}
+		.del-icon{
+			position: absolute;
+			top: 20px;
+			left: -15px;
+			z-index: 99;
+		}
 	}
 </style>

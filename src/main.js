@@ -15,7 +15,7 @@ import './plugins/axios'
 import './common/less/reset.less'
 import './flexible.js'
 import './common/js/pdfmake.min.js'
-import './common/js/vfs_fonts.js'
+// import './common/js/vfs_fonts.js'
 
 //地区分级
 import iviewArea from 'iview-area';

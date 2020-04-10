@@ -105,8 +105,8 @@
 <!--				<Table border size='small' :columns="sum_noise_column" :data="sum_noise" :show-header="false"></Table>-->
 			</div>
 			<div class="total">
-				<h2>合计应缴环保税费：{{total_pay}}</h2>
-				<h2>合计减免环保税费：{{total_off}}</h2>
+				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>
+				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>
 			</div>
 		</div>
 	</div>
@@ -745,7 +745,7 @@
 		}
 		.content{
 			background-color: #ffffff;
-			padding: 50px 0;
+			padding: 30px 0;
 			text-align: left;
 			.card{
 				border-top:solid 1px #ECECEC;
@@ -770,7 +770,6 @@
 					justify-content: center;
 					border-top: solid 1px #B3B3B3;
 					padding-top: 10px;
-					display: none;
 					img{
 						height: 50px;
 						margin-top: 10px;
@@ -781,7 +780,6 @@
 					right: 25px;
 					top: 25px;
 					height: 50px;
-					display: none;
 				}
 			}
 			.item-card{

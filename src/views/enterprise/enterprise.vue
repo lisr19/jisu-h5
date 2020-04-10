@@ -740,29 +740,7 @@
 				})
 			},
 
-			async uploadImg(params){
-				// this.showImg = false
-				if(!this.files_name||this.fileList2.length==0){
-					Notify({ type: 'warning', message: '文件不能为空' });
-					// this.$toast('文件不能为空')
-					return;
-				}
-				Toast.loading({
-					message: '合并中...',
-					forbidClick: true,
-					loadingType: 'spinner',
-					duration: 0
-				})
-				let res = await uploadImg({
-					file:params
-				})
-				if(res){
-					this.files_url = res.url
-					this.$toast('上传成功')
-					this.showImg =false
-					this.adddata1()
-				}
-			},
+
 			//更新地图坐标
 			updatemap() {
 				this.center = [this.enterDate.longit, this.enterDate.lati];
@@ -832,6 +810,29 @@
 				this.showImg =true
 				this.fileList2 = []
 				this.dd.content =[]
+			},
+			async uploadImg(params){
+				// this.showImg = false
+				if(!this.files_name||this.fileList2.length==0){
+					Notify({ type: 'warning', message: '文件不能为空' });
+					// this.$toast('文件不能为空')
+					return;
+				}
+				Toast.loading({
+					message: '合并中...',
+					forbidClick: true,
+					loadingType: 'spinner',
+					duration: 0
+				})
+				let res = await uploadImg({
+					file:params
+				})
+				if(res){
+					this.files_url = res.url
+					this.$toast('上传成功')
+					this.showImg =false
+					this.adddata1()
+				}
 			},
 			afterRead2(file) {
 				this.fileList2.push(file)

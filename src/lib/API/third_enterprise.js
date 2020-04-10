@@ -29,5 +29,9 @@ export function thirdEnterpriseDelete(params) {
 export function accountSelect(params) {
   return fetch('home/user/belong1', params);
 }
+//上传图片
+export function uploadImg(params) {
+  return post('home/file/report_upload',params);
+}
 
 

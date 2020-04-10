@@ -6,9 +6,9 @@ export function userLogin (params) {
 }
 
 
-// 上传图片
-export function uploadImg (params) {
-    return post('api/0.1/upload/img', params)
+//上传图片
+export function uploadImg(params) {
+    return post('home/file/report_upload',params);
 }
 
 // 用户信息
