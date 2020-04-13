@@ -713,7 +713,13 @@
 				</p>
 				<p style="margin-bottom:20px">
 					<span>年份：</span>
-					<DatePicker type="year" placeholder="请选择年份" style="width:200px;" @on-change="form1.year=$event" :value="form1.year" value-format="yyyy"></DatePicker>
+					<DatePicker   :open="open"
+					type="year" placeholder="请选择年份" style="width:200px;"
+								  @on-change="handleChange" :value="form1.year" value-format="yyyy">
+						<a href="javascript:void(0)" @click="handleClick">
+							<Input type="text" placeholder="请选择年份" readonly v-model="form1.year" style="width:200px"></Input>
+						</a>
+					</DatePicker>
 				</p>
 				<p style="margin-bottom:10px">
 					<span>季度：</span>
@@ -823,6 +829,8 @@
 		data() {
 			let self = this;
 			return {
+				open: false,
+				value3: '',
 				isLook:false,
 				//控制展开，收缩按钮
 				water_show:true,
@@ -1702,6 +1710,16 @@
 		},
 
 		methods: {
+			handleClick () {
+				this.open = !this.open;
+			},
+			handleChange (date) {
+				this.form1.year = date;
+				this.open = false;
+			},
+			handleClear () {
+				this.open = false;
+			},
 			//获取申报基础信息
 			handleGetenterpriseDetail2(){
 				let data={};

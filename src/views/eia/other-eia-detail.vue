@@ -9,7 +9,8 @@
 		</p>
 		<p style="margin-bottom: 10px;display: flex;align-items: center;background-color: #fff;padding:5px 10px">
 			<span style="width: 80px">年份：</span>
-			<DatePicker type="year" placeholder="请选择年份"  @on-change="form.year=$event" :value="form.year" value-format="yyyy"></DatePicker>
+			<i-input  readonly  v-model="form.year" placeholder="请选择年份"  @on-focus="openDate('year')"></i-input>
+<!--			<DatePicker type="year" placeholder="请选择年份"  @on-change="form.year=$event" :value="form.year" value-format="yyyy"></DatePicker>-->
 		</p>
 
 		<div class="content">
@@ -371,8 +372,10 @@
 
 		<Modal v-model="add_attach" :title="attach_title" @on-ok="adddata1">
 			<Input type="text" placeholder="请输入文件名" v-model="attach_name" style="width:100%"></Input>
-			<DatePicker type="date" placeholder="文件生成日期" style="width: 30%;margin-top:10px" @on-change="start_time=$event" :value="start_time" value-format="yyyy-MM-dd" ></DatePicker>
-			<DatePicker type="date" placeholder="文件截止有效期" style="width: 30%;margin-top:10px" @on-change="end_time=$event" :value="end_time" value-format="yyyy-MM-dd" ></DatePicker>
+			<i-input  readonly  v-model="start_time" placeholder="文件生成日期"  @on-focus="openDate('start_time')"></i-input>
+			<i-input  readonly  v-model="end_time" placeholder="文件截止有效期"  @on-focus="openDate('end_time')"></i-input>
+<!--			<DatePicker type="date" placeholder="文件生成日期" style="width: 30%;margin-top:10px" @on-change="start_time=$event" :value="start_time" value-format="yyyy-MM-dd" ></DatePicker>-->
+<!--			<DatePicker type="date" placeholder="文件截止有效期" style="width: 30%;margin-top:10px" @on-change="end_time=$event" :value="end_time" value-format="yyyy-MM-dd" ></DatePicker>-->
 			<Upload
 					:headers="headers"
 					:show-upload-list="false"
@@ -392,6 +395,29 @@
 
 		<div v-if="isAdd" class="btn" @click="handleAdd">新增</div>
 		<div v-else class="btn" @click="handleUpdate">保存</div>
+
+		<van-popup v-model="showDate" position="bottom" :style="{ height: '40%' }">
+			<van-datetime-picker
+					v-model="currentDate"
+					type="date"
+					:min-date="minDate"
+					:formatter="formatter"
+					@confirm="confirmPicker()"
+					@cancel="cancleDate"
+			/>
+		</van-popup>
+
+		<van-popup v-model="showYear" position="bottom" :style="{ height: '40%' }">
+			<van-picker
+					show-toolbar
+					title="年份"
+					:default-index="selectYear"
+					:columns="columnsYear"
+					@cancel="showYear = false"
+					@confirm="confirmYear"
+			/>
+		</van-popup>
+
 	</div>
 </template>
 
@@ -445,6 +471,14 @@
 		},
 		data() {
 			return {
+				columnsYear: ['2015', '2016','2017', '2018', '2019', '2020'],
+				showDate:false,
+				showYear:false,
+				currentDate: new Date(),
+				selectYear: 1000,
+				currentYear: new Date().getFullYear(),
+				currentType:'',
+				minDate: new Date(1950, 0, 1),
 				isAdd:true,
 				show1:false,
 				show2:false,
@@ -956,7 +990,16 @@
 			}
 		},
 		created() {
-
+			let arr2 = new Array();
+			for(let i=1950;i<this.currentYear+1;i++){
+				arr2.push(i);
+			}
+			this.columnsYear = arr2
+			setTimeout(()=>{
+				if(this.form.year){
+					this.selectYear =this.form.year-1950
+				}
+			},500)
 		},
 		mounted(){
 			this.getselectdata();
@@ -972,6 +1015,52 @@
 
 		},
 		methods: {
+			openDate(type){
+				if(type==='year'){
+					this.showYear =  true
+				}else {
+					this.currentType = type
+					this.showDate =  true
+				}
+			},
+			confirmYear(value){
+				this.form.year = value
+				this.showYear = false
+			},
+			formatter(type, val) {
+				if (type === 'year') {
+					return `${val}年`;
+				} else if (type === 'month') {
+					return `${val}月`
+				}else if (type === 'day') {
+					return `${val}日`
+				}
+				return val;
+			},
+			confirmPicker(value) {
+				let date = this.currentDate;
+				let m = date.getMonth() + 1;
+				let d = date.getDate();
+				if (m >= 1 && m <= 9) {
+					m = "0" + m;
+				}
+				if (d >= 0 && d <= 9) {
+					d = "0" + d;
+				}
+				let timer = date.getFullYear() + "-" + m + "-" + d
+				if(this.currentType==='start_time'){
+					this.start_time = timer
+				}else if(this.currentType==='end_time'){
+					this.end_time = timer
+				}
+				this.showDate = false
+				console.log(timer);
+			},
+			cancleDate(){
+				this.showDate = false
+				this.start_time =''
+				this.end_time =''
+			},
 			delFs(index){
 				this.po_emit_prove_index_array.splice(index,1);
 			},

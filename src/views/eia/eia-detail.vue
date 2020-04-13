@@ -58,7 +58,8 @@
 						<div style="margin-bottom:5px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">编制日期：</p> -->
 							<FormItem prop="book_date" label="编制日期：">
-								<DatePicker type="date" placeholder="请选择编制日期" style="width: 30%;" @on-change="form.book_date=$event" :value="form.book_date" value-format="yyyy-MM-dd" ></DatePicker>
+								<i-input  readonly  v-model="form.book_date" placeholder="请选择编制日期"  @on-focus="openDate('book_date')"></i-input>
+<!--								<DatePicker type="date" placeholder="请选择编制日期" style="width: 30%;" @on-change="form.book_date=$event" :value="form.book_date" value-format="yyyy-MM-dd" ></DatePicker>-->
 							</FormItem>
 						</div>
 
@@ -114,7 +115,8 @@
 						<div style="margin-bottom:5px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">批复日期：</p> -->
 							<FormItem prop="reply_date" label="批复日期：">
-								<DatePicker type="date" placeholder="批复日期" style="width: 30%;" @on-change="form.reply_date=$event" :value="form.reply_date" value-format="yyyy-MM-dd" ></DatePicker>
+								<i-input  readonly  v-model="form.reply_date" placeholder="请选择批复日期"  @on-focus="openDate('reply_date')"></i-input>
+<!--								<DatePicker type="date" placeholder="批复日期" style="width: 30%;" @on-change="form.reply_date=$event" :value="form.reply_date" value-format="yyyy-MM-dd" ></DatePicker>-->
 							</FormItem>
 						</div>
 						<div style="margin-bottom:5px">
@@ -155,7 +157,8 @@
 						<div style="margin-bottom:5px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">批复日期：</p> -->
 							<FormItem prop="check_accept_date" label="批复日期：">
-								<DatePicker type="date" placeholder="批复日期" style="width: 30%;" @on-change="form.check_accept_date=$event" :value="form.check_accept_date" value-format="yyyy-MM-dd" ></DatePicker>
+								<i-input  readonly  v-model="form.check_accept_date" placeholder="请选择批复日期"  @on-focus="openDate('check_accept_date')"></i-input>
+<!--								<DatePicker type="date" placeholder="批复日期" style="width: 30%;" @on-change="form.check_accept_date=$event" :value="form.check_accept_date" value-format="yyyy-MM-dd" ></DatePicker>-->
 							</FormItem>
 						</div>
 						<div style="margin-bottom:5px">
@@ -424,7 +427,7 @@
 					<div  class="w-card" v-if="form.noise==1&&show8" >
 						<div style="margin-bottom:5px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评噪音指标';pe_index=5" style="width:150px;margin-bottom:5px">添加环评噪音指标</Button>
-							<FormItem prop="po_emit_prove_index_array5" label=" ">
+							<FormItem prop="po_emit_prove_index_array5" label="">
 								<p><em style="color: #ed4014">*</em>噪音指标：</p>
 								<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array5">
 									<p class="name">{{index+1}} 、{{item.name}} <span @click="delFs5(index)">删除</span></p>
@@ -584,6 +587,17 @@
 		</Modal>
 		<div class="btn" @click="savemodel">保存</div>
 		<up-imgs v-if="showImg" @cancle="cancle" @adddata1="adddata1"></up-imgs>
+
+		<van-popup v-model="showDate" position="bottom" :style="{ height: '40%' }">
+			<van-datetime-picker
+					v-model="currentDate"
+					type="date"
+					:min-date="minDate"
+					:formatter="formatter"
+					@confirm="confirmPicker()"
+					@cancel="showDate = false"
+			/>
+		</van-popup>
 	</div>
 </template>
 
@@ -1483,7 +1497,11 @@
 						message: '不能为空',
 						trigger: 'blur'
 					}]
-				}
+				},
+				minDate: new Date(1950, 0, 1),
+				showDate:false,
+				currentDate: new Date(),
+				currentType:''
 			}
 		},
 		created() {
@@ -1509,6 +1527,41 @@
 		activated() {
 		},
 		methods: {
+			openDate(type){
+				this.currentType = type
+				this.showDate =  true
+			},
+			formatter(type, val) {
+				if (type === 'year') {
+					return `${val}年`;
+				} else if (type === 'month') {
+					return `${val}月`
+				}else if (type === 'day') {
+					return `${val}日`
+				}
+				return val;
+			},
+			confirmPicker(value) {
+				let date = this.currentDate;
+				let m = date.getMonth() + 1;
+				let d = date.getDate();
+				if (m >= 1 && m <= 9) {
+					m = "0" + m;
+				}
+				if (d >= 0 && d <= 9) {
+					d = "0" + d;
+				}
+				let timer = date.getFullYear() + "-" + m + "-" + d
+				if(this.currentType==='book_date'){
+					this.form.book_date = timer
+				}else if(this.currentType==='reply_date'){
+					this.form.reply_date = timer
+				}else if(this.currentType==='check_accept_date'){
+					this.form.check_accept_date = timer
+				}
+				this.showDate = false
+				console.log(timer);
+			},
 			cancle(){
 				this.showImg =false
 			},
@@ -1671,13 +1724,14 @@
 			//保存模板信息
 			savemodel(){
 				if(!this.enterprise_id){
-					debugger
+					this.$toast('非企业用户，请重新登录')
+					// debugger
 					// this.$Notice.error({
 					// 	title: '请选择企业',
 					// 	duration: this.$parent.getInfoFailTime
 					// });
 					return;
-				};
+				}
 				this.$refs.form.validate((valid) => {
 					if (valid) {
 						//指标数组合并
@@ -1728,25 +1782,18 @@
 						};
 						savemodel(data).then(res=>{
 							if(res.errno==0){
-								this.$Notice.success({
-									title: '保存成功',
-									duration: this.$parent.successTime
-								});
-								if(!sessionStorage.getItem('set_level_3')){
-									sessionStorage.setItem('per',JSON.stringify(this.level_3_access))
-									sessionStorage.setItem('set_level_3',true)
-									this.$router.push({
-										name:'home'
-									})
-									alert('权限更新！')
-									this.$router.go(0)
-								}
+								this.$toast('保存成功')
+								// if(!sessionStorage.getItem('set_level_3')){
+								// 	sessionStorage.setItem('per',JSON.stringify(this.level_3_access))
+								// 	sessionStorage.setItem('set_level_3',true)
+								// 	this.$router.push({
+								// 		name:'home'
+								// 	})
+								// 	alert('权限更新！')
+								// 	this.$router.go(0)
+								// }
 							}else{
-								this.$Notice.error({
-									title: '保存失败',
-									desc: res.errmsg,
-									duration: this.$parent.getInfoFailTime
-								});
+								this.$toast('保存失败')
 							}
 						})
 					} else {
@@ -1806,10 +1853,10 @@
 						this.form.solid_total_info[index].standard=this.form.po_emit_prove_index_array3[j].standard;
 						a=1
 					}
-				};
+				}
 				if(a==0){
-					this.form.solid_total_info[index].total_limit='';
-					this.form.solid_total_info[index].standard='';
+					this.form.solid_total_info[index].total_limit=''
+					this.form.solid_total_info[index].standard=''
 				}
 			},
 

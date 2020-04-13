@@ -93,7 +93,8 @@
 					</FormItem>
 
 					<FormItem label="注册时间" prop="register_time"  >
-						<DatePicker οnfοcus="this.blur()"  :disabled="!isEdit" type="date" placeholder="注册时间" @on-change="enterDate.register_time=$event" :value="enterDate.register_time" value-format="yyyy-MM-dd"></DatePicker>
+						<i-input  readonly :disabled="!isEdit"  v-model="enterDate.register_time"  @on-focus="openDate" @click="openDate"></i-input>
+<!--						<DatePicker οnfοcus="this.blur()"  :disabled="!isEdit" type="date" placeholder="注册时间" @on-change="enterDate.register_time=$event" :value="enterDate.register_time" value-format="yyyy-MM-dd"></DatePicker>-->
 					</FormItem>
 
 					<FormItem label="企业简介" prop="describe" class="my-form-item">
@@ -162,13 +163,17 @@
 						@confirm="confirmIndus"  @cancel="showIndus = false"
 			/>
 		</van-popup>
-<!--		<van-datetime-picker-->
-<!--				v-model="currentDate"-->
-<!--				type="date"-->
-<!--				:formatter="formatter"-->
-<!--				@confirm="confirmPicker()"-->
+		<van-popup v-model="showDate" position="bottom" :style="{ height: '40%' }">
+			<van-datetime-picker
+					v-model="currentDate"
+					type="date"
+					:min-date="minDate"
+					:formatter="formatter"
+					@confirm="confirmPicker()"
+					@cancel="showDate = false"
+			/>
+		</van-popup>
 
-<!--		/>-->
 	</div>
 </template>
 
@@ -216,6 +221,8 @@
 		},
 		data() {
 			return {
+				minDate: new Date(1950, 0, 1),
+				showDate:false,
 				currentDate: new Date(),
 				areaList:[],
 				currName:'',
@@ -456,6 +463,9 @@
 			this.registertypeSelect()
 		},
 		methods: {
+			openDate(){
+				this.showDate =  true
+			},
 			formatter(type, val) {
 				if (type === 'year') {
 					return `${val}年`;
@@ -477,6 +487,8 @@
 					d = "0" + d;
 				}
 				var timer = date.getFullYear() + "-" + m + "-" + d
+				this.enterDate.register_time = timer
+				this.showDate = false
 				console.log(timer);
 			},
 			// 获取当前位置
