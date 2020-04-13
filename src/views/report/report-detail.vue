@@ -715,7 +715,7 @@
 					<span>年份：</span>
 					<DatePicker   :open="open"
 					type="year" placeholder="请选择年份" style="width:200px;"
-								  @on-change="handleChange" :value="form1.year" value-format="yyyy">
+								  @on-clear="handleClear" @on-change="handleChange" :value="form1.year" value-format="yyyy">
 						<a href="javascript:void(0)" @click="handleClick">
 							<Input type="text" placeholder="请选择年份" readonly v-model="form1.year" style="width:200px"></Input>
 						</a>

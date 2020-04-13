@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Modal title="多图合并上传" v-model="showImg">
+    <Modal :title="title" v-model="showImg">
       <Input style="margin-bottom: 15px"  type="text" placeholder="请输入文件名" v-model="files_name"></Input>
       <div style="display: flex;flex-wrap: wrap">
         <div  class="posting-uploader-item" v-for="(item, index) in fileList" :key="index">
@@ -26,7 +26,10 @@
   export default {
     name: "up-imgs",
     props: {
-      // showImg: Boolean,
+      title: {
+        type: String,
+        default: '多图合并上传'
+      }
     },
     data() {
       return {
@@ -38,6 +41,9 @@
         },
         fileList:[],
       }
+    },
+    created() {
+      console.log(this.title);
     },
     methods:{
       cancle(){

@@ -19,15 +19,15 @@
 				</div>
 				<div class="inner-card" >
 					<div class="w-card" v-if="form.affect_book==1&&show1" >
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<FormItem prop="unit_name" label="编制单位：">
 								<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">编制单位：</p>  -->
 								<i-input type="text" v-model="form.unit_name" placeholder="请输入编制单位全称" style="width:200px"></i-input>
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="attach_type=1;attach_title='单位资质证书';add_attach=true" >上传资质证书</Button>
-<!--							<Button type="primary"  @click="showImg=true;attach_type=1" >多图合并上传</Button>-->
+							<Button type="primary"  @click="showImg=true;attach_type=1;attach_title='单位资质证书'" >多图合并上传</Button>
 						</div>
 						<FormItem prop="unit_prove" >
 							<p><em style="color: #ed4014">*</em>资质证书：</p>
@@ -39,13 +39,13 @@
 								<i-input type="text" v-model="form.register_name" placeholder="请输入注册环评工程师姓名" style="width:200px"></i-input>
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">注册证书编号：</p>  -->
 							<FormItem label="注册证书编号：" prop="register_code" >
 								<i-input type="text" v-model="form.register_code" placeholder="请输入注册证书编号" style="width:200px"></i-input>
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环评报告类型：</p> -->
 							<FormItem prop="book_type" label="环评报告类型：">
 								<i-select v-model="form.book_type" style="width:200px" >
@@ -55,7 +55,7 @@
 								</i-select>
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">编制日期：</p> -->
 							<FormItem prop="book_date" label="编制日期：">
 								<i-input  readonly  v-model="form.book_date" placeholder="请选择编制日期"  @on-focus="openDate('book_date')"></i-input>
@@ -63,14 +63,14 @@
 							</FormItem>
 						</div>
 
-						<!-- <div style="margin-bottom:5px">
+						<!-- <div style="margin-bottom:5px;margin-top:10px">
                           <Button type="primary" class="button1" @click="add_index1=true;index_title='环境影响评价报告书指标';index_type=4" >添加指标</Button>
                         </div>
-                        <Table border highlight-row size="small" :columns="columns_index6" :data="po_emit_prove_index_array" style="margin-bottom:5px"></Table> -->
+                        <Table border highlight-row size="small" :columns="columns_index6" :data="po_emit_prove_index_array" style="margin-bottom:5px;margin-top:10px"></Table> -->
 
-						<div style="margin-bottom:5px">
-							<Button type="primary" class="button1" @click="attach_type=2;attach_title='环评报告文件';add_attach=true" style="width:150px">上传环评报告文件</Button>
-<!--							<Button type="primary"  @click="showImg=true;attach_type=2" >多图合并上传</Button>-->
+						<div style="margin-bottom:5px;margin-top:10px">
+							<Button type="primary" class="button1" @click="attach_type=2;attach_title='环评报告文件';add_attach=true" >上传环评报告文件</Button>
+							<Button type="primary"  @click="showImg=true;attach_type=2;attach_title='环评报告文件'" >多图合并上传</Button>
 						</div>
 						<FormItem prop="affect_book_attach" >
 							<p>环评报告文件：</p>
@@ -78,7 +78,7 @@
 						</FormItem>
 						<div style="margin-top:5px;margin-bottom:5px">
 							<Button type="primary" class="button1" @click="attach_type=3;attach_title='其他附件';add_attach=true" >其他附件</Button>
-<!--							<Button type="primary"  @click="showImg=true;attach_type=3" >多图合并上传</Button>-->
+							<Button type="primary"  @click="showImg=true;attach_type=3;attach_title='其他附件'" >多图合并上传</Button>
 						</div>
 						<FormItem prop="affect_book_other_attach">
 							<p>其他附件：</p>
@@ -100,26 +100,26 @@
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.department_reply==1&&show2">
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环保批准部门：</p> -->
 							<FormItem prop="department_reply_name" label="环保批准部门：">
 								<Input type="text" placeholder="请输入环保批准部门全称" v-model="form.department_reply_name" style="width:200px"></Input>
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">批复文号：</p>  -->
 							<FormItem prop="reply_code" label="批复文号：">
 								<i-input type="text" v-model="form.reply_code" placeholder="请输入批复文号" style="width:200px"></i-input>
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">批复日期：</p> -->
 							<FormItem prop="reply_date" label="批复日期：">
 								<i-input  readonly  v-model="form.reply_date" placeholder="请选择批复日期"  @on-focus="openDate('reply_date')"></i-input>
 <!--								<DatePicker type="date" placeholder="批复日期" style="width: 30%;" @on-change="form.reply_date=$event" :value="form.reply_date" value-format="yyyy-MM-dd" ></DatePicker>-->
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="attach_type=4;attach_title='批复文件';add_attach=true" >添加批复文件</Button>
 							<span style="color:red;font-size:14px;margin-left:5px">环保部门批复文件的扫描件</span>
 						</div>
@@ -148,20 +148,20 @@
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.check_accept==1&&show3">
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环评验收单位：</p> -->
 							<FormItem prop="check_accept_name" label="环评验收单位：">
 								<Input type="text" placeholder="请输入环评验收单位全称" v-model="form.check_accept_name" style="width:200px"></Input>
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">批复日期：</p> -->
 							<FormItem prop="check_accept_date" label="批复日期：">
 								<i-input  readonly  v-model="form.check_accept_date" placeholder="请选择批复日期"  @on-focus="openDate('check_accept_date')"></i-input>
 <!--								<DatePicker type="date" placeholder="批复日期" style="width: 30%;" @on-change="form.check_accept_date=$event" :value="form.check_accept_date" value-format="yyyy-MM-dd" ></DatePicker>-->
 							</FormItem>
 						</div>
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="attach_type=6;attach_title='佐证文件';add_attach=true" >添加佐证文件</Button>
 							<span style="color:red;font-size:14px;margin-left:5px">佐证文件</span>
 						</div>
@@ -186,8 +186,8 @@
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.waste_water==1&&show4">
-						<div style="margin-bottom:5px">
-							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废水指标';pe_index=1" style="margin-bottom:5px">添加环评废水指标</Button>
+						<div style="margin-bottom:5px;margin-top:10px">
+							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废水指标';pe_index=1" style="margin-bottom:5px;margin-top:10px">添加环评废水指标</Button>
 							<FormItem prop="po_emit_prove_index_array1" label="">
 								<p>环评废水指标：</p>
 									<div class="item-card" v-for="(item,index) in form.po_emit_prove_index_array1">
@@ -304,7 +304,7 @@
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.solid_waste==1&&show6">
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评固废指标';pe_index=3" style="width:150px;margin-bottom:5px">添加环评固废指标</Button>
 							<FormItem prop="po_emit_prove_index_array3" label="">
 
@@ -363,7 +363,7 @@
 				</div>
 				<div class="inner-card">
 					<div class="w-card" v-if="form.dangerous_waste==1&&show7">
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评危险废物指标';pe_index=4" >添加环评危险废物指标</Button>
 							<FormItem prop="po_emit_prove_index_array4" label="">
 
@@ -425,7 +425,7 @@
 				</div>
 				<div class="inner-card">
 					<div  class="w-card" v-if="form.noise==1&&show8" >
-						<div style="margin-bottom:5px">
+						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评噪音指标';pe_index=5" style="width:150px;margin-bottom:5px">添加环评噪音指标</Button>
 							<FormItem prop="po_emit_prove_index_array5" label="">
 								<p><em style="color: #ed4014">*</em>噪音指标：</p>
@@ -586,7 +586,8 @@
 			</div>
 		</Modal>
 		<div class="btn" @click="savemodel">保存</div>
-		<up-imgs v-if="showImg" @cancle="cancle" @adddata1="adddata1"></up-imgs>
+
+		<up-imgs v-if="showImg" :title="attach_title" @cancle="cancle" @adddata1="adddata1"></up-imgs>
 
 		<van-popup v-model="showDate" position="bottom" :style="{ height: '40%' }">
 			<van-datetime-picker
@@ -2168,6 +2169,7 @@
 				this.attach_name='';
 				this.attach_url='';
 				this.water_attach=''
+				this.showImg =false
 			},
 
 			addData2(){
