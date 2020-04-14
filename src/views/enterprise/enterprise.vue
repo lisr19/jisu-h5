@@ -860,15 +860,18 @@
 	}
 </script>
 
-<style>
-	.van-field__label{
+<style scoped>
+	.content>>>.van-field__label{
 		text-align: left!important;
 	}
-	.ivu-form .ivu-form-item-label{
+	.content>>>.ivu-form .ivu-form-item-label{
 		text-align: center;
 	}
-	.ivu-cascader-menu{
+	.content>>>.ivu-cascader-menu{
 		width: 60px;
+	}
+	.content>>>.ivu-input-wrapper{
+		width: 100%;
 	}
 </style>
 <style lang="less" scoped>

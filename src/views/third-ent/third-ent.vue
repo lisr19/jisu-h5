@@ -1,25 +1,36 @@
 <template>
 	<div class="page">
 		<head-bar title="第三方公司列表"></head-bar>
-		<div class="table" v-if="data1.length>0">
-			<van-row  style="background:rgba(213,239,234,1);margin-bottom: 0">
-				<van-col span="6">公司名称</van-col>
-				<van-col span="6">联系人</van-col>
-				<van-col span="6">联系电话</van-col>
-				<van-col span="6">操作</van-col>
-			</van-row>
-			<van-row class="item" v-for="item in data1">
-				<van-col span="6">{{item.name}}</van-col>
-				<van-col span="6">{{item.link_name}}</van-col>
-				<van-col span="6">{{item.link_phone}}</van-col>
-				<van-col span="6">
-					<img  @click="openDetail(item)" style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
-					<img  @click="comFn(item)" src="@/assets/img/del.png" alt="">
-				</van-col>
-			</van-row>
+		<van-pull-refresh v-model="isDownLoading" @refresh="onRefresh">
+			<van-list
+					  v-model="loading"
+					  :finished="finished"
+					  :immediate-check="false"
+					  @load="onLoad"
+			>
+				<div class="table" :style="{height:boxHeight}">
+					<van-row  style="background:rgba(213,239,234,1);margin-bottom: 0">
+						<van-col span="6">公司名称</van-col>
+						<van-col span="6">联系人</van-col>
+						<van-col span="6">联系电话</van-col>
+						<van-col span="6">操作</van-col>
+					</van-row>
+					<van-row class="item" v-for="item in data1">
+						<van-col span="6">{{item.name}}</van-col>
+						<van-col span="6">{{item.link_name}}</van-col>
+						<van-col span="6">{{item.link_phone}}</van-col>
+						<van-col span="6">
+							<img  @click="openDetail(item)" style="margin-right: 15px" src="@/assets/img/edit.png" alt="">
+							<img  @click="comFn(item)" src="@/assets/img/del.png" alt="">
+						</van-col>
+					</van-row>
+				</div>
+			</van-list>
+		</van-pull-refresh>
 
-		</div>
-		<div v-else style="margin-top: 50px">暂无数据</div>
+
+		<div v-if="data1.length===0" style="margin-top: 50px">暂无数据</div>
+
 		<div class="btn" @click="addDetail">新增</div>
 	</div>
 </template>
@@ -35,10 +46,24 @@
 		data() {
 			return {
 				data1:[],
+				page:1,
+				count:0,
+				loading: false,
+				finished: false,
+				isDownLoading:false,//下拉刷新
+				clientHeight:'',
+				boxHeight:'',
 			}
 		},
 		created() {
-			this.handleGetInfo()
+			// 获取浏览器可视区域高度
+			this.clientHeight = `${document.documentElement.clientHeight}`
+			// window.onresize = function temp() {
+			// 	this.clientHeight = `${document.documentElement.clientHeight}`
+			// }
+			this.boxHeight = this.clientHeight -150+'px'
+			console.log(this.boxHeight);
+			this.handleGetInfo({page:1,	search : ''})
 		},
 		activated() {
 
@@ -47,19 +72,46 @@
 
 		},
 		methods: {
+			onRefresh() {
+				this.isDownLoading = false;
+				// setTimeout(() => {
+				// 	this.isDownLoading = false;
+				// 	this.page=1
+				// 	this.finished = false
+				// 	this.data1=[]
+				// 	this.handleGetInfo({page:1,	search : ''})
+				// }, 500);
+			},
+			onLoad() {
+				console.log('触发加载');
+				setTimeout(()=>{
+					this.handleGetInfo({page:this.page,	search : ''})
+				},500)
+
+			},
 			//获取第三方公司列表
-			handleGetInfo() {
-				let data = {
-					page : 1,
-					search : '',
-				}
-				thirdEnterpriseList(data).then(res => {
+			handleGetInfo(params) {
+				console.log(this.page);
+				thirdEnterpriseList(params).then(res => {
 					if(res.errno) {
 						this.$toast('获取第三方公司列表出错')
 					} else {
-						this.data1 = res.data.data;
 						this.count = res.data.count;
-						this.pagesize = res.data.pagesize;
+						this.loading = false;
+						this.totalPage = Math.ceil(this.count/10)
+						if(this.totalPage===0||this.totalPage===1){
+							this.finished = true
+						}else if(this.totalPage>this.page){
+							this.page++
+						}else {
+							this.finished = true
+						}
+						if(this.page===1){
+							this.data1=res.data.data
+						}else {
+							this.data1= this.data1.concat(res.data.data)
+						}
+						console.log(this.data1);
 					}
 				}).catch(err => {
 					this.$toast('获取第三方公司列表出错')
@@ -111,6 +163,7 @@
 		line-height: 68px;
 		margin-bottom: 20px;
 		background:rgba(255,255,255,1);
+		overflow: hidden;
 	}
 	.ivu-table-header{
 		height:68px;
@@ -139,8 +192,9 @@
 </style>
 <style lang="less" scoped>
 	.page{
-		padding: 112px 0 180px;
+		padding: 112px 0 230px;
 		.table{
+			overflow: auto;
 			.item{
 				img{
 					width: 40px;

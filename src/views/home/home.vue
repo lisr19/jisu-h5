@@ -27,7 +27,7 @@
 			<div class="title">
 				企业污染物排放类型分布（kg）
 			</div>
-			<ve-pie :extend="chartExtend"  :legend-visible="false" :data="chartData" width="320px" height="220px"  :data-empty="dataEmpty1"  style="margin: 0 auto;" ></ve-pie>
+			<ve-pie :extend="chartExtend"  :legend-visible="false" :data="chartData" width="320px" height="210px"  :data-empty="dataEmpty1"  style="margin: 0 auto;" ></ve-pie>
 		</div>
 
 		<div class="my-chart">
@@ -261,7 +261,7 @@
 				};
 				if(data.length>0){
 					//表格
-					console.log('data',data)
+					// console.log('data',data)
 					for(let i in data){
 						let status='未知';
 						if(data[i].limit_value!='无'){
@@ -340,7 +340,7 @@
 					}else{
 						this.dataEmpty3=true;
 					};
-					console.log(gasdata)
+					// console.log(gasdata)
 
 				}else{
 					let bingdata_rows=[];
