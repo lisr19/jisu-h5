@@ -11,7 +11,7 @@
 				<div class="desc">
 					<p class="role">{{userDate.name}}</p>
 					<p class="role">{{userDate.role_name}}</p>
-					<p class="ID">ID：{{enterprise_id}}</p>
+					<p class="ID" v-if="enterprise_id">ID：{{enterprise_id}}</p>
 					<van-icon name="arrow" size="20"/>
 				</div>
 			</div>
@@ -60,8 +60,13 @@
 			}
 		},
 		created() {
-			this.enterprise_id = sessionStorage.getItem('enterprise_id')
-			this.getUserDate()
+			this.enterprise_id = sessionStorage.getItem('enterprise_id') ||''
+			if(sessionStorage.getItem('account_type')==0){
+				this.userDate.role_name = '超级管理员'
+				this.userDate.name = sessionStorage.getItem('account_name')
+			}else {
+				this.getUserDate()
+			}
 		},
 		methods: {
 			//获取账户列表

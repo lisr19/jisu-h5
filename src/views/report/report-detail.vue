@@ -6,8 +6,6 @@
 				<div  class="card">
 					<img class="icon-down" src="@/assets/img/down2.png"  @click="base_show=true" v-if="base_show==false" alt="">
 					<p >1、企业季度信息</p>
-<!--					<a href="#" @click="base_show=true" v-if="base_show==false" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">展开</a>-->
-<!--					<a href="#" @click="base_show=false" v-if="base_show==true" style="margin-left:10px;padding:3px 5px 3px 5px;border-radius:3px;color:#fff;background-color:#2d8cf0">收缩</a>-->
 				</div>
 				<div class="inner-card" v-if="base_show==true">
 					<div v-if="quarter_info_base.length>0" class="w-card">
@@ -822,6 +820,7 @@
 	} from '@/lib/API/report';
 	import Config from '@/Config'
 	import headBar from '@/components/head-bar/head-bar'
+	import {Toast} from "vant";
 	export default {
 		components:{
 			headBar,
@@ -873,7 +872,6 @@
 					year:'',
 					quarter:''
 				},
-
 				//第二步
 				form3:{
 					output_value:'',
@@ -1726,9 +1724,12 @@
 				if (this.$route.query.id) {
 					data.id=this.$route.query.id
 					getsave1(data).then(res=>{
+						console.log(res);
 						this.report_id=res.data.id;
 						this.form1=res.data;
-						this.getModel();
+						setTimeout(()=>{
+							this.getModel();
+						},100)
 						this.third_enterpriseSelect();
 						this.getsave3info();
 					})
@@ -1953,7 +1954,7 @@
 							};
 							if(this.form3.waste_water==1){
 								this.water_waste_total=res.data.waste_water_total
-								console.log(this.water_waste_total);
+								// console.log(this.water_waste_total);
 							};
 							if(this.form3.waste_gas==1){
 								this.ga_tr_fa=res.data.waste_gas_info.ga_tr_fa;
@@ -1978,21 +1979,18 @@
 							};
 							if(this.form3.noise==1){
 								this.noise_list=res.data.noise_list
-							};
-							// if(this.form3.em_type==1){
-							//   this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
-							// }else if(this.form3.em_type==2){
-							//   this.em_type_third_enterprise_id=res.data.em_type_info.third_enterprise_id;
-							//   this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
-							// }else if(this.form3.em_type==3){
-							//   this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
-							// }else if(this.form3.em_type==4){
-							//   this.em_type_explain=res.data.em_type_info.explain;
-							//   // if(res.data.em_type_info.attach) {
-							//   //    this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
-							//   // }
-							//   this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
-							// }
+							}
+							if(this.form3.em_type==1){
+								this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
+							}else if(this.form3.em_type==2){
+								this.em_type_third_enterprise_id=res.data.em_type_info.third_enterprise_id;
+								this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
+							}else if(this.form3.em_type==3){
+								this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
+							}else if(this.form3.em_type==4){
+								this.em_type_explain=res.data.em_type_info.explain;
+								this.em_type_attach=JSON.parse(res.data.em_type_info.attach);
+							}
 						}
 					}else{
 						this.$Notice.error({
@@ -2526,8 +2524,15 @@
 				};
 				this.wastegas_total[index].outfall_count=data;
 			},
+
+
 			//获取模板数据
 			getModel(){
+				Toast.loading({
+					message: '加载数据中...',
+					forbidClick: true,
+					loadingType: 'spinner',
+				})
 				let data={
 					id:this.form1.enterprise_id
 				};

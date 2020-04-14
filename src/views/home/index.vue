@@ -111,33 +111,22 @@
         mounted() {
         },
         activated() {
-            if(sessionStorage.getItem('token')&&sessionStorage.getItem('account_type')!=1){
-                Dialog.alert({
-                    title: '标题',
-                    message: '该账号非企业用户'
-                }).then(() => {
-                    localStorage.clear()
-                    sessionStorage.clear()
-                    this.$toast('请用企业账号登录')
-                    this.$router.push({name:'登录'})
-                });
-            }
-            // this.getUserDate()
+            // if(sessionStorage.getItem('token')&&sessionStorage.getItem('account_type')!=1){
+            //     Dialog.alert({
+            //         title: '标题',
+            //         message: '该账号非企业用户'
+            //     }).then(() => {
+            //         localStorage.clear()
+            //         sessionStorage.clear()
+            //         this.$toast('请用企业账号登录')
+            //         this.$router.push({name:'登录'})
+            //     });
+            // }
             this.getEnterInfo()
             this.epList()
             this.procedureList() //其他环保手续
         },
         methods: {
-            //获取用户信息
-            async getUserDate(params) {
-                let res = await getUserDate(params)
-                if(res.errno ==0){
-                    this.userDate = res.data.data[0]
-                    console.log(this.userDate);
-                } else {
-                    this.$toast(res.errmsg)
-                }
-            },
             //企业账户，获取单个企业统计数据
             async getEnterInfo(){
                 let res = await getEnterInfo()

@@ -6,43 +6,60 @@
         </div>
 		<div class="card">
 			<div class="item" @click="openAlarm">
-				<p class="type">预警告警
-<!--					<img src="@/assets/img/warn.png" alt="">-->
-				</p>
+				<p class="type">预警告警</p>
 				<div class="ctx">
 					<img src="@/assets/img/i-one.png" alt="" style="width: 65%;margin:0px 0 0 12px">
 				</div>
 			</div>
 			<div class="item" @click="openTax">
-				<p class="type">税务核算
-<!--					<img src="@/assets/img/icon8.png" alt="">-->
-				</p>
+				<p class="type">税务核算</p>
 				<div class="ctx">
 					<img src="@/assets/img/i-two.png" alt="" style="width: 50%;margin:8px 0 0 10px">
 				</div>
 			</div>
 		</div>
-
-		<div class="my-chart">
-			<div class="title">
-				企业污染物排放类型分布（kg）
+		<template v-if="isQy">
+			<div class="my-chart">
+				<div class="title">
+					企业污染物排放类型分布（kg）
+				</div>
+				<ve-pie :extend="chartExtend"  :legend-visible="false" :data="chartData" width="320px" height="210px"  :data-empty="dataEmpty1"  style="margin: 0 auto;" ></ve-pie>
 			</div>
-			<ve-pie :extend="chartExtend"  :legend-visible="false" :data="chartData" width="320px" height="210px"  :data-empty="dataEmpty1"  style="margin: 0 auto;" ></ve-pie>
-		</div>
 
-		<div class="my-chart">
-			<div class="title" style="margin-bottom: 0">
-				大气主要污染物排放情况
+			<div class="my-chart">
+				<div class="title" style="margin-bottom: 0">
+					大气主要污染物排放情况
+				</div>
+				<ve-bar  :data="chartData1" width="320px"  height="250px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
 			</div>
-			<ve-bar  :data="chartData1" width="320px"  height="250px" legend-position="top"  :data-empty="dataEmpty2"></ve-bar>
-		</div>
 
-		<div class="my-chart">
-			<div class="title" style="margin-bottom: 0">
-				水体主要污染物排放情况
+			<div class="my-chart">
+				<div class="title" style="margin-bottom: 0">
+					水体主要污染物排放情况
+				</div>
+				<ve-bar  :data="chartData2" width="320px"  height="250px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
 			</div>
-			<ve-bar  :data="chartData2" width="320px"  height="250px" legend-position="top"  :data-empty="dataEmpty3"></ve-bar>
-		</div>
+		</template>
+		<template v-if="!isQy">
+			<div class="admin">
+				<p>工业废物排放量</p>
+				<p><Icon type="trash-a" style="font-size:20px;color:red;"></Icon>产生量：<span style="font-size:20px;color:red;margin-right:5px">{{product_count}}</span>吨</p>
+				<p><Icon type="android-sync" style="font-size:20px;color:#19be6b;"></Icon>利用量：<span style="font-size:20px;color:#19be6b;margin-right:5px">{{use_count}}</span>吨</p>
+				<p><Icon type="android-navigate" style="font-size:20px;color:#f50;"></Icon>委外处理量：<span style="font-size:20px;color:#f50;margin-right:5px">{{out_count}}</span>吨</p>
+				<p><Icon type="ios-folder" style="font-size:20px;color:red;"></Icon>剩余量：<span style="font-size:20px;color:red;margin-right:5px">{{remain_count}}</span>吨</p>
+			</div>
+			<div class="map">
+				<p>管理区域企业分布图</p>
+				<div class="amap-page-container" >
+					<el-amap vid="amapDemo" :zoom="zoom" :center="center" :expandZoomRange="expandZoomRange" :zooms="zooms"
+							 style="height:250px;width: 100% ">
+						<el-amap-marker v-for="(marker, index) in markers" v-bind:key="index.position" :position="marker.position"
+										:visible="marker.visible" :label="marker.label" :vid="index"></el-amap-marker>
+					</el-amap>
+				</div>
+			</div>
+
+		</template>
 	</div>
 </template>
 <script>
@@ -56,6 +73,15 @@
 				},
 			};
 			return{
+				isQy:true,
+				product_count:0,
+				use_count:0,
+				out_count:0,
+				remain_count:0,
+				zoom: 10,
+				expandZoomRange: true,
+				zooms: [3, 20],
+				center: [113.264417, 23.130067],
 				inforCardData: [
 					{ title: '注册企业', icon: 'android-person-add', count:0, color: '#2d8cf0' },
 					{ title: '正常运行', icon: 'load-a', count:0, color: '#19be6b' },
@@ -94,20 +120,20 @@
 				},
 			}
 		},
-		created(){
-			// this.getEnterInfo()
-		},
 		mounted(){
-			// this.account_type=sessionStorage.getItem("account_type");
-			// if(this.account_type!=1){
-			// 	this.getinfolist();
-			// }else{
-			// 	this.getEnterInfo()
-			// }
-			this.getEnterInfo()
+			this.account_type=sessionStorage.getItem("account_type");
+			if(this.account_type==1){
+				this.isQy=true
+				this.getEnterInfo()
+			}else if(this.account_type==0){
+				this.isQy=false
+				this.getinfolist();
+			}
 		},
 		activated() {
-			if(localStorage.getItem('from')==='login'){
+			this.account_type=sessionStorage.getItem("account_type");
+			if(localStorage.getItem('from')==='login'&& this.account_type==1){
+				this.isQy=true
 				this.getEnterInfo()
 				localStorage.setItem('from','')
 			}
@@ -156,7 +182,6 @@
 				})
 			},
 			openTax(){
-				// this.$router.push({name:'建设'})
 				this.$router.push({name:"税务"})
 			},
 			openAlarm(){
@@ -476,6 +501,17 @@
 				color:rgba(102,102,102,1);
 				line-height:40px;
 				margin: 30px 0;
+			}
+		}
+
+		.admin{
+			padding: 20px;
+		}
+		.map{
+			width: 100%;
+			padding: 20px;
+			p{
+				margin: 10px 0;
 			}
 		}
 	}
