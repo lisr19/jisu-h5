@@ -1,38 +1,47 @@
 <template>
 	<div class="page">
 		<head-bar title="动态环保数据"></head-bar>
-		<div class="table" v-if="dataList.length>0">
-			<van-row  style="background:rgba(213,239,234,1);margin-bottom: 0">
-				<van-col span="5">年份</van-col>
-				<van-col span="6">季度</van-col>
-				<van-col span="5">状态</van-col>
-				<van-col span="8">操作</van-col>
-			</van-row>
-			<van-row class="item" v-for="item in dataList">
-				<van-col span="5">{{item.year}}</van-col>
+		<van-pull-refresh v-model="isDownLoading"  @refresh="onRefresh">
+			<van-list
+					v-model="isUpLoading"
+					:finished="finished"
+					:immediate-check="false"
+					@load="onLoad"
+			>
+				<div class="table" :style="{height:boxHeight}">
+					<van-row  style="background:rgba(213,239,234,1);margin-bottom: 0">
+						<van-col span="5">年份</van-col>
+						<van-col span="6">季度</van-col>
+						<van-col span="5">状态</van-col>
+						<van-col span="8">操作</van-col>
+					</van-row>
+					<van-row class="item" v-for="item in dataList">
+						<van-col span="5">{{item.year}}</van-col>
 
-				<template>
-					<van-col span="6" v-if="item.quarter==1">第一季度</van-col>
-					<van-col span="6" v-if="item.quarter==2">第二季度</van-col>
-					<van-col span="6" v-if="item.quarter==3">第三季度</van-col>
-					<van-col span="6" v-if="item.quarter==4">第四季度</van-col>
-				</template>
+						<template>
+							<van-col span="6" v-if="item.quarter==1">第一季度</van-col>
+							<van-col span="6" v-if="item.quarter==2">第二季度</van-col>
+							<van-col span="6" v-if="item.quarter==3">第三季度</van-col>
+							<van-col span="6" v-if="item.quarter==4">第四季度</van-col>
+						</template>
 
-				<template>
-					<van-col span="5" v-if="item.status==1">未完成</van-col>
-					<van-col span="5" v-if="item.status==2">审核中</van-col>
-					<van-col span="5" v-if="item.status==3">驳回</van-col>
-					<van-col span="5" v-if="item.status==4">已完成</van-col>
-				</template>
+						<template>
+							<van-col span="5" v-if="item.status==1">未完成</van-col>
+							<van-col span="5" v-if="item.status==2">审核中</van-col>
+							<van-col span="5" v-if="item.status==3">驳回</van-col>
+							<van-col span="5" v-if="item.status==4">已完成</van-col>
+						</template>
 
-				<van-col style="display: flex;align-items: center;justify-content: center;height: 100%" span="8">
-					<img v-if="item.status==1||item.status==3" @click="openDetail(item)"  src="@/assets/img/edit.png" alt="">
-					<img  @click="lookDetail(item)" style="margin: 0 15px;" src="@/assets/img/eye.png" alt="">
-					<img v-if="item.status==1||item.status==3"  @click="comFn(item)" src="@/assets/img/del.png" alt="">
-				</van-col>
-			</van-row>
-		</div>
-		<div v-else style="margin-top: 50px">暂无数据</div>
+						<van-col style="display: flex;align-items: center;justify-content: center;height: 100%" span="8">
+							<img v-if="item.status==1||item.status==3" @click="openDetail(item)"  src="@/assets/img/edit.png" alt="">
+							<img  @click="lookDetail(item)" style="margin: 0 15px;" src="@/assets/img/eye.png" alt="">
+							<img v-if="item.status==1||item.status==3"  @click="comFn(item)" src="@/assets/img/del.png" alt="">
+						</van-col>
+					</van-row>
+				</div>
+			</van-list>
+		</van-pull-refresh>
+		<div v-if="dataList.length===0" style="margin-top: 50px">暂无数据</div>
 		<div class="btn" @click="addDetail">新增</div>
 	</div>
 </template>
@@ -48,23 +57,42 @@
 		data() {
 			return {
 				dataList:[],
+				page:1,
+				count:0,
+				finished: false,
+				isDownLoading:false,//下拉刷新
+				isUpLoading:false,//上拉加载更多
+				clientHeight:'',
+				boxHeight:'',
 
 			}
 		},
 		created() {
-			this.reportList()
+			this.clientHeight = `${document.documentElement.clientHeight}`
+			this.boxHeight = this.clientHeight -150+'px'
+
 		},
 		activated() {
 
 		},
 		mounted(){
-
+			this.reportList()
 		},
 		methods: {
+			onRefresh() {
+				this.isDownLoading = false;
+			},
+			onLoad() {
+				console.log('触发加载');
+				setTimeout(()=>{
+					this.reportList()
+				},500)
+
+			},
 			//获取动态环保数据
 			async reportList() {
 				let params = {
-					page : 1,
+					page : this.page,
 					search :'',
 				}
 				let res = await reportList(params)
@@ -72,7 +100,22 @@
 					if(res.data.data.length==0){
 						console.log('暂无动态数据');
 					}else {
-						this.dataList = res.data.data
+						console.log(res.data);
+						this.count = res.data.count;
+						this.isUpLoading = false;
+						this.totalPage = res.data.totalPages
+						if(this.totalPage===0||this.totalPage===1){
+							this.finished = true
+						}else if(this.totalPage>this.page){
+							this.page++
+						}else {
+							this.finished = true
+						}
+						if(this.page===1){
+							this.dataList=res.data.data
+						}else {
+							this.dataList= this.dataList.concat(res.data.data)
+						}
 					}
 				} else {
 					this.$toast(res.errmsg)
@@ -153,8 +196,9 @@
 </style>
 <style lang="less" scoped>
 	.page{
-		padding-top: 112px;
+		padding: 112px 0 230px;
 		.table{
+			overflow: auto;
 			.item{
 				img{
 					width: 40px;

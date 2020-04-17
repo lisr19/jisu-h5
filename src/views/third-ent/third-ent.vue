@@ -58,11 +58,7 @@
 		created() {
 			// 获取浏览器可视区域高度
 			this.clientHeight = `${document.documentElement.clientHeight}`
-			// window.onresize = function temp() {
-			// 	this.clientHeight = `${document.documentElement.clientHeight}`
-			// }
 			this.boxHeight = this.clientHeight -150+'px'
-			console.log(this.boxHeight);
 			this.handleGetInfo({page:1,	search : ''})
 		},
 		activated() {
@@ -92,13 +88,15 @@
 			//获取第三方公司列表
 			handleGetInfo(params) {
 				console.log(this.page);
+				console.log(this.finished);
+				console.log(this.loading);
 				thirdEnterpriseList(params).then(res => {
 					if(res.errno) {
 						this.$toast('获取第三方公司列表出错')
 					} else {
 						this.count = res.data.count;
 						this.loading = false;
-						this.totalPage = Math.ceil(this.count/10)
+						this.totalPage = res.data.totalPages
 						if(this.totalPage===0||this.totalPage===1){
 							this.finished = true
 						}else if(this.totalPage>this.page){

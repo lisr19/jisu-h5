@@ -12,20 +12,20 @@
 						<div class="item-card" v-for="(item,index) in quarter_info_base">
 							<p class="name">月份：{{item.month}}</p>
 							<p>产值（元）：
-								<Input type="number" placeholder="0" v-model="item.output_value"></Input>
+								<InputNumber type="number" placeholder="0" v-model="item.output_value"></InputNumber>
 <!--								{{item.output_value}}-->
 							</p>
 							<p>纳税（元）：
-								<Input type="number" placeholder="0" v-model="item.pay_taxes"></Input>
+								<InputNumber type="number" placeholder="0" v-model="item.pay_taxes"></InputNumber>
 							</p>
 							<p>用水（吨）：
-								<Input type="number" placeholder="0" v-model="item.use_water"></Input>
+								<InputNumber type="number" placeholder="0" v-model="item.use_water"></InputNumber>
 							</p>
 							<p>用电（度）：
-								<Input type="number" placeholder="0" v-model="item.use_electricity"></Input>
+								<InputNumber type="number" placeholder="0" v-model="item.use_electricity"></InputNumber>
 							</p>
 							<p>生产时间（h）：
-								<Input type="number" placeholder="" v-model="item.time" @on-change='prodTime(item,index)'></Input>
+								<InputNumber type="number" placeholder="" v-model="item.time" @on-change='prodTime(item,index)'></InputNumber>
 							</p>
 						</div>
 						<div  class="fold"  style="margin-top: 30px">
@@ -1791,9 +1791,9 @@
 					this.columns_index[3].title="3月";
 					this.columns_index1[3].title="3月";
 					this.quarter_info_base=[
-						{'month':'1月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'2月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'3月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0}
+						{'month':'1月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'2月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'3月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1}
 					];
 				}else if(this.form1.quarter==2){
 					this.columns_index[1].title="4月";
@@ -1803,9 +1803,9 @@
 					this.columns_index[3].title="6月";
 					this.columns_index1[3].title="6月";
 					this.quarter_info_base=[
-						{'month':'4月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'5月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'6月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0}
+						{'month':'4月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'5月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'6月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1}
 					];
 				}else if(this.form1.quarter==3){
 					this.columns_index[1].title="7月";
@@ -1815,9 +1815,9 @@
 					this.columns_index[3].title="9月";
 					this.columns_index1[3].title="9月";
 					this.quarter_info_base=[
-						{'month':'7月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'8月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'9月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0}
+						{'month':'7月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'8月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'9月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1}
 					];
 				}else if(this.form1.quarter==4){
 					this.columns_index[1].title="10月";
@@ -1827,9 +1827,9 @@
 					this.columns_index[3].title="12月";
 					this.columns_index1[3].title="12月";
 					this.quarter_info_base=[
-						{'month':'10月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'11月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0},
-						{'month':'12月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'workTime':0}
+						{'month':'10月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'11月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1},
+						{'month':'12月','output_value':0,'pay_taxes':0,'use_water':0,'use_electricity':0,'time':1}
 					];
 				};
 				//构建基础表格数据
@@ -2494,7 +2494,7 @@
 			},
 
 			changeWaterhours(item,index,index3){
-				console.log(item.hours,index,index3);
+				// console.log(item.hours,index,index3);
 				if(index3==0){
 					if(item.hours>this.produtimeList[0]){
 						this.$toast('生产时间不得超过企业季度信息中填写的生产时间,请重新填写')
@@ -2521,7 +2521,7 @@
 
 			},
 			changeAttachDetail(value){
-				console.log('index',value)
+				// console.log('index',value)
 				this.attach_name = this.attach_history[value].name
 				this.attach_url = this.attach_history[value].url
 				this.attach_type = this.attach_history[value].attach_type
