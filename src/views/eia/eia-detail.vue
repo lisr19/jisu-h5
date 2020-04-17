@@ -274,7 +274,7 @@
                                     </p> -->
 
 									<div style="margin:10px 0">
-										<Button type="primary" class="button1" @click="add_index=true;index_title='排气监测点数据';index_type=index.toString()+'gas'" >选择环评废气指标</Button>
+										<Button type="primary" class="button1" @click="add_index=true;index_title='排气监测点数据';index_type=index.toString()+'gas'" >选择环评废气指标999999</Button>
 									</div>
 
 									<div style="margin-top: 10px" class="item-card" v-for="(item3,index3) in item.index_array">
@@ -552,10 +552,10 @@
 			<div style="margin-bottom:10px" >
 				<span>废物名称：</span>
 				<Select  v-show="index_type.toString().indexOf('water')!= -1" v-model="id"  :label-in-value="true" style="width:200px" @on-change="all_index_change"  >
-					<Option v-for="(item,index) in form.po_emit_prove_index_array1" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+					<Option v-for="(item,index) in form.po_emit_prove_index_array1" :key="index" :value="item.id" :label="item.name"></Option>
 				</Select>
 				<Select  v-show="index_type.toString().indexOf('gas')!= -1" v-model="id"  :label-in-value="true" style="width:200px" @on-change="all_index_change"  >
-					<Option v-for="(item,index) in form.po_emit_prove_index_array2" v-bind:key="index" :value="item.id" :label="item.name"></Option>
+					<Option v-for="(item,index) in form.po_emit_prove_index_array2" :key="index" :value="item.id+''" :label="item.name"></Option>
 				</Select>
 			</div>
 			<!-- <div style="margin-bottom:10px" >
@@ -823,8 +823,6 @@
 						{ validator: noiseValidate, trigger: 'blur' }
 					],
 				},
-				//指标类型
-				waste_type:'',
 				po_emit_prove_index_data:[],
 				po_emit_prove_index_data1:[],
 				add_index1:false,
@@ -938,7 +936,6 @@
 				total:0,
 				density:0,
 				speed:0,
-				index_type:'',
 				day_noise:0,
 				night_noise:0,
 				waste_type:'',
@@ -1608,14 +1605,6 @@
 			delFs5(index){
 				this.form.po_emit_prove_index_array5.splice(index,1);
 			},
-			choseOne(item2,index1){
-				console.log(item2);
-				console.log(index1);
-				this.add_index=true;
-				this.index_title='排污监测点数据';
-				this.water_index=index1;
-				this.index_type=index1.toString()+'water';
-			},
 			delFszb(item3,index3){
 				if(item3.index_type==31){
 					// this.form.water_waste_total[item3.water_index].wa_tr_fa_index_array.splice(item.index,1);
@@ -1627,7 +1616,6 @@
 					let index=parseInt(item3.index_type);
 					this.form.water_waste_total[item3.water_index].wastewater_total[index].index_array.splice(index3,1);
 				}else if(item3.index_type.toString().indexOf('gas')!=-1){
-					console.log(1212);
 					let index=parseInt(item3.index_type);
 					this.form.wastegas_total[index].index_array.splice(index3,1);
 				}
@@ -1929,7 +1917,6 @@
 			//通用
 			//插入排水口或排气口或危险物
 			add_total(e,index){
-				// console.log(index);
 				if(e=='water_waste'){
 					let data={
 						type_id:'',

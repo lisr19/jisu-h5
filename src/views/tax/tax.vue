@@ -105,6 +105,12 @@
 <!--				<Table border size='small' :columns="sum_noise_column" :data="sum_noise" :show-header="false"></Table>-->
 			</div>
 			<div class="total">
+				<h2>{{month_list[0]}}月份合计应缴环保税费：{{tax_month_count[0].toFixed(2)}}</h2>
+				<h2>{{month_list[0]}}月份合计减免环保税费：{{tax_breaks_month_count[0].toFixed(2)}}</h2>
+				<h2>{{month_list[1]}}月份合计应缴环保税费：{{tax_month_count[1].toFixed(2)}}</h2>
+				<h2>{{month_list[1]}}月份合计减免环保税费：{{tax_breaks_month_count[1].toFixed(2)}}</h2>
+				<h2>{{month_list[2]}}月份合计应缴环保税费：{{tax_month_count[2].toFixed(2)}}</h2>
+				<h2>{{month_list[2]}}月份合计减免环保税费：{{tax_breaks_month_count[2].toFixed(2)}}</h2>
 				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>
 				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>
 			</div>
@@ -532,7 +538,8 @@
 				],
 
 				//分月统计
-				water_gas_month_count:[0,0,0],
+				tax_month_count:[0,0,0],
+				tax_breaks_month_count:[0,0,0],
 			}
 		},
 		mounted () {
@@ -558,6 +565,17 @@
 			//合计减免税费
 			total_off:function(){
 				return this.water_gas_tax_breaks + this.solid_dang_tax_breaks + this.noise_tax_breaks
+			},
+			month_list:function(){
+				if (this.selectQuarter == 1) {
+					return ['1','2','3']
+				} else if (this.selectQuarter == 2) {
+					return ['4','5','6']
+				} else if (this.selectQuarter == 3) {
+					return ['7','8','9']
+				} else if (this.selectQuarter == 4) {
+					return ['10','11','12']
+				}
 			}
 		},
 		methods: {
@@ -580,38 +598,19 @@
 						this. _resetTable()
 						for(let month in res.data) {
 							res.data[month].water_arr.forEach(item => {
-								this.data_waterGas.push(item)
-								this.water_gas_count_sum += item.count
-								this.water_gas_tax_liability += item.tax_liability
-								this.water_gas_tax_breaks += item.tax_breaks
-								this.water_gas_month_count[month] += item.tax_liability
+								this._waterGasGatherData(item,month)
 							})
 							res.data[month].gas_arr.forEach(item => {
-								this.data_waterGas.push(item)
-								this.water_gas_count_sum += item.count
-								this.water_gas_tax_liability += item.tax_liability
-								this.water_gas_tax_breaks += item.tax_breaks
-								this.water_gas_month_count[month] += item.tax_liability
+								this._waterGasGatherData(item,month)
 							})
 							res.data[month].solid_arr.forEach(item => {
-								this.data_solidDangerous.push(item)
-								this.solid_dang_count_sum += item.count
-								this.solid_dang_tax_liability += item.tax_liability
-								this.solid_dang_tax_breaks += item.tax_breaks
+								this._solidDangGatherData(item,month)
 							})
 							res.data[month].dangerous_arr.forEach(item => {
-								this.data_solidDangerous.push(item)
-								this.solid_dang_count_sum += item.count
-								this.solid_dang_tax_liability += item.tax_liability
-								this.solid_dang_tax_breaks += item.tax_breaks
+								this._solidDangGatherData(item,month)
 							})
 							res.data[month].noise_arr.forEach(item => {
-								this.data_noise.push(item)
-								this.noise_count_sum += item.count
-								this.noise_tax_liability += item.tax_liability
-								this.noise_exceed_value += item.exceed_value
-								this.noise_exceed_day += item.exceed_day
-								this.noise_tax_breaks += item.tax_breaks
+								this._noiseGatherData(item,month)
 							})
 						}
 					}
@@ -681,8 +680,8 @@
 			//重置表格信息
 			_resetTable(){
 				this.data_waterGas = [],
-						this.data_solidDangerous = [],
-						this.data_noise = []
+				this.data_solidDangerous = [],
+				this.data_noise = []
 				this.water_gas_count_sum = 0
 				this.water_gas_tax_liability = 0
 				this.water_gas_tax_breaks = 0
@@ -694,6 +693,39 @@
 				this.noise_exceed_value=0
 				this.noise_exceed_day=0
 				this.noise_tax_breaks=0
+				this.tax_month_count=[0,0,0]
+				this.tax_breaks_month_count=[0,0,0]
+			},
+			//废水废气表格渲染
+			_waterGasGatherData(item,month){
+				this.data_waterGas.push(item)
+				this.water_gas_count_sum += item.count
+				this.water_gas_tax_liability += item.tax_liability
+				this.water_gas_tax_breaks += item.tax_breaks
+				this.tax_month_count[month] += item.tax_liability
+				this.tax_breaks_month_count[month] += item.tax_breaks
+			},
+
+			//废固危废表格渲染
+			_solidDangGatherData(item,month){
+				this.data_solidDangerous.push(item)
+				this.solid_dang_count_sum += item.count
+				this.solid_dang_tax_liability += item.tax_liability
+				this.solid_dang_tax_breaks += item.tax_breaks
+				this.tax_month_count[month] += item.tax_liability
+				this.tax_breaks_month_count[month] += item.tax_breaks
+			},
+
+			//噪音表格渲染
+			_noiseGatherData(item,month){
+				this.data_noise.push(item)
+				this.noise_count_sum += item.count
+				this.noise_tax_liability += item.tax_liability
+				this.noise_exceed_value += item.exceed_value
+				this.noise_exceed_day += item.exceed_day
+				this.noise_tax_breaks += item.tax_breaks
+				this.tax_month_count[month] += item.tax_liability
+				this.tax_breaks_month_count[month] += item.tax_breaks
 			}
 		}
 	}

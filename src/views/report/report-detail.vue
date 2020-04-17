@@ -25,7 +25,7 @@
 								<Input type="number" placeholder="0" v-model="item.use_electricity"></Input>
 							</p>
 							<p>生产时间（h）：
-								<Input type="number" placeholder="" v-model="item.time" ></Input>
+								<Input type="number" placeholder="" v-model="item.time" @on-change='prodTime(item,index)'></Input>
 							</p>
 						</div>
 						<div  class="fold"  style="margin-top: 30px">
@@ -36,7 +36,7 @@
 <!--					<Table border highlight-row size="small" :columns="columns1" :data="quarter_info_base" ></Table>-->
 				</div>
 
-				<div class="card" v-if="showWater">
+				<div class="card">
 					<img class="icon-down" src="@/assets/img/down2.png"  @click="water_show=true" v-if="water_show==false" alt="">
 					<p >2、是否产生工业废水</p>
 					<RadioGroup v-model="form3.waste_water"  >
@@ -67,7 +67,7 @@
 								<div class="card-two" v-for="(item3,index3) in item2.outfall_count" :key="index3">
 									<p class="name">月份：{{item3.month}}</p>
 									<p>生产时间（h）：
-										<Input type="number" placeholder="0" v-model="item3.hours" @on-change='update_outfall_count(index,index1)'></Input>
+										<Input type="number" placeholder="0" v-model="item3.hours" @on-change='changeWaterhours(item3,index,index3)'></Input>
 									</p>
 									<p>总量(m³)：
 										{{item3.total}}
@@ -189,7 +189,7 @@
 					</div>
 				</div>
 
-				<div class="card" v-if="showGas">
+				<div class="card">
 					<img class="icon-down" src="@/assets/img/down2.png"  @click="gas_show=true" v-if="gas_show==false" alt="">
 					<p >3、是否产生工业废气</p>
 					<RadioGroup v-model="form3.waste_gas" >
@@ -341,7 +341,7 @@
 					</div>
 				</div>
 
-				<div class="card" v-if="showSolid">
+				<div class="card">
 					<img class="icon-down" src="@/assets/img/down2.png"  @click="solid_show=true" v-if="solid_show==false" alt="">
 					<p >4、是否产生一般固废</p>
 					<RadioGroup v-model="form3.solid_waste"  >
@@ -383,7 +383,7 @@
 								<Input type="number" placeholder="0" v-model="item3.solid_remain_count"></Input>
 							</p>
 							<p>阈值（吨）：
-								<Input type="number" placeholder="0" v-model="item3.limit"></Input>
+								<Input type="number" placeholder="0" v-model="item3.limit" readonly></Input>
 							</p>
 							<p>执行标准：
 								<Input type="number" placeholder="0" v-model="item3.standard"></Input>
@@ -453,7 +453,7 @@
 					</div>
 				</div>
 
-				<div class="card" v-if="showDanger">
+				<div class="card">
 					<img class="icon-down" src="@/assets/img/down2.png"  @click="dangerous_show=true" v-if="dangerous_show==false" alt="">
 					<p >5、是否产生危险废物</p>
 					<RadioGroup v-model="form3.dangerous_waste"  >
@@ -491,7 +491,7 @@
 								<Input type="number" placeholder="0" v-model="item3.solid_remain_count"></Input>
 							</p>
 							<p>阈值（吨）：
-								<Input type="number" placeholder="0" v-model="item3.limit"></Input>
+								<Input type="number" placeholder="0" v-model="item3.limit" readonly></Input>
 							</p>
 							<p>执行标准：
 								<Input type="number" placeholder="0" v-model="item3.standard"></Input>
@@ -562,10 +562,10 @@
 					</div>
 				</div>
 
-				<div class="card" v-if="showNoise">
+				<div class="card" >
 					<img class="icon-down" src="@/assets/img/down2.png"  @click="noise_show=true" v-if="noise_show==false" alt="">
 					<p >6、是否有噪音排放</p>
-					<RadioGroup v-model="form3.noise"  >
+					<RadioGroup v-model="form3.noise">
 						<Radio :label="0" border disabled>否</Radio>
 						<Radio :label="1" border disabled>是</Radio>
 					</RadioGroup>
@@ -701,7 +701,7 @@
 			</form>
 		</div>
 
-		<Modal v-model="first_show" title="申报主体" >
+		<Modal v-model="first_show" title="申报主体"   @on-cancel="goback">
 			<div style="margin:10px;">
 				<p style="margin-bottom:20px">
 					<span>申报企业：</span>
@@ -828,6 +828,7 @@
 		data() {
 			let self = this;
 			return {
+				produtimeList:[],
 				open: false,
 				value3: '',
 				isLook:false,
@@ -1776,6 +1777,9 @@
 					}
 				})
 			},
+			goback(){
+				this.$router.back()
+			},
 			async nextaction(){
 				this.first_show= false;
 				//更改浓度表头月份
@@ -1948,7 +1952,10 @@
 							}
 							if(res.data.quarter_info_base.length>0){
 								this.quarter_info_base=res.data.quarter_info_base
-							};
+								this.quarter_info_base.forEach((i)=>{
+									this.produtimeList.push(i.time)
+								})
+							}
 							if(res.data.illegal_record_attach){
 								this.form3.illegal_record_attach=JSON.parse(res.data.illegal_record_attach);
 							};
@@ -2462,7 +2469,57 @@
 				this.attach_url='';
 				this.water_attach=''
 			},
+			prodTime(item,index){
+				if(index==0){
+					console.log(0);
+					this.produtimeList[0]= parseInt(item.time)
+				}else if(index==1){
+					console.log(1);
+					this.produtimeList[1]=parseInt(item.time)
+				}else if(index==2){
+					console.log(2);
+					this.produtimeList[2]=parseInt(item.time)
+				}
+				console.log(this.produtimeList);
+				for (let i in this.water_waste_total) {
+					this.water_waste_total[i].wastewater_total[0].outfall_count[index].hours=parseInt(item.time);
+					let total_count_water=item.time*this.water_waste_total[i].wastewater_total[0].count;
+					this.water_waste_total[i].wastewater_total[0].outfall_count[index].total=total_count_water.toFixed(2);
+				}
+				for (let i in this.wastegas_total) {
+					let total_count_gas=item.time*this.wastegas_total[i].count;
+					this.wastegas_total[i].outfall_count[index].total = total_count_gas.toFixed(2)
+					this.wastegas_total[i].outfall_count[index].hours=parseInt(item.time);
+				}
+			},
 
+			changeWaterhours(item,index,index3){
+				console.log(item.hours,index,index3);
+				if(index3==0){
+					if(item.hours>this.produtimeList[0]){
+						this.$toast('生产时间不得超过企业季度信息中填写的生产时间,请重新填写')
+						setTimeout(()=>{
+							item.hours = this.produtimeList[0]
+						},100)
+					}
+				}else if(index3==1){
+					if(item.hours>this.produtimeList[1]){
+						this.$toast('生产时间不得超过企业季度信息中填写的生产时间,请重新填写')
+						setTimeout(()=>{
+							item.hours = this.produtimeList[1]
+						},100)
+					}
+				}else if(index3==2){
+					if(item.hours>this.produtimeList[2]){
+						this.$toast('生产时间不得超过企业季度信息中填写的生产时间,请重新填写')
+						setTimeout(()=>{
+							item.hours = this.produtimeList[2]
+						},100)
+					}
+				}
+				this.update_outfall_count(index,0)
+
+			},
 			changeAttachDetail(value){
 				console.log('index',value)
 				this.attach_name = this.attach_history[value].name
@@ -2500,16 +2557,17 @@
 			},
 
 			update_outfall_count(index,index1){
-				let speed=this.water_waste_total[index].wastewater_total[index1].count;
-				let data=this.water_waste_total[index].wastewater_total[index1].outfall_count;
+				console.log(index,index1)
+				let speed=this.water_waste_total[index].wastewater_total[index1].count
+				let data=this.water_waste_total[index].wastewater_total[index1].outfall_count
 				for(var i in data){
 					if(!data[i].hours){
-						data[i].hours=0;
-					};
-					let total_count=speed*data[i].hours;
-					data[i].total=total_count.toFixed(2);
-				};
-				this.water_waste_total[index].wastewater_total[index1].outfall_count=data;
+						data[i].hours=0
+					}
+					let total_count=speed*data[i].hours
+					data[i].total=total_count.toFixed(2)
+				}
+				this.water_waste_total[index].wastewater_total[index1].outfall_count=data
 			},
 
 			update_gas_outfall_count(index){
@@ -2558,6 +2616,8 @@
 						if(res.data.noise == 1) {
 							this.form3.noise = 1
 							this.noise_change()
+						}else if(res.data.noise == 0){
+							this.form3.noise = 0
 						}
 					}
 				});
@@ -2566,14 +2626,19 @@
 			waste_water_change(){
 				//如果等于1获取模板
 				if(this.model_data.waste_water==1){
+					// this.water_waste_total[i].wastewater_total[0].outfall_count=this.produtimeList;
 					let data= this.water_waste_total.length>0 ? this.water_waste_total : this.model_data.waste_water_total;
 					for(let i in data){
-						data[i].wa_tr_fa=0;
-						data[i].ou_wa_fa=0;
-						data[i].wa_tr_fa_attach=[];
-						data[i].ou_wa_fa_attach=[];
-						data[i].third_enterprise_id='';
+						data[i].wa_tr_fa=this.water_waste_total[i] ?  this.water_waste_total[i].wa_tr_fa : 0;
+						data[i].ou_wa_fa=this.water_waste_total[i] ? this.water_waste_total[i].ou_wa_fa : 0;
+						data[i].wa_tr_fa_attach=this.water_waste_total[i] ? this.water_waste_total[i].wa_tr_fa_attach : [];
+						data[i].ou_wa_fa_attach=this.water_waste_total[i] ? this.water_waste_total[i].ou_wa_fa_attach : [];
+						data[i].third_enterprise_id=this.water_waste_total[i] ? this.water_waste_total[i].third_enterprise_id : '';
 						let data1 = data[i].wastewater_total;
+						if(data1[0].index_array.length < this.model_data.waste_water_total[i].wastewater_total[0].index_array.length) {
+							let start = data1[0].index_array.length
+							data1[0].index_array = data1[0].index_array.concat(this.model_data.waste_water_total[i].wastewater_total[0].index_array.slice(start))
+						}
 						for(let j in data1){
 							if(!data1[j].outfall_count){
 								if(this.form1.quarter==1){
