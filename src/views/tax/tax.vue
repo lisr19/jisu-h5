@@ -103,14 +103,14 @@
 			</div>
 			<div class="total">
 				<Table border highlight-row :columns="columns1" :data="data1"></Table>
-<!--				<h2>{{month_list[0]}}月份合计应缴环保税费：{{tax_month_count[0].toFixed(2)}}</h2>-->
-<!--				<h2>{{month_list[0]}}月份合计减免环保税费：{{tax_breaks_month_count[0].toFixed(2)}}</h2>-->
-<!--				<h2>{{month_list[1]}}月份合计应缴环保税费：{{tax_month_count[1].toFixed(2)}}</h2>-->
-<!--				<h2>{{month_list[1]}}月份合计减免环保税费：{{tax_breaks_month_count[1].toFixed(2)}}</h2>-->
-<!--				<h2>{{month_list[2]}}月份合计应缴环保税费：{{tax_month_count[2].toFixed(2)}}</h2>-->
-<!--				<h2>{{month_list[2]}}月份合计减免环保税费：{{tax_breaks_month_count[2].toFixed(2)}}</h2>-->
-<!--				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>-->
-<!--				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>-->
+				<h2>{{month_list[0]}}月份合计应缴环保税费：{{tax_month_count[0].toFixed(2)}}</h2>
+				<h2>{{month_list[0]}}月份合计减免环保税费：{{tax_breaks_month_count[0].toFixed(2)}}</h2>
+				<h2>{{month_list[1]}}月份合计应缴环保税费：{{tax_month_count[1].toFixed(2)}}</h2>
+				<h2>{{month_list[1]}}月份合计减免环保税费：{{tax_breaks_month_count[1].toFixed(2)}}</h2>
+				<h2>{{month_list[2]}}月份合计应缴环保税费：{{tax_month_count[2].toFixed(2)}}</h2>
+				<h2>{{month_list[2]}}月份合计减免环保税费：{{tax_breaks_month_count[2].toFixed(2)}}</h2>
+				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>
+				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>
 			</div>
 		</div>
 	</div>
@@ -131,15 +131,15 @@
 						title: '月份',
 						key: 'month',
 						align: 'center',
-						width:70
+						width:75
 					},
 					{
-						title: '应缴税费',
+						title: '应缴税费(元)',
 						align: 'center',
 						key: 'tax_month_count'
 					},
 					{
-						title: '减免税费',
+						title: '减免税费(元)',
 						align: 'center',
 						key: 'tax_breaks'
 					},
@@ -502,30 +502,8 @@
 			} else {
 				this.handleGetenterpriseList()
 			}
-			setTimeout(()=>{
-				this.data1 =  [
-					{
-						month: this.month_list[0],
-						tax_month_count: this.tax_month_count[0].toFixed(2),
-						tax_breaks: this.tax_breaks_month_count[0].toFixed(2),
-					},
-					{
-						month: this.month_list[1],
-						tax_month_count: this.tax_month_count[1].toFixed(2),
-						tax_breaks: this.tax_breaks_month_count[1].toFixed(2),
-					},
-					{
-						month: this.month_list[2],
-						tax_month_count: this.tax_month_count[2].toFixed(2),
-						tax_breaks: this.tax_breaks_month_count[2].toFixed(2),
-					},
-					{
-						month: '合计',
-						tax_month_count: this.total_pay.toFixed(2),
-						tax_breaks: this.total_off.toFixed(2),
-					},
-				]
-			},500)
+			this.updataTax()
+
 
 		},
 		computed: {
@@ -556,6 +534,32 @@
 			}
 		},
 		methods: {
+			updataTax(){
+				setTimeout(()=>{
+					this.data1 =  [
+						{
+							month: this.month_list[0],
+							tax_month_count: this.tax_month_count[0].toFixed(2),
+							tax_breaks: this.tax_breaks_month_count[0].toFixed(2),
+						},
+						{
+							month: this.month_list[1],
+							tax_month_count: this.tax_month_count[1].toFixed(2),
+							tax_breaks: this.tax_breaks_month_count[1].toFixed(2),
+						},
+						{
+							month: this.month_list[2],
+							tax_month_count: this.tax_month_count[2].toFixed(2),
+							tax_breaks: this.tax_breaks_month_count[2].toFixed(2),
+						},
+						{
+							month: '合计',
+							tax_month_count: this.total_pay.toFixed(2),
+							tax_breaks: this.total_off.toFixed(2),
+						},
+					]
+				},500)
+			},
 			handleGetTaxData(){
 				let data = {
 					enterprise_id:this.search.enterprise_id || sessionStorage.getItem('enterprise_id'),
@@ -592,6 +596,7 @@
 						}
 					}
 				})
+				this.updataTax()
 			},
 
 			handleCalTaxData(){
@@ -710,7 +715,10 @@
 
 <style scoped>
 	.content>>>.ivu-table-cell{
-		font-size: 25px;
+		font-size: 26px;
+	}
+	.content>>>.ivu-row-flex-center{
+		padding: 30px 0;
 	}
 </style>
 <style lang="less" scoped>
