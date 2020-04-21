@@ -64,19 +64,14 @@
 				isUpLoading:false,//上拉加载更多
 				clientHeight:'',
 				boxHeight:'',
-
 			}
 		},
 		created() {
 			this.clientHeight = `${document.documentElement.clientHeight}`
 			this.boxHeight = this.clientHeight -150+'px'
-
-		},
-		activated() {
-
+			this.reportList()
 		},
 		mounted(){
-			this.reportList()
 		},
 		methods: {
 			onRefresh() {

@@ -442,7 +442,11 @@
 		},
 	}
 </script>
-
+<style scoped>
+	.main>>>.ivu-input-wrapper{
+		width: 100%;
+	}
+</style>
 <style>
 	.van-field__label{
 		text-align: left!important;

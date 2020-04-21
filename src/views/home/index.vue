@@ -111,17 +111,17 @@
         mounted() {
         },
         activated() {
-            // if(sessionStorage.getItem('token')&&sessionStorage.getItem('account_type')!=1){
-            //     Dialog.alert({
-            //         title: '标题',
-            //         message: '该账号非企业用户'
-            //     }).then(() => {
-            //         localStorage.clear()
-            //         sessionStorage.clear()
-            //         this.$toast('请用企业账号登录')
-            //         this.$router.push({name:'登录'})
-            //     });
-            // }
+            if(sessionStorage.getItem('token')&&sessionStorage.getItem('account_type')!=1){
+                Dialog.alert({
+                    title: '标题',
+                    message: '该账号非企业用户'
+                }).then(() => {
+                    localStorage.clear()
+                    sessionStorage.clear()
+                    this.$toast('请用企业账号登录')
+                    this.$router.push({name:'登录'})
+                });
+            }
             this.getEnterInfo()
             this.epList()
             this.procedureList() //其他环保手续

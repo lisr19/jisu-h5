@@ -20,7 +20,7 @@
 					<div class="item-card" v-for="(item,index) in data_waterGas">
 						<p class="name">月份:{{item.month}}</p>
 						<p>排放口：{{item.outlet}}</p>
-						<p>税目：{{item.tax_item}}</p>
+						<p>税目：{{item.waste_type===1?'废水':'废气'}}</p>
 						<p>污染物名称：{{item.waste_name}}</p>
 						<p>当量数：{{item.count}}</p>
 						<p>单位税额：{{item.price}}</p>
@@ -51,7 +51,6 @@
 						<p>污染物名称：{{item.waste_name}}</p>
 						<p>排放量（吨）：{{item.count}}</p>
 						<p>单位税额：{{item.price}}</p>
-						<p>折扣率：{{item.discount}}</p>
 						<p>应纳税额：{{item.tax_liability}}</p>
 						<p>减免税额：{{item.tax_breaks}}</p>
 						<p>计税依据：{{item.tax_basis}}</p>
@@ -78,14 +77,12 @@
 					<div class="item-card" v-for="(item,index) in data_noise">
 						<p class="name">月份:{{item.month}}</p>
 						<p>监测点：{{item.monitor}}</p>
-						<p>税目：{{item.tax_item}}</p>
 						<p>编号：{{item.num}}</p>
 						<p>类型：{{item.type}}</p>
 						<p>时段：{{item.time}}</p>
 						<p>检测分贝数：{{item.test_value}}</p>
 						<p>超标分贝数：{{item.exceed_value}}</p>
 						<p>超标天数：{{item.exceed_day}}</p>
-						<p>折扣率：{{item.discount}}</p>
 						<p>应纳税额：{{item.tax_liability}}</p>
 						<p>减免税额：{{item.tax_breaks}}</p>
 						<p>计税依据：{{item.tax_basis}}</p>
@@ -105,14 +102,15 @@
 <!--				<Table border size='small' :columns="sum_noise_column" :data="sum_noise" :show-header="false"></Table>-->
 			</div>
 			<div class="total">
-				<h2>{{month_list[0]}}月份合计应缴环保税费：{{tax_month_count[0].toFixed(2)}}</h2>
-				<h2>{{month_list[0]}}月份合计减免环保税费：{{tax_breaks_month_count[0].toFixed(2)}}</h2>
-				<h2>{{month_list[1]}}月份合计应缴环保税费：{{tax_month_count[1].toFixed(2)}}</h2>
-				<h2>{{month_list[1]}}月份合计减免环保税费：{{tax_breaks_month_count[1].toFixed(2)}}</h2>
-				<h2>{{month_list[2]}}月份合计应缴环保税费：{{tax_month_count[2].toFixed(2)}}</h2>
-				<h2>{{month_list[2]}}月份合计减免环保税费：{{tax_breaks_month_count[2].toFixed(2)}}</h2>
-				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>
-				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>
+				<Table border highlight-row :columns="columns1" :data="data1"></Table>
+<!--				<h2>{{month_list[0]}}月份合计应缴环保税费：{{tax_month_count[0].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[0]}}月份合计减免环保税费：{{tax_breaks_month_count[0].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[1]}}月份合计应缴环保税费：{{tax_month_count[1].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[1]}}月份合计减免环保税费：{{tax_breaks_month_count[1].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[2]}}月份合计应缴环保税费：{{tax_month_count[2].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[2]}}月份合计减免环保税费：{{tax_breaks_month_count[2].toFixed(2)}}</h2>-->
+<!--				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>-->
+<!--				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>-->
 			</div>
 		</div>
 	</div>
@@ -128,6 +126,25 @@
 		},
 		data(){
 			return {
+				columns1: [
+					{
+						title: '月份',
+						key: 'month',
+						align: 'center',
+						width:70
+					},
+					{
+						title: '应缴税费',
+						align: 'center',
+						key: 'tax_month_count'
+					},
+					{
+						title: '减免税费',
+						align: 'center',
+						key: 'tax_breaks'
+					},
+				],
+				data1: [],
 				showCard1:true,
 				showCard2:true,
 				showCard3:true,
@@ -285,71 +302,6 @@
 				solid_dang_count_sum:0,
 				solid_dang_tax_liability:0,
 				solid_dang_tax_breaks:0,
-
-				//噪音税费合计表
-				sum_noise_column:[
-					{
-						align:'center',
-						key: 'total'
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return '———'
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return '———'
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return '———'
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return '———'
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return '———'
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return this.noise_exceed_value
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return this.noise_exceed_day
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return this.noise_tax_liability
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return this.noise_tax_breaks
-						}
-					}, {
-						align:'center',
-						render: (h,params) => {
-							return '———'
-						}
-					}
-				],
-
-				//噪音税费合计表数据
-				sum_noise:[
-					{
-						total:'合计'
-					}
-				],
 
 				noise_count_sum:0,
 				noise_tax_liability:0,
@@ -550,6 +502,31 @@
 			} else {
 				this.handleGetenterpriseList()
 			}
+			setTimeout(()=>{
+				this.data1 =  [
+					{
+						month: this.month_list[0],
+						tax_month_count: this.tax_month_count[0].toFixed(2),
+						tax_breaks: this.tax_breaks_month_count[0].toFixed(2),
+					},
+					{
+						month: this.month_list[1],
+						tax_month_count: this.tax_month_count[1].toFixed(2),
+						tax_breaks: this.tax_breaks_month_count[1].toFixed(2),
+					},
+					{
+						month: this.month_list[2],
+						tax_month_count: this.tax_month_count[2].toFixed(2),
+						tax_breaks: this.tax_breaks_month_count[2].toFixed(2),
+					},
+					{
+						month: '合计',
+						tax_month_count: this.total_pay.toFixed(2),
+						tax_breaks: this.total_off.toFixed(2),
+					},
+				]
+			},500)
+
 		},
 		computed: {
 			//判断是否是企业账户
@@ -731,36 +708,9 @@
 	}
 </script>
 
-<style >
-	.ivu-row-flex-center{
-		padding: 30px 0;
-	}
-	.ivu-input-wrapper{
-		width: auto;
-	}
-	.ivu-input{
-
-	}
-	.ivu-radio-group{
-		font-size: 28px;
-		margin-top: 20px;
-	}
-	.ivu-radio-wrapper{
-		font-size: 32px;
-		margin-right: 100px;
-	}
-	.ivu-form .ivu-form-item-label{
-		font-size: 28px;
-	}
-	.ivu-form-item-content{
-		font-size: 28px;
-		text-align: left;
-	}
-	.ivu-btn{
-		font-size: 28px;
-	}
-	.ivu-modal-body{
-
+<style scoped>
+	.content>>>.ivu-table-cell{
+		font-size: 25px;
 	}
 </style>
 <style lang="less" scoped>
@@ -873,6 +823,6 @@
 	.total{
 		text-align: left;
 		font-size: 36px;
-		padding: 30px 35px;
+		padding: 30px 25px;
 	}
 </style>

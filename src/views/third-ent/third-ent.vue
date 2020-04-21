@@ -24,12 +24,10 @@
 							<img  @click="comFn(item)" src="@/assets/img/del.png" alt="">
 						</van-col>
 					</van-row>
+					<div v-if="data1.length===0" style="margin-top: 50px">暂无数据</div>
 				</div>
 			</van-list>
 		</van-pull-refresh>
-
-
-		<div v-if="data1.length===0" style="margin-top: 50px">暂无数据</div>
 
 		<div class="btn" @click="addDetail">新增</div>
 	</div>
