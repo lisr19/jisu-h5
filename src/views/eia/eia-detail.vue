@@ -18,7 +18,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card" >
-					<div class="w-card" v-if="form.affect_book==1&&show1" >
+					<div class="w-card" v-show="form.affect_book==1&&show1" >
 						<div style="margin-bottom:5px;margin-top:10px">
 							<FormItem prop="unit_name" label="编制单位：">
 								<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">编制单位：</p>  -->
@@ -99,7 +99,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.department_reply==1&&show2">
+					<div class="w-card" v-show="form.department_reply==1&&show2">
 						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环保批准部门：</p> -->
 							<FormItem prop="department_reply_name" label="环保批准部门：">
@@ -147,7 +147,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.check_accept==1&&show3">
+					<div class="w-card" v-show="form.check_accept==1&&show3">
 						<div style="margin-bottom:5px;margin-top:10px">
 							<!-- <p style="width:100px;float:left;text-align:right;line-height:32px">环评验收单位：</p> -->
 							<FormItem prop="check_accept_name" label="环评验收单位：">
@@ -185,7 +185,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.waste_water==1&&show4">
+					<div class="w-card" v-show="form.waste_water==1&&show4">
 						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废水指标';pe_index=1" style="margin-bottom:5px;margin-top:10px">添加环评废水指标</Button>
 							<FormItem prop="po_emit_prove_index_array1" label="">
@@ -245,7 +245,7 @@
 					</RadioGroup>
 				</div>
 				<div  class="inner-card">
-					<div class="w-card" v-if="form.waste_gas==1&&show5">
+					<div class="w-card" v-show="form.waste_gas==1&&show5">
 						<div style="margin-bottom:5px;">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评废气指标';pe_index=2" >添加环评废气指标</Button>
 							<FormItem prop="po_emit_prove_index_array2" label="">
@@ -303,7 +303,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.solid_waste==1&&show6">
+					<div class="w-card" v-show="form.solid_waste==1&&show6">
 						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评固废指标';pe_index=3" style="width:150px;margin-bottom:5px">添加环评固废指标</Button>
 							<FormItem prop="po_emit_prove_index_array3" label="">
@@ -362,7 +362,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.dangerous_waste==1&&show7">
+					<div class="w-card" v-show="form.dangerous_waste==1&&show7">
 						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评危险废物指标';pe_index=4" >添加环评危险废物指标</Button>
 							<FormItem prop="po_emit_prove_index_array4" label="">
@@ -424,7 +424,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div  class="w-card" v-if="form.noise==1&&show8" >
+					<div  class="w-card" v-show="form.noise==1&&show8" >
 						<div style="margin-bottom:5px;margin-top:10px">
 							<Button type="primary" class="button1" @click="add_index1=true;index_title='环评噪音指标';pe_index=5" style="width:150px;margin-bottom:5px">添加环评噪音指标</Button>
 							<FormItem prop="po_emit_prove_index_array5" label="">

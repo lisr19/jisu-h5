@@ -7,13 +7,12 @@
 					<img class="icon-down" src="@/assets/img/down2.png"  @click="base_show=true" v-if="base_show==false" alt="">
 					<p >1、企业季度信息</p>
 				</div>
-				<div class="inner-card" v-if="base_show==true">
+				<div class="inner-card" v-show="base_show==true">
 					<div v-if="quarter_info_base.length>0" class="w-card">
 						<div class="item-card" v-for="(item,index) in quarter_info_base">
 							<p class="name">月份：{{item.month}}</p>
 							<p>产值（元）：
 								<InputNumber type="number" placeholder="0" v-model="item.output_value"></InputNumber>
-<!--								{{item.output_value}}-->
 							</p>
 							<p>纳税（元）：
 								<InputNumber type="number" placeholder="0" v-model="item.pay_taxes"></InputNumber>

@@ -10,7 +10,6 @@
 		<p style="margin-bottom: 10px;display: flex;align-items: center;background-color: #fff;padding:5px 10px">
 			<span style="width: 80px">年份：</span>
 			<i-input  readonly  v-model="form.year" placeholder="请选择年份"  @on-focus="openDate('year')"></i-input>
-<!--			<DatePicker type="year" placeholder="请选择年份"  @on-change="form.year=$event" :value="form.year" value-format="yyyy"></DatePicker>-->
 		</p>
 
 		<div class="content">
@@ -24,7 +23,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card" >
-					<div class="w-card" v-if="form.po_emit_prove==1&&show1">
+					<div class="w-card" v-show="form.po_emit_prove==1&&show1">
 						<FormItem  label="" prop="po_emit_prove"  >
 							<div style="margin: 0">
 								<p style="margin-bottom:5px">
@@ -125,7 +124,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.ra_safe_prove==1&&show2">
+					<div class="w-card" v-show="form.ra_safe_prove==1&&show2">
 						<span>发证部门：</span>
 						<Input type="text" placeholder="请输入发证部门全称" v-model="ra_safe_name" ></Input>
 						<div style="margin-bottom:5px">
@@ -147,7 +146,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.drainage_prove==1&&show3">
+					<div class="w-card" v-show="form.drainage_prove==1&&show3">
 						<FormItem label="" prop="drainage_prove" >
 							<div>
 								<span>发证部门：</span>
@@ -175,7 +174,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.em_manager==1&&show4">
+					<div class="w-card" v-show="form.em_manager==1&&show4">
 						<FormItem label="" prop="em_manager"  >
 							<div>
 								<span>预案编制单位：</span>
@@ -203,7 +202,7 @@
 					</RadioGroup>
 				</div>
 				<div  class="inner-card">
-					<div class="w-card" v-if="form.se_ou_manager==1&&show5">
+					<div class="w-card" v-show="form.se_ou_manager==1&&show5">
 						<FormItem label="" prop="se_ou_manager" >
 							<div v-if="form.se_ou_manager==1">
 								<div style="margin-bottom:5px">
@@ -229,7 +228,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.cl_pr_manager==1&&show6">
+					<div class="w-card" v-show="form.cl_pr_manager==1&&show6">
 						<FormItem label="" prop="cl_pr_manager" >
 							<div>
 								<div style="margin-bottom:5px">
@@ -255,7 +254,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.po_co_fa==1&&show7">
+					<div class="w-card" v-show="form.po_co_fa==1&&show7">
 						<FormItem label="" prop="po_co_fa" >
 							<div >
 								<span>设施名称：</span>
@@ -283,7 +282,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.ba_pr_power==1&&show8">
+					<div class="w-card" v-show="form.ba_pr_power==1&&show8">
 						<FormItem label="" prop="ba_pr_power" >
 							<div >
 								<div style="margin-bottom:5px">
@@ -309,7 +308,7 @@
 					</RadioGroup>
 				</div>
 				<div class="inner-card">
-					<div class="w-card" v-if="form.other_data==1&&show9">
+					<div class="w-card" v-show="form.other_data==1&&show9">
 						<FormItem label="" prop="other_data" >
 							<div>
 								<div style="margin-bottom:5px">

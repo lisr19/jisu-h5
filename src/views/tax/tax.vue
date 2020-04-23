@@ -103,14 +103,14 @@
 			</div>
 			<div class="total">
 				<Table border highlight-row :columns="columns1" :data="data1"></Table>
-				<h2>{{month_list[0]}}月份合计应缴环保税费：{{tax_month_count[0].toFixed(2)}}</h2>
-				<h2>{{month_list[0]}}月份合计减免环保税费：{{tax_breaks_month_count[0].toFixed(2)}}</h2>
-				<h2>{{month_list[1]}}月份合计应缴环保税费：{{tax_month_count[1].toFixed(2)}}</h2>
-				<h2>{{month_list[1]}}月份合计减免环保税费：{{tax_breaks_month_count[1].toFixed(2)}}</h2>
-				<h2>{{month_list[2]}}月份合计应缴环保税费：{{tax_month_count[2].toFixed(2)}}</h2>
-				<h2>{{month_list[2]}}月份合计减免环保税费：{{tax_breaks_month_count[2].toFixed(2)}}</h2>
-				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>
-				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>
+<!--				<h2>{{month_list[0]}}月份合计应缴环保税费：{{tax_month_count[0].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[0]}}月份合计减免环保税费：{{tax_breaks_month_count[0].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[1]}}月份合计应缴环保税费：{{tax_month_count[1].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[1]}}月份合计减免环保税费：{{tax_breaks_month_count[1].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[2]}}月份合计应缴环保税费：{{tax_month_count[2].toFixed(2)}}</h2>-->
+<!--				<h2>{{month_list[2]}}月份合计减免环保税费：{{tax_breaks_month_count[2].toFixed(2)}}</h2>-->
+<!--				<h2>合计应缴环保税费：{{total_pay.toFixed(2)}}</h2>-->
+<!--				<h2>合计减免环保税费：{{total_off.toFixed(2)}}</h2>-->
 			</div>
 		</div>
 	</div>
